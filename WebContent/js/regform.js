@@ -1,6 +1,6 @@
 window.onload = () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const tipo = urlParams.get('tipo'); // 'cliente' o 'artigiano'
+    const tipo = urlParams.get('tipo'); 
   
     const formArtigiano = document.getElementById('form-artigiano');
   
@@ -32,10 +32,10 @@ window.onload = () => {
           iban: form.iban.value.trim()
         };
   
-        // 🔗 COLLEGAMENTO AL DB per ARTIGIANO
+        //  COLLEGAMENTO AL DB per ARTIGIANO
         console.log("Salva nel DB (Artigiano):", { ...datiBase, ...datiExtra });
   
-        // 📬 INVIA A ADMIN
+        //  INVIA A ADMIN
         const segnalazioneAdmin = {
           nome: datiBase.nome,
           cognome: datiBase.cognome,
@@ -45,11 +45,10 @@ window.onload = () => {
         console.log("Invia segnalazione all’admin:", segnalazioneAdmin);
   
       } else {
-        // 🔗 COLLEGAMENTO AL DB per CLIENTE
+        //  COLLEGAMENTO AL DB per CLIENTE
         console.log("Salva nel DB (Cliente):", datiBase);
       }
   
-      // ✅ REDIRECT ALLA HOME
       window.location.href = "home.html";
     });
   };

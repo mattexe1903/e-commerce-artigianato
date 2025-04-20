@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dettaglio prodotto</title>
+  <link rel="stylesheet" href="../css/productsview.css">
+</head>
+<body>
+  <header>
+    <div class="logo">Lokal</div>
+  </header>
+
+  <section class="product-details-container">
+    <div class="product-image">
+      <img id="product-img" src="" alt="Immagine prodotto">
+    </div>
+
+    <div class="product-info">
+      <h2 id="product-name">Nome prodotto</h2>
+      
+      <!-- Cuore per i preferiti spostato a destra -->
+      <button id="favorite-btn" onclick="aggiungiAiPreferiti()" title="Aggiungi ai preferiti">
+        <span id="heart-icon">&#10084;</span>
+      </button>
+      
+      <div class="product-description">
+        <h3>Descrizione</h3>
+        <p><strong>Categoria:</strong> <span id="product-category">Categoria prodotto</span></p>
+        <p id="product-description-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      </div>
+
+      <div class="product-price-quantity">
+        <p><strong>Prezzo:</strong> <span id="product-price">€99.99</span></p>
+        <p><strong>Quantità disponibile:</strong> <span id="product-quantity">20</span></p>
+        <input type="number" id="quantity-input" value="1" min="1" max="20" onchange="verificaQuantita()">
+      </div>
+
+      <button id="add-to-cart-btn" onclick="aggiungiAlCarrello()" title="Aggiungi al carrello">
+        Aggiungi al carrello
+      </button>
+    </div>
+  </section>
+
+  <!-- Pop-up login -->
+  <div id="login-popup" class="popup">
+    <div class="popup-content">
+      <p>Solo gli utenti loggati possono aggiungere ai preferiti o al carrello.</p>
+      <button onclick="window.location.href='login.html'">Accedi</button>
+    </div>
+  </div>
+
+  <script src="../js/productsview.js"></script>
+</body>
+</html>
