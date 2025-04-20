@@ -1,0 +1,123 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #3b3434;
+  }
+  
+  .regform-container {
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 40px;
+    background-color: #000;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    color: #fff;
+    position: relative;
+  }
+  
+  .back-arrow {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    text-decoration: none;
+    font-size: 32px;
+    color: #f5b400;
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #f5b400;
+  }
+  
+  label {
+    display: block;
+    margin-top: 18px;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border: none;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+  
+  .register-button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 30px;
+    background-color: #f5b400;
+    color: #000;
+    font-weight: bold;
+    font-size: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .register-button:hover {
+    background-color: #d49f00;
+  }
+  
+  #form-artigiano {
+    margin-top: 40px;
+    border-top: 1px solid #666;
+    padding-top: 30px;
+  }
+  
+  .info-box {
+    margin-top: 20px;
+    padding: 12px;
+    border: 1px dashed #ccc;
+    color: #f5b400;
+    font-size: 13px;
+    line-height: 1.4;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+  }
+  
+  .password-toggle {
+    text-align: right;
+    margin-top: 5px;
+    font-size: 12px;
+  }
+  
+  .password-toggle a {
+    color: #f5b400;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .password-toggle a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 600px) {
+    .regform-container {
+      padding: 25px;
+    }
+  
+    .back-arrow {
+      font-size: 24px;
+      left: 15px;
+    }
+  
+    h1 {
+      font-size: 20px;
+    }
+  
+    .register-button {
+      font-size: 14px;
+      padding: 12px;
+    }
+  }
+  
