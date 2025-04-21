@@ -7,9 +7,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use('/api', authRoutes);
+
 app.get('/', (req, res) => {
     res.send('Benvenuto nel backend dell\'e-commerce!');
-  });
+});
 
 // API di test - prende tutti gli utenti
 app.get('/api/utenti', async (req, res) => {
