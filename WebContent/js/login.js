@@ -27,12 +27,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // fetch('/api/login', { method: 'POST', body: JSON.stringify({ email, password }) })
 
     // Simulazione temporanea per utente
-    if (email === "demo@demo.it" && password === "password") {
-      window.location.href = "homereg.html";
+    if ((email === "client@demo.it" && password === "client") || (email === "arti@demo.it" && password === "arti")) {
+      localStorage.setItem("userEmail", email); // Salva l'email nel localStorage
+      window.location.href = "homereg.html";  
     } else {
       errorMessage.style.display = "block";
       errorMessage.textContent = "Credenziali errate. Riprova.";
-    }
+  }
+
   });
 
   document.getElementById("registerLink").addEventListener("click", function (e) {

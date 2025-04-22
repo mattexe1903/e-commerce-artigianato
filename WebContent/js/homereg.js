@@ -4,9 +4,27 @@ function vaiAllaPaginaProdotto(idProdotto) {
   window.location.href = `productsview.html?id=${idProdotto}&user=${userId}`;
 }
 
-function vaiAlProfilo() {
-  window.location.href = `profile.html?user=${userId}`;
+function vaiAlProfiloFromStorage() {
+  const email = localStorage.getItem("userEmail");
+  if (email) {
+    vaiAlProfilo(email);
+  } else {
+    console.error("Email utente non trovata nel localStorage.");
+  }
 }
+
+
+function vaiAlProfilo(email) {
+  if (email === "client@demo.it") {
+    window.location.href = "profileclient.html";
+  } else if (email === "arti@demo.it") {
+    window.location.href = "profilearti.html";
+  } else {
+    // Redirect di default o messaggio d’errore
+    console.error("Email non riconosciuta:", email);
+  }
+}
+
 
 function logout() {
   alert("Logout effettuato");

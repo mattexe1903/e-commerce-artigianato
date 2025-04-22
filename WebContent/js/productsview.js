@@ -12,13 +12,22 @@ window.onload = function () {
       document.getElementById('product-price').innerText = `€${prodotto.prezzo}`;
       document.getElementById('product-quantity').innerText = prodotto.quantita;
       document.getElementById('quantity-input').max = prodotto.quantita;
+
+      // Se il prodotto è nei preferiti (da sessionStorage), colora il cuore
+      const heartIcon = document.getElementById('heart-icon');
+      if (sessionStorage.getItem("preferito") === "true" &&
+          sessionStorage.getItem("nomeProdotto") === prodotto.nome) {
+        heartIcon.classList.add('preferito');
+        heartIcon.style.color = 'red';
+      }
     }
   }
 };
 
-// 👉 Simulazione utente loggato (da sostituire con il controllo reale)
-const utenteLoggato = true; // Cambia a `true` per simulare un utente loggato
+// Simulazione utente loggato
+const utenteLoggato = true;
 
+// Simulazione database prodotti
 function getProdottoById(id) {
   const prodotti = [
     {
@@ -43,22 +52,25 @@ function getProdottoById(id) {
   return prodotti.find(p => p.id === parseInt(id));
 }
 
+// Aggiungi/Rimuovi dai preferiti
 function aggiungiAiPreferiti() {
   const prodottoId = new URLSearchParams(window.location.search).get('id');
-  if (!prodottoId) return;
-
   const heartIcon = document.getElementById('heart-icon');
 
-  if (utenteLoggato) {
-    const isGiaPreferito = heartIcon.classList.contains('preferito');
+  if (!prodottoId) return;
 
-    if (isGiaPreferito) {
+  if (utenteLoggato) {
+    const isPreferito = heartIcon.classList.contains('preferito');
+
+    if (isPreferito) {
       heartIcon.classList.remove('preferito');
-      heartIcon.style.color = '#f5b400'; // colore originale
+      heartIcon.style.color = '#f5b400';
+      sessionStorage.setItem("preferito", "false");
       console.log(`Prodotto ${prodottoId} rimosso dai preferiti.`);
     } else {
       heartIcon.classList.add('preferito');
       heartIcon.style.color = 'red';
+      sessionStorage.setItem("preferito", "true");
       console.log(`Prodotto ${prodottoId} aggiunto ai preferiti!`);
     }
   } else {
@@ -66,6 +78,7 @@ function aggiungiAiPreferiti() {
   }
 }
 
+// Aggiungi al carrello
 function aggiungiAlCarrello() {
   const prodottoId = new URLSearchParams(window.location.search).get('id');
   const quantita = parseInt(document.getElementById('quantity-input').value);
@@ -81,6 +94,7 @@ function aggiungiAlCarrello() {
   }
 }
 
+// Verifica quantità inserita
 function verificaQuantita() {
   const input = document.getElementById('quantity-input');
   const max = parseInt(input.max);
