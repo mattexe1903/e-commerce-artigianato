@@ -31,21 +31,20 @@ body {
     margin-bottom: 20px;
   }
 
-  /* Carousel stile treno */
   .carousel-container {
     overflow: hidden;
     width: 100%;
     position: relative;
     margin-bottom: 30px;
   }
-
+  
   .carousel-track {
     display: flex;
     gap: 20px;
     animation: scroll-left 40s linear infinite;
     width: max-content;
   }
-
+  
   @keyframes scroll-left {
     0% {
       transform: translateX(0);
@@ -54,7 +53,7 @@ body {
       transform: translateX(-50%);
     }
   }
-
+  
   .product-carousel,
   .product-list {
     display: flex;

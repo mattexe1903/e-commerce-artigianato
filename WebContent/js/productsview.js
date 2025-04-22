@@ -1,95 +1,95 @@
-// Funzione che carica i dettagli del prodotto dalla query string
 window.onload = function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('id');
-    
-    if (productId) {
-      // Simula il recupero dei dati dal DB (sostituire con chiamata reale al DB)
-      // Qui i dati vengono mockati, ma dovrebbero essere presi dal database tramite l'ID
-      const prodotto = getProdottoById(productId);
-      if (prodotto) {
-        // Popola i dati nella pagina
-        document.getElementById('product-img').src = prodotto.imgUrl;
-        document.getElementById('product-name').innerText = prodotto.nome;
-        document.getElementById('product-category').innerText = prodotto.categoria;
-        document.getElementById('product-description-text').innerText = prodotto.descrizione;
-        document.getElementById('product-price').innerText = `€${prodotto.prezzo}`;
-        document.getElementById('product-quantity').innerText = prodotto.quantita;
-        document.getElementById('quantity-input').max = prodotto.quantita;  // Limita la quantità al valore disponibile
-      }
+  const urlParams = new URLSearchParams(window.location.search);
+  const productId = urlParams.get('id');
+
+  if (productId) {
+    const prodotto = getProdottoById(productId);
+    if (prodotto) {
+      document.getElementById('product-img').src = prodotto.imgUrl;
+      document.getElementById('product-name').innerText = prodotto.nome;
+      document.getElementById('product-category').innerText = prodotto.categoria;
+      document.getElementById('product-description-text').innerText = prodotto.descrizione;
+      document.getElementById('product-price').innerText = `€${prodotto.prezzo}`;
+      document.getElementById('product-quantity').innerText = prodotto.quantita;
+      document.getElementById('quantity-input').max = prodotto.quantita;
     }
-  };
-  
-  // Simulazione dati da DB
-  function getProdottoById(id) {
-    const prodotti = [
-      {
-        id: 1,
-        nome: "Prodotto 1",
-        imgUrl: "../images/prodotto1.jpg",
-        descrizione: "Descrizione dettagliata del prodotto 1.",
-        categoria: "Legno",
-        prezzo: "19.99",
-        quantita: 20,
-      },
-      {
-        id: 2,
-        nome: "Prodotto 2",
-        imgUrl: "../images/prodotto2.jpg",
-        descrizione: "Descrizione dettagliata del prodotto 2.",
-        categoria: "Vetro",
-        prezzo: "24.99",
-        quantita: 15,
-      }
-    ];
-    return prodotti.find(p => p.id === parseInt(id));
   }
-  
-  // Funzione per aggiungere ai preferiti
-  function aggiungiAiPreferiti() {
-    const prodottoId = new URLSearchParams(window.location.search).get('id');
-    if (!prodottoId) return;
-  
-    const utenteLoggato = false; // Simula l'utente loggato (sostituire con il check effettivo)
-  
-    if (utenteLoggato) {
-      // Simulazione aggiunta ai preferiti
-      // Qui dovresti inviare l'ID al tuo DB per associare il prodotto all'utente loggato
+};
+
+// 👉 Simulazione utente loggato (da sostituire con il controllo reale)
+const utenteLoggato = true; // Cambia a `true` per simulare un utente loggato
+
+function getProdottoById(id) {
+  const prodotti = [
+    {
+      id: 1,
+      nome: "Prodotto 1",
+      imgUrl: "../images/prodotto1.jpg",
+      descrizione: "Descrizione dettagliata del prodotto 1.",
+      categoria: "Legno",
+      prezzo: "19.99",
+      quantita: 20,
+    },
+    {
+      id: 2,
+      nome: "Prodotto 2",
+      imgUrl: "../images/prodotto2.jpg",
+      descrizione: "Descrizione dettagliata del prodotto 2.",
+      categoria: "Vetro",
+      prezzo: "24.99",
+      quantita: 15,
+    }
+  ];
+  return prodotti.find(p => p.id === parseInt(id));
+}
+
+function aggiungiAiPreferiti() {
+  const prodottoId = new URLSearchParams(window.location.search).get('id');
+  if (!prodottoId) return;
+
+  const heartIcon = document.getElementById('heart-icon');
+
+  if (utenteLoggato) {
+    const isGiaPreferito = heartIcon.classList.contains('preferito');
+
+    if (isGiaPreferito) {
+      heartIcon.classList.remove('preferito');
+      heartIcon.style.color = '#f5b400'; // colore originale
+      console.log(`Prodotto ${prodottoId} rimosso dai preferiti.`);
+    } else {
+      heartIcon.classList.add('preferito');
+      heartIcon.style.color = 'red';
       console.log(`Prodotto ${prodottoId} aggiunto ai preferiti!`);
-      document.getElementById('heart-icon').style.color = 'red'; // Cambia colore cuore per indicare preferito
-    } else {
-      // Mostra pop-up login
-      document.getElementById('login-popup').style.display = 'flex';
     }
+  } else {
+    document.getElementById('login-popup').style.display = 'flex';
   }
-  
-  // Funzione per aggiungere al carrello
-  function aggiungiAlCarrello() {
-    const prodottoId = new URLSearchParams(window.location.search).get('id');
-    const quantita = document.getElementById('quantity-input').value;
-    if (!prodottoId || !quantita) return;
-  
-    const utenteLoggato = false; // Simula l'utente loggato (sostituire con il check effettivo)
-  
-    if (utenteLoggato) {
-      // Simulazione aggiunta al carrello
-      // Qui dovresti inviare l'ID e la quantità al tuo DB per aggiornare il carrello dell'utente
-      console.log(`Prodotto ${prodottoId} aggiunto al carrello con quantità ${quantita}.`);
-      alert("Prodotto aggiunto al carrello!");
-    } else {
-      // Mostra pop-up login
-      document.getElementById('login-popup').style.display = 'flex';
-    }
+}
+
+function aggiungiAlCarrello() {
+  const prodottoId = new URLSearchParams(window.location.search).get('id');
+  const quantita = parseInt(document.getElementById('quantity-input').value);
+  const maxQuantita = parseInt(document.getElementById('quantity-input').max);
+
+  if (!prodottoId || !quantita || quantita < 1 || quantita > maxQuantita) return;
+
+  if (utenteLoggato) {
+    console.log(`Prodotto ${prodottoId} aggiunto al carrello con quantità ${quantita}.`);
+    alert("Prodotto aggiunto al carrello!");
+  } else {
+    document.getElementById('login-popup').style.display = 'flex';
   }
-  
-  // Verifica che la quantità non superi quella disponibile
-  function verificaQuantita() {
-    const maxQuantita = document.getElementById('quantity-input').max;
-    const quantitaSelezionata = document.getElementById('quantity-input').value;
-    
-    if (quantitaSelezionata > maxQuantita) {
-      alert("La quantità selezionata supera quella disponibile.");
-      document.getElementById('quantity-input').value = maxQuantita;  // Limita la quantità al massimo disponibile
-    }
+}
+
+function verificaQuantita() {
+  const input = document.getElementById('quantity-input');
+  const max = parseInt(input.max);
+  const val = parseInt(input.value);
+
+  if (val > max) {
+    alert("La quantità selezionata supera quella disponibile.");
+    input.value = max;
+  } else if (val < 1) {
+    input.value = 1;
   }
-  
+}
