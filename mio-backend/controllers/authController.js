@@ -4,9 +4,16 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await authService.login(email, password);
-    res.status(200).json({ message: 'Login riuscito', user });
+    res.status(200).json({
+      success: true,
+      message: 'Login riuscito',
+      user
+    });
   } catch (err) {
-    res.status(401).json({ message: err.message });
+    res.status(401).json({
+      success: false,
+      message: err. message || 'Credenziali non valide'
+    });
   }
 };
 

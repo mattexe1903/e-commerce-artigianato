@@ -28,13 +28,13 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       body: JSON.stringify({ email, password })
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Credenziali errate");
+      .then(async response => {
+        const data = await response.json();
+    
+        if (!response.ok || !data.success) {
+          throw new Error(data.message);
         }
-        return response.json();
-      })
-      .then(data => {
+    
         localStorage.setItem("userEmail", data.user.email);
         window.location.href = "homereg.html";
       })

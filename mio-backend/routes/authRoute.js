@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
-const pool = require('../db'); // non dimenticare di importarlo!
+const pool = require('../db');
 
 // Route login
 router.post('/login', authController.login);
 
 // Route per ottenere il ruolo
-router.post('/getRuolo', async (req, res) => {
+/*router.post('/getRuolo', async (req, res) => {
   const { email } = req.body;
   try {
     const result = await pool.query(
@@ -23,6 +23,6 @@ router.post('/getRuolo', async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: 'Errore nel server' });
   }
-});
+});*/
 
 module.exports = router;
