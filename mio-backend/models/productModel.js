@@ -1,3 +1,10 @@
 const pool = require('../db');
 
-module.exports = {};
+const getAllProducts = async () => {
+  const result = await pool.query('SELECT * FROM prodotti');
+  return result.rows;
+};
+
+module.exports = {
+    getAllProducts
+};
