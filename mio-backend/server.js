@@ -8,7 +8,10 @@ app.use(cors());
 app.use(express.json());
 
 const authRoutes = require('./routes/authRoute');
+const productRoutes = require('./routes/productRoute');
+
 app.use('/api', authRoutes);
+app.use('/api', productRoutes);
 
 app.get('/', (req, res) => {
     res.send('Benvenuto nel backend dell\'e-commerce!');

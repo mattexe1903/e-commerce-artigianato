@@ -31,4 +31,7 @@ const register = async (nome, cognome, email, password, ruolo) => {
   };
 }
 
-module.exports = { login, register };
+module.exports = {
+  login, 
+  register
+};
