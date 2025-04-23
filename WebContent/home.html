@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Lokal - Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #3b3434;
+      color: #fff;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 30px;
+      background-color: #000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #f5b400;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .header-buttons button {
+      padding: 10px 15px;
+      background-color: #f5b400;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .header-buttons button:hover {
+      background-color: #d49f00;
+    }
+
+    section {
+      padding: 20px;
+    }
+
+    h2 {
+      color: #f5b400;
+      margin-top: 40px;
+      margin-bottom: 20px;
+    }
+
+    /* Carousel stile treno */
+    .carousel-container {
+      overflow: hidden;
+      width: 100%;
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    .carousel-track {
+      display: flex;
+      gap: 20px;
+      animation: scroll-left 40s linear infinite;
+      width: max-content;
+    }
+
+    @keyframes scroll-left {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .product-carousel,
+    .product-list {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .product {
+      background-color: #000;
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      transition: transform 0.2s;
+      cursor: pointer;
+      text-align: center;
+      flex: 0 0 160px;
+      margin-right: 20px;
+    }
+
+    .product:hover {
+      transform: scale(1.03);
+    }
+
+    .product img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .filter-container {
+      margin-top: 20px;
+    }
+
+    .filter-container button {
+      padding: 10px 15px;
+      background-color: #f5b400;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    .filter-container select {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px 10px 0 0;
+      background-color: #000;
+      color: #f5b400;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .header-buttons {
+        margin-top: 10px;
+        flex-wrap: wrap;
+      }
+
+      .carousel-track {
+        animation-duration: 60s;
+      }
+
+      .product {
+        flex: 0 0 140px;
+      }
+
+      .product-list {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">Lokal</div>
+    <div class="header-buttons">
+      <button onclick="window.location.href='html/login.html'">Accedi</button>
+      <button onclick="window.location.href='html/regchoice.html'">Registrati</button>
+    </div>
+  </header>
+
+  <section>
+    <h2>Nuovi arrivi</h2>
+    <div class="carousel-container">
+      <div class="carousel-track" id="carousel-track">
+        <!-- 🔶 INIZIO DATI DA DB: nuovi arrivi -->
+        <div class="product" onclick="vaiAllaPaginaProdotto(1)">
+          <img src="../images/prodotto1.jpg" alt="Prodotto 1">
+          <div>Nome prodotto 1</div>
+          <div>€19.99</div>
+        </div>
+        <div class="product" onclick="vaiAllaPaginaProdotto(2)">
+          <img src="../images/prodotto2.jpg" alt="Prodotto 2">
+          <div>Nome prodotto 2</div>
+          <div>€24.99</div>
+        </div>
+        <div class="product" onclick="vaiAllaPaginaProdotto(3)">
+          <img src="../images/prodotto3.jpg" alt="Prodotto 3">
+          <div>Nome prodotto 3</div>
+          <div>€29.99</div>
+        </div>
+        <div class="product" onclick="vaiAllaPaginaProdotto(4)">
+          <img src="../images/prodotto4.jpg" alt="Prodotto 4">
+          <div>Nome prodotto 4</div>
+          <div>€34.99</div>
+        </div>
+        <div class="product" onclick="vaiAllaPaginaProdotto(5)">
+          <img src="../images/prodotto5.jpg" alt="Prodotto 5">
+          <div>Nome prodotto 5</div>
+          <div>€44.99</div>
+        </div>
+        <!-- 🔁 Duplica per effetto treno -->
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Tutti i prodotti</h2>
+
+    <div class="filter-container">
+      <button onclick="toggleFiltri()">Filtra</button>
+      <div id="menu-filtri" style="display: none;">
+        <select id="filtro-categoria">
+          <option value="">Tutte le categorie</option>
+          <option value="legno">Legno</option>
+          <option value="vetro">Vetro</option>
+          <option value="metallo">Metallo</option>
+        </select>
+
+        <select id="filtro-prezzo">
+          <option value="">Ordina per prezzo</option>
+          <option value="asc">Prezzo crescente</option>
+          <option value="desc">Prezzo decrescente</option>
+        </select>
+
+        <select id="filtro-disponibilita">
+          <option value="">Ordina per disponibilità</option>
+          <option value="disponibile">Disponibili prima</option>
+          <option value="non_disponibile">Non disponibili prima</option>
+        </select>
+
+        <button onclick="applicaFiltri()">Applica</button>
+      </div>
+    </div>
+
+    <div class="product-list" id="product-list">
+      <!-- 🔶 Esempi statici: da sostituire con i dati dal DB -->
+      <div class="product" data-prezzo="39.99" data-disponibile="1" data-categoria="vetro" onclick="vaiAllaPaginaProdotto(10)">
+        <img src="../images/prodotto10.jpg" alt="Prodotto 10">
+        <div>Nome prodotto 10</div>
+        <div>€39.99</div>
+      </div>
+      <div class="product" data-prezzo="29.99" data-disponibile="0" data-categoria="legno" onclick="vaiAllaPaginaProdotto(11)">
+        <img src="../images/prodotto11.jpg" alt="Prodotto 11">
+        <div>Nome prodotto 11</div>
+        <div>€29.99</div>
+      </div>
+      <div class="product" data-prezzo="19.99" data-disponibile="1" data-categoria="metallo" onclick="vaiAllaPaginaProdotto(12)">
+        <img src="../images/prodotto12.jpg" alt="Prodotto 12">
+        <div>Nome prodotto 12</div>
+        <div>€19.99</div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function vaiAllaPaginaProdotto(idProdotto) {
+      window.location.href = `html/productsview.html?id=${idProdotto}`;
+    }
+
+    function toggleFiltri() {
+      const menu = document.getElementById("menu-filtri");
+      menu.style.display = menu.style.display === "none" ? "block" : "none";
+    }
+
+    function applicaFiltri() {
+      const categoria = document.getElementById("filtro-categoria").value;
+      const ordinePrezzo = document.getElementById("filtro-prezzo").value;
+      const disponibilita = document.getElementById("filtro-disponibilita").value;
+
+      const lista = document.getElementById("product-list");
+      const prodotti = Array.from(lista.getElementsByClassName("product"));
+
+      let filtrati = prodotti.filter(p => {
+        if (categoria && p.dataset.categoria !== categoria) return false;
+        return true;
+      });
+
+      filtrati.sort((a, b) => {
+        if (a.dataset.categoria < b.dataset.categoria) return -1;
+        if (a.dataset.categoria > b.dataset.categoria) return 1;
+
+        if (ordinePrezzo === "asc") return parseFloat(a.dataset.prezzo) - parseFloat(b.dataset.prezzo);
+        if (ordinePrezzo === "desc") return parseFloat(b.dataset.prezzo) - parseFloat(a.dataset.prezzo);
+
+        if (disponibilita === "disponibile") return parseInt(b.dataset.disponibile) - parseInt(a.dataset.disponibile);
+        if (disponibilita === "non_disponibile") return parseInt(a.dataset.disponibile) - parseInt(b.dataset.disponibile);
+
+        return 0;
+      });
+
+      lista.innerHTML = "";
+      filtrati.forEach(p => lista.appendChild(p));
+    }
+
+    // Duplica il carousel per il loop continuo effetto treno
+    window.addEventListener("load", () => {
+      const track = document.getElementById("carousel-track");
+      const prodotti = track.innerHTML;
+      track.innerHTML += prodotti;
+    });
+  </script>
+
+</body>
+</html>
