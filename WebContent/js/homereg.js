@@ -7,21 +7,37 @@ function vaiAllaPaginaProdotto(idProdotto) {
 function vaiAlProfiloFromStorage() {
   const email = localStorage.getItem("userEmail");
   if (email) {
-    vaiAlProfilo(email);
+    fetch('http://localhost:3000/api/getRuolo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email })
+    })    
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Errore nel recupero del ruolo");
+      }
+      return response.json();
+    })
+    .then(data => {
+      vaiAlProfiloConRuolo(data.ruolo);
+    })
+    .catch(err => {
+      console.error("Errore nel recupero ruolo:", err);
+    });
   } else {
     console.error("Email utente non trovata nel localStorage.");
   }
 }
 
-
-function vaiAlProfilo(email) {
-  if (email === "client@demo.it") {
+function vaiAlProfiloConRuolo(ruolo) {
+  if (ruolo === "cliente") {
     window.location.href = "profileclient.html";
-  } else if (email === "arti@demo.it") {
+  } else if (ruolo === "artigiano") {
     window.location.href = "profilearti.html";
   } else {
-    // Redirect di default o messaggio d’errore
-    console.error("Email non riconosciuta:", email);
+    console.error("Ruolo non riconosciuto:", ruolo);
   }
 }
 
