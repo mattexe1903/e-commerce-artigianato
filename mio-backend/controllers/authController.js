@@ -12,9 +12,27 @@ const login = async (req, res) => {
   } catch (err) {
     res.status(401).json({
       success: false,
-      message: err. message || 'Credenziali non valide'
+      message: err.message || 'Credenziali non valide'
     });
   }
 };
 
-module.exports = { login };
+const register = async (req, res) => {
+  const { nome, cognome, email, password} = req.body;
+  try {
+    const user = await authService.register(nome, cognome, email, password);
+    res.status(201).json({
+      success: true,
+      message: 'Registrazione riuscita',
+      user
+    });
+  }
+  catch (err) {
+    res.status(400).json({
+      success: false,
+      message: err.message || 'Errore nella registrazione'
+    });
+  }
+}
+
+module.exports = { login , register};

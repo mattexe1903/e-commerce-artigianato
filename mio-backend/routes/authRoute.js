@@ -6,6 +6,11 @@ const pool = require('../db');
 // Route login
 router.post('/login', authController.login);
 
+// Route registrazione
+router.post('/register', authController.register);
+
+
+
 // Route per ottenere il ruolo
 /*router.post('/getRuolo', async (req, res) => {
   const { email } = req.body;

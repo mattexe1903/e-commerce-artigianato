@@ -16,4 +16,19 @@ const login = async (email, password) => {
   };
 };
 
-module.exports = { login };
+const register = async (nome, cognome, email, password) => {
+  const existingUser = await userModel.getUserByEmail(email);
+  if (existingUser) throw new Error('Email già registrata');
+
+  //const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = password;
+  const newUser = await userModel.createUser(nome, cognome, email, hashedPassword, 'cliente');
+
+  return {
+    id: newUser.id,
+    nome: newUser.nome,
+    email: newUser.email
+  };
+}
+
+module.exports = { login, register };
