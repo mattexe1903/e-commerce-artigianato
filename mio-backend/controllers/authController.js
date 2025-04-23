@@ -20,7 +20,7 @@ const login = async (req, res) => {
 const register = async (req, res) => {
   const { nome, cognome, email, password} = req.body;
   try {
-    const user = await authService.register(nome, cognome, email, password);
+    const user = await authService.register(nome, cognome, email, password, 'cliente');
     res.status(201).json({
       success: true,
       message: 'Registrazione riuscita',
@@ -35,4 +35,26 @@ const register = async (req, res) => {
   }
 }
 
-module.exports = { login , register};
+const registerArtigano = async (req, res) => {
+  const { nome, cognome, email, password} = req.body;
+  try {
+    const user = await authService.register(nome, cognome, email, password, 'artigiano');
+    res.status(201).json({
+      success: true,
+      message: 'Registrazione riuscita',
+      user
+    });
+  }
+  catch (err) {
+    res.status(400).json({
+      success: false,
+      message: err.message || 'Errore nella registrazione'
+    });
+  }
+}
+
+module.exports = { 
+  login, 
+  register,
+  registerArtigano
+};

@@ -16,13 +16,13 @@ const login = async (email, password) => {
   };
 };
 
-const register = async (nome, cognome, email, password) => {
+const register = async (nome, cognome, email, password, ruolo) => {
   const existingUser = await userModel.getUserByEmail(email);
   if (existingUser) throw new Error('Email già registrata');
 
   //const hashedPassword = await bcrypt.hash(password, 10);
   const hashedPassword = password;
-  const newUser = await userModel.createUser(nome, cognome, email, hashedPassword, 'cliente');
+  const newUser = await userModel.createUser(nome, cognome, email, hashedPassword, ruolo);
 
   return {
     id: newUser.id,

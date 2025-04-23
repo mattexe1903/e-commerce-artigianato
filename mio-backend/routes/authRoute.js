@@ -6,9 +6,11 @@ const pool = require('../db');
 // Route login
 router.post('/login', authController.login);
 
-// Route registrazione
+// Route registrazione cliente
 router.post('/register', authController.register);
 
+// Route registrazione artigiano
+router.post('/registerArtigano', authController.registerArtigiano);
 
 
 // Route per ottenere il ruolo
