@@ -21,20 +21,28 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Punto di collegamento con il database
-    // Qui andrai a verificare le credenziali tramite una chiamata al server
-    // Esempio (da implementare):
-    // fetch('/api/login', { method: 'POST', body: JSON.stringify({ email, password }) })
-
-    // Simulazione temporanea per utente
-    if ((email === "client@demo.it" && password === "client") || (email === "arti@demo.it" && password === "arti")) {
-      localStorage.setItem("userEmail", email); // Salva l'email nel localStorage
-      window.location.href = "homereg.html";  
-    } else {
-      errorMessage.style.display = "block";
-      errorMessage.textContent = "Credenziali errate. Riprova.";
-  }
-
+    fetch('http://localhost:5500/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password })
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Credenziali errate");
+        }
+        return response.json();
+      })
+      .then(data => {
+        localStorage.setItem("userEmail", data.user.email);
+        window.location.href = "homereg.html";
+      })
+      .catch(error => {
+        errorMessage.style.display = "block";
+        errorMessage.textContent = error.message || "Errore di connessione.";
+      });
+    
   });
 
   document.getElementById("registerLink").addEventListener("click", function (e) {
