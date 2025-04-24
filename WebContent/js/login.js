@@ -42,9 +42,9 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.setItem("user", JSON.stringify(user));
 
         console.log("Data ricevuta:", data);
-        console.log("Ruolo utente:", user.role);
+        console.log("Ruolo utente:", user.ruolo);
         
-        switch(user.role) {
+        switch(user.ruolo) {
           case "admin":
             window.location.href = "adminview.html";
             break;
