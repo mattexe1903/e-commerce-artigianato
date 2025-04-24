@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };      
   
     window.proceedOrder = () => {
-      location.href = "procediordine.html";
+      location.href = "payment.html";
     };
   
     renderCart();
