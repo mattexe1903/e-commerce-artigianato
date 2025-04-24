@@ -16,10 +16,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Controllo accesso admin
+    /*
     if (email === "admin@admin.it" && password === "admin") {
       window.location.href = "adminview.html";
       return;
     }
+    */
 
     fetch('http://localhost:3000/api/login', {
       method: 'POST',
@@ -35,14 +37,34 @@ document.addEventListener("DOMContentLoaded", function () {
         return response.json();
       })
       .then(data => {
-        localStorage.setItem("userEmail", data.user.email);
-        window.location.href = "homereg.html";
+        const user = data.user;
+
+        localStorage.setItem("user", JSON.stringify(user));
+
+        console.log("Data ricevuta:", data);
+        console.log("Ruolo utente:", user.role);
+        
+        switch(user.role) {
+          case "admin":
+            window.location.href = "adminview.html";
+            break;
+          case "cliente":
+            window.location.href = "homereg.html";
+            break;
+          case "artigiano":
+            window.location.href = "homereg.html";
+            break;
+          default:
+            errorMessage.style.display = "block";
+            errorMessage.textContent = "Ruolo non riconosciuto.";
+            return;
+        }
       })
       .catch(error => {
         errorMessage.style.display = "block";
         errorMessage.textContent = error.message || "Errore di connessione.";
       });
-    
+
   });
 
   document.getElementById("registerLink").addEventListener("click", function (e) {
