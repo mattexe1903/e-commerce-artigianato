@@ -33,7 +33,7 @@ const register = async (req, res) => {
       message: err.message || 'Errore nella registrazione'
     });
   }
-}
+};
 
 const registerArtigano = async (req, res) => {
   const { nome, cognome, email, password} = req.body;
@@ -51,7 +51,7 @@ const registerArtigano = async (req, res) => {
       message: err.message || 'Errore nella registrazione'
     });
   }
-}
+};
 
 module.exports = { 
   login, 
