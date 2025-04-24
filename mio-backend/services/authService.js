@@ -12,7 +12,10 @@ const login = async (email, password) => {
   return {
     id: user.id,
     nome: user.nome,
-    email: user.email
+    cognome: user.cognome,
+    email: user.email,
+    ruolo: user.ruolo, 
+    dataCreazoine: user.data_creazione
   };
 };
 
