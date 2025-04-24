@@ -17,6 +17,8 @@ const login = async (req, res) => {
   }
 };
 
+
+
 const register = async (req, res) => {
   const { nome, cognome, email, password} = req.body;
   try {
