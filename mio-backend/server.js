@@ -9,9 +9,11 @@ app.use(express.json());
 
 const authRoutes = require('./routes/authRoute');
 const productRoutes = require('./routes/productRoute');
+const userRoutes = require('./routes/userRoute');
 
 app.use('/api', authRoutes);
 app.use('/api', productRoutes);
+app.use('/api', userRoutes);
 
 app.get('/', (req, res) => {
     res.send('Benvenuto nel backend dell\'e-commerce!');
