@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profilo Cliente</title>
+  <link rel="stylesheet" href="../css/profileclient.css" />
+</head>
+<body>
+  <div class="client-layout">
+    <nav class="sidebar">
+      <h2>Profile</h2>
+      <ul>
+        <li><a href="#dati">Dati</a></li>
+        <li><a href="#ordini">I miei ordini</a></li>
+        <li><a href="#preferiti">I miei preferiti</a></li>
+        <li><button id="home-btn">Home</button></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <header>
+        <h1>Benvenuto, Cliente</h1>
+      </header>
+
+      <section class="card" id="dati">
+        <h2>Dati personali</h2>
+        <div id="dati-utente"></div>
+      </section>
+
+      <section class="card" id="ordini">
+        <h2>I miei ordini</h2>
+        <table id="tabella-ordini">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Numero Ordine</th>
+              <th>Prezzo</th>
+              <th>Articoli</th>
+              <th>Stato</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Dati dinamici -->
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card" id="preferiti">
+        <h2>I miei preferiti</h2>
+        <div id="lista-preferiti" class="grid-preferiti"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../js/profileclient.js"></script>
+</body>
+</html>
