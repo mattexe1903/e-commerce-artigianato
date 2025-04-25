@@ -32,8 +32,32 @@ window.onload = () => {
         iban: form.iban.value.trim()
       };
 
-      //  COLLEGAMENTO AL DB per ARTIGIANO
-      console.log("Salva nel DB (Artigiano):", { ...datiBase, ...datiExtra });
+      console.log("Dati artigiano:", {datiBase, datiExtra});
+
+      fetch('http://localhost:3000/api/registerArtigiano', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({datiBase, datiExtra})
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Registrazione fallita. Controlla i dati.");
+          }
+          return response.json();
+        })
+        .then(data => {
+          const user = data.user;
+
+          localStorage.setItem("user", JSON.stringify(user));
+
+          window.location.href = "homereg.html";
+        })
+        .catch(error => {
+          errorMessage.style.display = "block";
+          errorMessage.textContent = error.message || "Errore di connessione.";
+        });
 
       //  INVIA A ADMIN
       const segnalazioneAdmin = {
@@ -46,7 +70,7 @@ window.onload = () => {
 
     } else {
 
-      console.log("Dati inviati al backend:", datiBase);
+      console.log("Dati cliente:", datiBase);
 
       fetch('http://localhost:3000/api/register', {
         method: 'POST',
