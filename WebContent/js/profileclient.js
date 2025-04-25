@@ -3,20 +3,21 @@ document.getElementById("home-btn").addEventListener("click", () => {
   });
   
   const userId = 123; // Placeholder, verrà preso dal sistema di login
-  
-  // Simulazione dati utente
-  const utente = {
-    nome: "Giulia",
-    cognome: "Verdi",
-    email: "giulia.verdi@example.com",
-    telefono: "333-4567890"
-  };
+
+  const userString = localStorage.getItem("user");
+
+  if (!userString) {
+    console.error("Nessun utente trovato nel localStorage");
+    return;
+  }
+
+  const user = JSON.parse(userString);
   
   const datiUtente = document.getElementById("dati-utente");
   datiUtente.innerHTML = `
-    <p><strong>Nome:</strong> ${utente.nome} ${utente.cognome}</p>
-    <p><strong>Email:</strong> ${utente.email}</p>
-    <p><strong>Telefono:</strong> ${utente.telefono}</p>
+    <p><strong>Nome:</strong> ${user.nome} ${user.cognome}</p>
+    <p><strong>Email:</strong> ${user.email}</p>
+    <p><strong>Telefono:</strong> ${"TO-DO"}</p>
   `;
   
   // Simulazione ordini
