@@ -1,7 +1,6 @@
 window.onload = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const tipo = urlParams.get('tipo');
-
   const formArtigiano = document.getElementById('form-artigiano');
 
   if (tipo === 'artigiano') {
@@ -46,12 +45,15 @@ window.onload = () => {
       console.log("Invia segnalazione all’admin:", segnalazioneAdmin);
 
     } else {
+
+      console.log("Dati inviati al backend:", datiBase);
+
       fetch('http://localhost:3000/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ nome, cognome, email, password, ruolo })
+        body: JSON.stringify(datiBase)
       })
         .then(response => {
           if (!response.ok) {
