@@ -15,14 +15,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Controllo accesso admin
-    /*
-    if (email === "admin@admin.it" && password === "admin") {
-      window.location.href = "adminview.html";
-      return;
-    }
-    */
-
     fetch('http://localhost:3000/api/login', {
       method: 'POST',
       headers: {
@@ -40,9 +32,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const user = data.user;
 
         localStorage.setItem("user", JSON.stringify(user));
-
-        console.log("Data ricevuta:", data);
-        console.log("Ruolo utente:", user.ruolo);
         
         switch(user.ruolo) {
           case "admin":
