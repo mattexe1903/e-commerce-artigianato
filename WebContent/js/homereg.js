@@ -4,42 +4,25 @@ function vaiAllaPaginaProdotto(idProdotto) {
   window.location.href = `productsview.html?id=${idProdotto}&user=${userId}`;
 }
 
-function vaiAlProfiloFromStorage() {
-  const email = localStorage.getItem("userEmail");
-  if (email) {
-    fetch('http://localhost:3000/api/getRuolo', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email })
-    })    
-    .then(response => {
-      if (!response.ok) {
-        throw new Error("Errore nel recupero del ruolo");
-      }
-      return response.json();
-    })
-    .then(data => {
-      vaiAlProfiloConRuolo(data.ruolo);
-    })
-    .catch(err => {
-      console.error("Errore nel recupero ruolo:", err);
-    });
+function vaiAlProfilo() {
+  const userString = localStorage.getItem("user");
+
+  if (!userString) {
+    console.error("Nessun utente trovato nel localStorage");
+    return;
+  }
+
+  const user = JSON.parse(userString);
+
+  if (user.ruolo === "cliente") {
+    window.location.href = "profileclient.html";
+  } else if (user.ruolo === "artigiano") {
+    window.location.href = "profilearti.html";
   } else {
-    console.error("Email utente non trovata nel localStorage.");
+    console.error("Ruolo non riconosciuto:", user.ruolo);
   }
 }
 
-function vaiAlProfiloConRuolo(ruolo) {
-  if (ruolo === "cliente") {
-    window.location.href = "profileclient.html";
-  } else if (ruolo === "artigiano") {
-    window.location.href = "profilearti.html";
-  } else {
-    console.error("Ruolo non riconosciuto:", ruolo);
-  }
-}
 
 
 function logout() {
