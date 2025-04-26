@@ -1,6 +1,15 @@
-const userId = 42; // Simulazione: l'ID utente può essere recuperato da sessione/cookie
+document.addEventListener("DOMContentLoaded", () => {
+  aggiornaCarrello();
+  caricaNuoviArrivi();
+  caricaTuttiProdotti();
+});
+
+function getUserId() {
+  return new URLSearchParams(window.location.search).get("id") || "123";
+}
 
 function vaiAllaPaginaProdotto(idProdotto) {
+  const userId = getUserId();
   window.location.href = `productsview.html?id=${idProdotto}&user=${userId}`;
 }
 
@@ -41,13 +50,13 @@ function vaiAlProfiloConRuolo(ruolo) {
   }
 }
 
-
 function logout() {
   alert("Logout effettuato");
   window.location.href = "../home.html";
 }
 
 function vaiAlCarrello() {
+  const userId = getUserId();
   window.location.href = `cart.html?user=${userId}`;
 }
 
@@ -86,24 +95,71 @@ function applicaFiltri() {
   filtrati.forEach(p => lista.appendChild(p));
 }
 
-// Duplica carousel
-window.addEventListener("load", () => {
-  const track = document.getElementById("carousel-track");
-  const prodotti = track.innerHTML;
-  track.innerHTML += prodotti;
+async function aggiornaCarrello() {
+  try {
+    const userId = getUserId();
+    const res = await fetch(`/api/cart/${userId}`);
+    const prodottiNelCarrello = await res.json();
 
-  // Simulazione: aggiorna il carrello
-  aggiornaCarrello();
-});
+    const totale = prodottiNelCarrello.reduce((acc, p) => acc + p.price, 0);
+    document.getElementById("cart-count").innerText = `(${prodottiNelCarrello.length})`;
+    document.getElementById("cart-total").innerText = `€${totale.toFixed(2)}`;
+  } catch (err) {
+    console.error("Errore aggiornamento carrello:", err);
+  }
+}
 
-function aggiornaCarrello() {
-  // Simulazione dati del carrello
-  const prodottiNelCarrello = [
-    { nome: "Prodotto A", prezzo: 19.99 },
-    { nome: "Prodotto B", prezzo: 24.50 }
-  ];
+async function caricaNuoviArrivi() {
+  try {
+    const res = await fetch('/api/products/new');
+    const nuoviProdotti = await res.json();
 
-  const totale = prodottiNelCarrello.reduce((acc, p) => acc + p.prezzo, 0);
-  document.getElementById("cart-count").innerText = `(${prodottiNelCarrello.length})`;
-  document.getElementById("cart-total").innerText = `€${totale.toFixed(2)}`;
+    const track = document.getElementById("carousel-track");
+    track.innerHTML = "";
+
+    nuoviProdotti.forEach(p => {
+      const div = document.createElement("div");
+      div.className = "product";
+      div.onclick = () => vaiAllaPaginaProdotto(p.id);
+      div.innerHTML = `
+        <img src="${p.image}" alt="${p.name}">
+        <div>${p.name}</div>
+        <div>€${p.price.toFixed(2)}</div>
+      `;
+      track.appendChild(div);
+    });
+
+    // Duplica per effetto carousel
+    track.innerHTML += track.innerHTML;
+  } catch (err) {
+    console.error("Errore nel caricamento dei nuovi arrivi:", err);
+  }
+}
+
+async function caricaTuttiProdotti() {
+  try {
+    const res = await fetch('/api/products');
+    const prodotti = await res.json();
+
+    const lista = document.getElementById("product-list");
+    lista.innerHTML = "";
+
+    prodotti.forEach(p => {
+      const div = document.createElement("div");
+      div.className = "product";
+      div.dataset.id = p.id;
+      div.dataset.prezzo = p.price;
+      div.dataset.disponibile = p.available ? "1" : "0";
+      div.dataset.categoria = p.category;
+      div.onclick = () => vaiAllaPaginaProdotto(p.id);
+      div.innerHTML = `
+        <img src="${p.image}" alt="${p.name}">
+        <div>${p.name}</div>
+        <div>€${p.price.toFixed(2)}</div>
+      `;
+      lista.appendChild(div);
+    });
+  } catch (err) {
+    console.error("Errore nel caricamento dei prodotti:", err);
+  }
 }

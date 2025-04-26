@@ -19,8 +19,9 @@ body {
     font-size: 24px;
     font-weight: bold;
     color: #f5b400;
+    flex: 0 0 200px; /* Larghezza fissa ma responsiva */
+    text-align: center;
   }
-  
   .go-home {
     cursor: pointer;
   }

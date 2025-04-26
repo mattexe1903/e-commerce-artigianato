@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile</title>
+  <title>Profilo Artigiano</title>
   <link rel="stylesheet" href="../css/profilearti.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="admin-layout">
     <nav class="sidebar">
-      <h2>Profile</h2>
+      <h2>Lokal</h2>
       <ul>
         <li><a href="#dati">Dati</a></li>
         <li><a href="#ordini">I miei ordini</a></li>
@@ -24,7 +24,7 @@
 
     <main class="content">
       <header>
-        <h1>Benvenuto, Artigiano</h1>
+        <h1>Benvenuto nel tuo Profilo</h1>
       </header>
 
       <section class="card" id="dati">
@@ -50,12 +50,15 @@
 
       <section class="card" id="preferiti">
         <h2>I miei preferiti</h2>
-        <div id="preferiti-list"></div>
+        <div class="grid-container" id="preferiti-list"></div>
       </section>
 
       <section class="card" id="inventario">
-        <h2>Inventario</h2>
-        <div id="inventario-list"></div>
+        <div class="inventario-header">
+          <h2>Inventario</h2>
+          <button id="aggiungi-prodotto-btn">+</button>
+        </div>
+        <div class="grid-container" id="inventario-list"></div>
       </section>
 
       <section class="card" id="prenotazioni">
