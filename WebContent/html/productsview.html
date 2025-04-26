@@ -15,11 +15,11 @@
 
   <section class="product-details-container">
     <div class="product-image">
-      <img id="product-img" src="" alt="Immagine prodotto">
+      <img id="product-img" src="" alt="Immagine prodotto" />
     </div>
 
     <div class="product-info">
-      <h2 id="product-name">Nome prodotto</h2>
+      <h2 id="product-name"></h2>
 
       <button id="favorite-btn" onclick="aggiungiAiPreferiti()" title="Aggiungi ai preferiti">
         <span id="heart-icon">&#10084;</span>
@@ -27,14 +27,14 @@
 
       <div class="product-description">
         <h3>Descrizione</h3>
-        <p><strong>Categoria:</strong> <span id="product-category">Categoria prodotto</span></p>
-        <p id="product-description-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <p><strong>Categoria:</strong> <span id="product-category"></span></p>
+        <p id="product-description-text"></p>
       </div>
 
       <div class="product-price-quantity">
-        <p><strong>Prezzo:</strong> <span id="product-price">€99.99</span></p>
-        <p><strong>Quantità disponibile:</strong> <span id="product-quantity">20</span></p>
-        <input type="number" id="quantity-input" value="1" min="1" onchange="verificaQuantita()">
+        <p><strong>Prezzo:</strong> <span id="product-price"></span></p>
+        <p><strong>Quantità disponibile:</strong> <span id="product-quantity"></span></p>
+        <input type="number" id="quantity-input" value="1" min="1" onchange="verificaQuantita()" />
       </div>
 
       <button id="add-to-cart-btn" onclick="aggiungiAlCarrello()" title="Aggiungi al carrello">
@@ -44,7 +44,7 @@
   </section>
 
   <!-- Pop-up login -->
-  <div id="login-popup" class="popup">
+  <div id="login-popup" class="popup" style="display: none;">
     <div class="popup-content">
       <p>Solo gli utenti loggati possono aggiungere ai preferiti o al carrello.</p>
       <button onclick="window.location.href='login.html'">Accedi</button>

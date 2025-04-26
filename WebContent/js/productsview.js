@@ -1,10 +1,13 @@
-window.onload = function () {
+window.onload = async function () {
   const urlParams = new URLSearchParams(window.location.search);
   const productId = urlParams.get('id');
 
   if (productId) {
-    const prodotto = getProdottoById(productId);
-    if (prodotto) {
+    try {
+      const response = await fetch(`/api/prodotti/${productId}`);
+      if (!response.ok) throw new Error("Prodotto non trovato");
+      const prodotto = await response.json();
+
       document.getElementById('product-img').src = prodotto.imgUrl;
       document.getElementById('product-name').innerText = prodotto.nome;
       document.getElementById('product-category').innerText = prodotto.categoria;
@@ -13,88 +16,77 @@ window.onload = function () {
       document.getElementById('product-quantity').innerText = prodotto.quantita;
       document.getElementById('quantity-input').max = prodotto.quantita;
 
-      // Se il prodotto è nei preferiti (da sessionStorage), colora il cuore
       const heartIcon = document.getElementById('heart-icon');
-      if (sessionStorage.getItem("preferito") === "true" &&
-          sessionStorage.getItem("nomeProdotto") === prodotto.nome) {
+      const preferitiResponse = await fetch(`/api/utenti/preferiti/${productId}`);
+      const isPreferito = await preferitiResponse.json();
+
+      if (isPreferito === true) {
         heartIcon.classList.add('preferito');
         heartIcon.style.color = 'red';
       }
+
+    } catch (error) {
+      console.error("Errore nel recupero del prodotto:", error);
     }
   }
 };
 
-// Simulazione utente loggato
-const utenteLoggato = true;
-
-// Simulazione database prodotti
-function getProdottoById(id) {
-  const prodotti = [
-    {
-      id: 1,
-      nome: "Prodotto 1",
-      imgUrl: "../images/prodotto1.jpg",
-      descrizione: "Descrizione dettagliata del prodotto 1.",
-      categoria: "Legno",
-      prezzo: "19.99",
-      quantita: 20,
-    },
-    {
-      id: 2,
-      nome: "Prodotto 2",
-      imgUrl: "../images/prodotto2.jpg",
-      descrizione: "Descrizione dettagliata del prodotto 2.",
-      categoria: "Vetro",
-      prezzo: "24.99",
-      quantita: 15,
-    }
-  ];
-  return prodotti.find(p => p.id === parseInt(id));
-}
-
-// Aggiungi/Rimuovi dai preferiti
-function aggiungiAiPreferiti() {
+async function aggiungiAiPreferiti() {
   const prodottoId = new URLSearchParams(window.location.search).get('id');
   const heartIcon = document.getElementById('heart-icon');
 
   if (!prodottoId) return;
 
-  if (utenteLoggato) {
+  try {
     const isPreferito = heartIcon.classList.contains('preferito');
+    const method = isPreferito ? 'DELETE' : 'POST';
 
-    if (isPreferito) {
-      heartIcon.classList.remove('preferito');
-      heartIcon.style.color = '#f5b400';
-      sessionStorage.setItem("preferito", "false");
-      console.log(`Prodotto ${prodottoId} rimosso dai preferiti.`);
-    } else {
-      heartIcon.classList.add('preferito');
-      heartIcon.style.color = 'red';
-      sessionStorage.setItem("preferito", "true");
-      console.log(`Prodotto ${prodottoId} aggiunto ai preferiti!`);
+    const response = await fetch(`/api/utenti/preferiti/${prodottoId}`, {
+      method: method
+    });
+
+    if (response.ok) {
+      if (isPreferito) {
+        heartIcon.classList.remove('preferito');
+        heartIcon.style.color = '#f5b400';
+        console.log(`Prodotto ${prodottoId} rimosso dai preferiti.`);
+      } else {
+        heartIcon.classList.add('preferito');
+        heartIcon.style.color = 'red';
+        console.log(`Prodotto ${prodottoId} aggiunto ai preferiti!`);
+      }
+    } else if (response.status === 401) {
+      document.getElementById('login-popup').style.display = 'flex';
     }
-  } else {
-    document.getElementById('login-popup').style.display = 'flex';
+  } catch (error) {
+    console.error("Errore durante l'aggiunta/rimozione dai preferiti:", error);
   }
 }
 
-// Aggiungi al carrello
-function aggiungiAlCarrello() {
+async function aggiungiAlCarrello() {
   const prodottoId = new URLSearchParams(window.location.search).get('id');
   const quantita = parseInt(document.getElementById('quantity-input').value);
   const maxQuantita = parseInt(document.getElementById('quantity-input').max);
 
   if (!prodottoId || !quantita || quantita < 1 || quantita > maxQuantita) return;
 
-  if (utenteLoggato) {
-    console.log(`Prodotto ${prodottoId} aggiunto al carrello con quantità ${quantita}.`);
-    alert("Prodotto aggiunto al carrello!");
-  } else {
-    document.getElementById('login-popup').style.display = 'flex';
+  try {
+    const response = await fetch(`/api/carrello`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prodottoId, quantita })
+    });
+
+    if (response.ok) {
+      alert("Prodotto aggiunto al carrello!");
+    } else if (response.status === 401) {
+      document.getElementById('login-popup').style.display = 'flex';
+    }
+  } catch (error) {
+    console.error("Errore durante l'aggiunta al carrello:", error);
   }
 }
 
-// Verifica quantità inserita
 function verificaQuantita() {
   const input = document.getElementById('quantity-input');
   const max = parseInt(input.max);
