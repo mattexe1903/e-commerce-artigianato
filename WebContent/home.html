@@ -5,178 +5,194 @@
   <title>Lokal - Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #3b3434;
-      color: #fff;
-    }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #3b3434;
+  color: #fff;
+}
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 30px;
-      background-color: #000;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
-      flex-wrap: wrap;
-    }
+header {
+  display: flex;
+  align-items: center;
+  padding: 20px 30px;
+  background-color: #000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  position: relative;
+}
 
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-      color: #f5b400;
-    }
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #f5b400;
+  flex: 0 0 200px; /* Larghezza fissa ma responsiva */
+  text-align: center;
+}
 
-    .header-buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
+/* I bottoni sono fuori dall'header ma subito sotto */
+.header-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 7px 7px 0 7px;
+}
 
-    .header-buttons button {
-      padding: 10px 15px;
-      background-color: #f5b400;
-      color: #000;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
+/* Bottoni */
+.header-buttons button {
+  padding: 10px 15px;
+  background-color: #f5b400;
+  color: #000;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
 
-    .header-buttons button:hover {
-      background-color: #d49f00;
-    }
+.header-buttons button:hover {
+  background-color: #d49f00;
+}
 
-    section {
-      padding: 20px;
-    }
+/* --- CONTENUTO --- */
+section {
+  padding: 20px;
+}
 
-    h2 {
-      color: #f5b400;
-      margin-top: 40px;
-      margin-bottom: 20px;
-    }
+h2 {
+  color: #f5b400;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
 
-    /* Carousel stile treno */
-    .carousel-container {
-      overflow: hidden;
-      width: 100%;
-      position: relative;
-      margin-bottom: 30px;
-    }
+.carousel-container {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  margin-bottom: 30px;
+}
 
-    .carousel-track {
-      display: flex;
-      gap: 20px;
-      animation: scroll-left 40s linear infinite;
-      width: max-content;
-    }
+.carousel-track {
+  display: flex;
+  gap: 20px;
+  animation: scroll-left 40s linear infinite;
+  width: max-content;
+}
 
-    @keyframes scroll-left {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(-50%);
-      }
-    }
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
 
-    .product-carousel,
-    .product-list {
-      display: flex;
-      flex-wrap: wrap;
-    }
+.product-carousel,
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+}
 
-    .product {
-      background-color: #000;
-      border-radius: 12px;
-      padding: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      transition: transform 0.2s;
-      cursor: pointer;
-      text-align: center;
-      flex: 0 0 160px;
-      margin-right: 20px;
-    }
+.product {
+  background-color: #000;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+  cursor: pointer;
+  text-align: center;
+  flex: 0 0 160px;
+  margin-right: 20px;
+}
 
-    .product:hover {
-      transform: scale(1.03);
-    }
+.product:hover {
+  transform: scale(1.03);
+}
 
-    .product img {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
+.product img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
 
-    .filter-container {
-      margin-top: 20px;
-    }
+/* Filtri */
+.filter-container {
+  margin-top: 20px;
+}
 
-    .filter-container button {
-      padding: 10px 15px;
-      background-color: #f5b400;
-      color: #000;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-bottom: 10px;
-    }
+.filter-container button {
+  padding: 10px 15px;
+  background-color: #f5b400;
+  color: #000;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
 
-    .filter-container select {
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      margin: 10px 10px 0 0;
-      background-color: #000;
-      color: #f5b400;
-    }
+.filter-container select {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  margin: 10px 10px 0 0;
+  background-color: #000;
+  color: #f5b400;
+}
 
-    @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 15px 20px;
+  }
 
-      .header-buttons {
-        margin-top: 10px;
-        flex-wrap: wrap;
-      }
+  .logo {
+    font-size: 20px;
+    text-align: left;
+  }
 
-      .carousel-track {
-        animation-duration: 60s;
-      }
+  .header-buttons {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    padding: 10px 20px 0 20px;
+  }
 
-      .product {
-        flex: 0 0 140px;
-      }
+  .carousel-track {
+    animation-duration: 60s;
+  }
 
-      .product-list {
-        justify-content: center;
-      }
-    }
+  .product {
+    flex: 0 0 140px;
+  }
+
+  .product-list {
+    justify-content: center;
+  }
+}
   </style>
 </head>
+
 <body>
 
   <header>
     <div class="logo">Lokal</div>
-    <div class="header-buttons">
-      <button onclick="window.location.href='html/login.html'">Accedi</button>
-      <button onclick="window.location.href='html/regchoice.html'">Registrati</button>
-    </div>
   </header>
 
+  <!-- BOTTONI subito sotto header -->
+  <div class="header-buttons">
+    <button onclick="window.location.href='html/login.html'">Accedi</button>
+    <button onclick="window.location.href='html/regchoice.html'">Registrati</button>
+  </div>
+
+  <!-- CONTENUTO -->
   <section>
     <h2>Nuovi arrivi</h2>
     <div class="carousel-container">
       <div class="carousel-track" id="carousel-track">
-        <!-- 🔶 INIZIO DATI DA DB: nuovi arrivi -->
         <div class="product" onclick="vaiAllaPaginaProdotto(1)">
           <img src="../images/prodotto1.jpg" alt="Prodotto 1">
           <div>Nome prodotto 1</div>
@@ -202,7 +218,6 @@
           <div>Nome prodotto 5</div>
           <div>€44.99</div>
         </div>
-        <!-- 🔁 Duplica per effetto treno -->
       </div>
     </div>
   </section>
@@ -237,7 +252,6 @@
     </div>
 
     <div class="product-list" id="product-list">
-      <!-- 🔶 Esempi statici: da sostituire con i dati dal DB -->
       <div class="product" data-prezzo="39.99" data-disponibile="1" data-categoria="vetro" onclick="vaiAllaPaginaProdotto(10)">
         <img src="../images/prodotto10.jpg" alt="Prodotto 10">
         <div>Nome prodotto 10</div>
@@ -256,6 +270,7 @@
     </div>
   </section>
 
+  <!-- SCRIPT -->
   <script>
     function vaiAllaPaginaProdotto(idProdotto) {
       window.location.href = `html/productsview.html?id=${idProdotto}`;
@@ -280,15 +295,10 @@
       });
 
       filtrati.sort((a, b) => {
-        if (a.dataset.categoria < b.dataset.categoria) return -1;
-        if (a.dataset.categoria > b.dataset.categoria) return 1;
-
         if (ordinePrezzo === "asc") return parseFloat(a.dataset.prezzo) - parseFloat(b.dataset.prezzo);
         if (ordinePrezzo === "desc") return parseFloat(b.dataset.prezzo) - parseFloat(a.dataset.prezzo);
-
         if (disponibilita === "disponibile") return parseInt(b.dataset.disponibile) - parseInt(a.dataset.disponibile);
         if (disponibilita === "non_disponibile") return parseInt(a.dataset.disponibile) - parseInt(b.dataset.disponibile);
-
         return 0;
       });
 
@@ -296,7 +306,6 @@
       filtrati.forEach(p => lista.appendChild(p));
     }
 
-    // Duplica il carousel per il loop continuo effetto treno
     window.addEventListener("load", () => {
       const track = document.getElementById("carousel-track");
       const prodotti = track.innerHTML;
