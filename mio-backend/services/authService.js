@@ -19,7 +19,7 @@ const login = async (email, password) => {
   };
 };
 
-const register = async (nome, cognome, email, password, ruolo) => {
+const register = async (nome, cognome, email, password, ruolo, indirizzo) => {
   const existingUser = await userModel.getUserByEmail(email);
   if (existingUser) throw new Error('Email già registrata');
 

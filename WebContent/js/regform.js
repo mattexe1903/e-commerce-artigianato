@@ -5,6 +5,12 @@ window.onload = () => {
 
   if (tipo === 'artigiano') {
     formArtigiano.style.display = 'block';
+
+    document.getElementById('iban').setAttribute('required', 'required');
+    document.getElementById('tipo_artigiano').setAttribute('required', 'required');
+  } else {
+    document.getElementById('iban').removeAttribute('required');
+    document.getElementById('tipo_artigiano').removeAttribute('required');
   }
 
   const form = document.getElementById('form-cliente');
@@ -32,14 +38,14 @@ window.onload = () => {
         iban: form.iban.value.trim()
       };
 
-      console.log("Dati artigiano:", {datiBase, datiExtra});
+      console.log("Dati artigiano:", { datiBase, datiExtra });
 
       fetch('http://localhost:3000/api/registerArtigiano', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({datiBase, datiExtra})
+        body: JSON.stringify({ datiBase, datiExtra })
       })
         .then(response => {
           if (!response.ok) {
@@ -97,7 +103,6 @@ window.onload = () => {
           errorMessage.textContent = error.message || "Errore di connessione.";
         });
     }
-    window.location.href = "home.html";
   });
 };
 
