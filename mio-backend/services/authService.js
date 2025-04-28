@@ -12,8 +12,29 @@ const login = async (email, password) => {
   return {
     id: user.id,
     nome: user.nome,
-    email: user.email
+    cognome: user.cognome,
+    email: user.email,
+    ruolo: user.ruolo, 
+    dataCreazoine: user.data_creazione
   };
 };
 
-module.exports = { login };
+const register = async (nome, cognome, email, password, ruolo, indirizzo) => {
+  const existingUser = await userModel.getUserByEmail(email);
+  if (existingUser) throw new Error('Email già registrata');
+
+  //const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = password;
+  const newUser = await userModel.createUser(nome, cognome, email, hashedPassword, ruolo);
+
+  return {
+    id: newUser.id,
+    nome: newUser.nome,
+    email: newUser.email
+  };
+}
+
+module.exports = {
+  login, 
+  register
+};
