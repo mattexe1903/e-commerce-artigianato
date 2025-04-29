@@ -4,26 +4,18 @@ window.onload = async function () {
 
   if (productId) {
     try {
-      const response = await fetch(`/api/prodotti/${productId}`);
+      const response = await fetch(`http://localhost:3000/api/products/${productId}`);
       if (!response.ok) throw new Error("Prodotto non trovato");
-      const prodotto = await response.json();
+      const data = await response.json();
+      const prodotto = data.product;
 
-      document.getElementById('product-img').src = prodotto.imgUrl;
+      document.getElementById('product-img').src = prodotto.foto;
       document.getElementById('product-name').innerText = prodotto.nome;
-      document.getElementById('product-category').innerText = prodotto.categoria;
+      document.getElementById('product-category').innerText = prodotto.categoria || "N/A";
       document.getElementById('product-description-text').innerText = prodotto.descrizione;
-      document.getElementById('product-price').innerText = `€${prodotto.prezzo}`;
+      document.getElementById('product-price').innerText = `€${Number(prodotto.prezzo).toFixed(2)}`;
       document.getElementById('product-quantity').innerText = prodotto.quantita;
       document.getElementById('quantity-input').max = prodotto.quantita;
-
-      const heartIcon = document.getElementById('heart-icon');
-      const preferitiResponse = await fetch(`/api/utenti/preferiti/${productId}`);
-      const isPreferito = await preferitiResponse.json();
-
-      if (isPreferito === true) {
-        heartIcon.classList.add('preferito');
-        heartIcon.style.color = 'red';
-      }
 
     } catch (error) {
       console.error("Errore nel recupero del prodotto:", error);

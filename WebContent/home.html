@@ -247,34 +247,17 @@
     function vaiAllaPaginaProdotto(idProdotto) {
       window.location.href = `html/productsview.html?id=${idProdotto}`;
     }
-  <script>
-    function vaiAllaPaginaProdotto(idProdotto) {
-      window.location.href = `html/productsview.html?id=${idProdotto}`;
-    }
-
     function toggleFiltri() {
       const menu = document.getElementById("menu-filtri");
       menu.style.display = menu.style.display === "none" ? "block" : "none";
     }
-    function toggleFiltri() {
-      const menu = document.getElementById("menu-filtri");
-      menu.style.display = menu.style.display === "none" ? "block" : "none";
-    }
-
-    async function caricaNuoviArrivi() {
-      const track = document.getElementById("carousel-track");
     async function caricaNuoviArrivi() {
       const track = document.getElementById("carousel-track");
 
       try {
-        const response = await fetch('/api/nuovi-arrivi'); // Cambia l'endpoint se diverso
+        const response = await fetch('http://localhost:3000/api/nuovi-arrivi'); // Cambia l'endpoint se diverso
         const prodotti = await response.json();
 
-        prodotti.forEach(prodotto => {
-          const div = document.createElement('div');
-          div.className = 'product';
-          div.onclick = () => vaiAllaPaginaProdotto(prodotto.id);
-          div.innerHTML = `
         prodotti.forEach(prodotto => {
           const div = document.createElement('div');
           div.className = 'product';
@@ -286,9 +269,6 @@
         `;
           track.appendChild(div);
         });
-          track.appendChild(div);
-        });
-
         // Duplica il contenuto per effetto carousel infinito
         track.innerHTML += track.innerHTML;
       } catch (error) {
@@ -301,26 +281,24 @@
   lista.innerHTML = ""; // Pulisce prima la lista
 
   try {
-    const response = await fetch('http://localhost:3000/api/products'); // ATTENTO al nome giusto
+    const response = await fetch('http://localhost:3000/api/products');
     if (!response.ok) {
       throw new Error(`Errore HTTP: ${response.status}`);
     }
 
-    const prodotti = await response.json();
-    console.log(prodotti); // Per vedere i dati
-
-    const arrayProdotti = Array.isArray(prodotti) ? prodotti : prodotti.data || [];
+    const dati = await response.json();
+    const arrayProdotti = Array.isArray(dati.products) ? dati.products : [];
 
     arrayProdotti.forEach(prodotto => {
       const div = document.createElement('div');
       div.className = 'product';
       div.dataset.prezzo = prodotto.prezzo ?? '';
-      div.dataset.disponibile = prodotto.disponibile ? '1' : '0';
+      div.dataset.disponibile = prodotto.quantita > 0 ? '1' : '0';
       div.dataset.categoria = prodotto.categoria ?? '';
       div.onclick = () => vaiAllaPaginaProdotto(prodotto.id);
 
       div.innerHTML = `
-        <img src="${prodotto.immagine || 'placeholder.jpg'}" alt="${prodotto.nome || 'Senza Nome'}" style="width:100px;height:auto;">
+        <img src="${prodotto.foto || 'placeholder.jpg'}" alt="${prodotto.nome || 'Senza Nome'}" style="width:100px;height:auto;">
         <div class="product-name">${prodotto.nome || 'Nome mancante'}</div>
         <div class="product-price">€ ${Number(prodotto.prezzo).toFixed(2)}</div>
       `;
@@ -335,10 +313,6 @@
 }
 
 
-    function applicaFiltri() {
-      const categoria = document.getElementById("filtro-categoria").value;
-      const ordinePrezzo = document.getElementById("filtro-prezzo").value;
-      const disponibilita = document.getElementById("filtro-disponibilita").value;
     function applicaFiltri() {
       const categoria = document.getElementById("filtro-categoria").value;
       const ordinePrezzo = document.getElementById("filtro-prezzo").value;
@@ -359,17 +333,9 @@
         if (disponibilita === "non_disponibile") return parseInt(a.dataset.disponibile) - parseInt(b.dataset.disponibile);
         return 0;
       });
-      filtrati.sort((a, b) => {
-        if (ordinePrezzo === "asc") return parseFloat(a.dataset.prezzo) - parseFloat(b.dataset.prezzo);
-        if (ordinePrezzo === "desc") return parseFloat(b.dataset.prezzo) - parseFloat(a.dataset.prezzo);
-        if (disponibilita === "disponibile") return parseInt(b.dataset.disponibile) - parseInt(a.dataset.disponibile);
-        if (disponibilita === "non_disponibile") return parseInt(a.dataset.disponibile) - parseInt(b.dataset.disponibile);
-        return 0;
-      });
-
       lista.innerHTML = "";
       filtrati.forEach(p => lista.appendChild(p));
-    }
+    };
 
     // Caricamento dei dati al caricamento della pagina
     window.addEventListener("load", () => {
