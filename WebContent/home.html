@@ -270,30 +270,43 @@
     }
 
     async function caricaProdotti() {
-      const lista = document.getElementById("product-list");
+  const lista = document.getElementById("product-list");
+  lista.innerHTML = ""; // Pulisce prima la lista
 
-      try {
-        const response = await fetch('/api/prodotti'); // Cambia l'endpoint se diverso
-        const prodotti = await response.json();
-
-        prodotti.forEach(prodotto => {
-          const div = document.createElement('div');
-          div.className = 'product';
-          div.dataset.prezzo = prodotto.prezzo;
-          div.dataset.disponibile = prodotto.disponibile ? '1' : '0';
-          div.dataset.categoria = prodotto.categoria;
-          div.onclick = () => vaiAllaPaginaProdotto(prodotto.id);
-          div.innerHTML = `
-          <img src="${prodotto.immagine}" alt="${prodotto.nome}">
-          <div>${prodotto.nome}</div>
-          <div>€${prodotto.prezzo.toFixed(2)}</div>
-        `;
-          lista.appendChild(div);
-        });
-      } catch (error) {
-        console.error('Errore nel caricare i prodotti:', error);
-      }
+  try {
+    const response = await fetch('http://localhost:3000/api/products'); // ATTENTO al nome giusto
+    if (!response.ok) {
+      throw new Error(`Errore HTTP: ${response.status}`);
     }
+
+    const prodotti = await response.json();
+    console.log(prodotti); // Per vedere i dati
+
+    const arrayProdotti = Array.isArray(prodotti) ? prodotti : prodotti.data || [];
+
+    arrayProdotti.forEach(prodotto => {
+      const div = document.createElement('div');
+      div.className = 'product';
+      div.dataset.prezzo = prodotto.prezzo ?? '';
+      div.dataset.disponibile = prodotto.disponibile ? '1' : '0';
+      div.dataset.categoria = prodotto.categoria ?? '';
+      div.onclick = () => vaiAllaPaginaProdotto(prodotto.id);
+
+      div.innerHTML = `
+        <img src="${prodotto.immagine || 'placeholder.jpg'}" alt="${prodotto.nome || 'Senza Nome'}" style="width:100px;height:auto;">
+        <div class="product-name">${prodotto.nome || 'Nome mancante'}</div>
+        <div class="product-price">€ ${Number(prodotto.prezzo).toFixed(2)}</div>
+      `;
+
+      lista.appendChild(div);
+    });
+
+  } catch (error) {
+    console.error('Errore nel caricare i prodotti:', error);
+    lista.innerHTML = "<p>Errore nel caricare i prodotti.</p>";
+  }
+}
+
 
     function applicaFiltri() {
       const categoria = document.getElementById("filtro-categoria").value;
