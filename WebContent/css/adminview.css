@@ -15,6 +15,7 @@ body {
   width: 100%;
 }
 
+/* === SIDEBAR === */
 .sidebar {
   width: 220px;
   background-color: #1f1f1f;
@@ -32,10 +33,11 @@ body {
 .sidebar ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .sidebar li {
-  margin: 15px 0;
+  margin: 12px 0;
 }
 
 .sidebar a,
@@ -48,6 +50,7 @@ body {
   cursor: pointer;
   transition: color 0.3s;
   font-size: 16px;
+  display: inline-block;
 }
 
 .sidebar a:hover,
@@ -55,6 +58,7 @@ body {
   color: #f5b400;
 }
 
+/* === CONTENUTO === */
 .content {
   flex-grow: 1;
   padding: 40px;
@@ -95,6 +99,7 @@ header h1 {
   margin: 5px 0;
 }
 
+/* === BUTTON === */
 button {
   padding: 10px 18px;
   margin-top: 10px;
@@ -111,6 +116,7 @@ button:hover {
   background-color: #d49f00;
 }
 
+/* === CANVAS === */
 canvas {
   margin-top: 20px;
   background-color: #fff;
@@ -120,6 +126,16 @@ canvas {
 }
 
 /* === RESPONSIVE === */
+@media (max-width: 1024px) {
+  .content {
+    padding: 30px;
+  }
+
+  .card {
+    padding: 22px;
+  }
+}
+
 @media (max-width: 768px) {
   .admin-layout {
     flex-direction: column;
@@ -129,11 +145,12 @@ canvas {
     width: 100%;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: center;
     padding: 10px;
     position: sticky;
     top: 0;
-    z-index: 999;
+    z-index: 1000;
+    border-bottom: 1px solid #333;
   }
 
   .sidebar h2 {
@@ -146,6 +163,8 @@ canvas {
     justify-content: center;
     gap: 10px;
     width: 100%;
+    padding: 0;
+    margin: 0;
   }
 
   .sidebar li {
@@ -155,7 +174,7 @@ canvas {
   .sidebar a,
   .sidebar button {
     font-size: 14px;
-    padding: 8px 12px;
+    padding: 8px 14px;
   }
 
   .content {
@@ -204,5 +223,10 @@ canvas {
 
   canvas {
     padding: 5px;
+  }
+
+  button {
+    font-size: 13px;
+    padding: 8px 12px;
   }
 }
