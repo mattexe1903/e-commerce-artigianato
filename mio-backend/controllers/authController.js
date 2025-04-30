@@ -1,12 +1,16 @@
 const authService = require('../services/authService');
 
+const jwt = require('jsonwebtoken');
+
 const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await authService.login(email, password);
+    const token = generateToken(user.id); 
     res.status(200).json({
       success: true,
       message: 'Login riuscito',
+      token,
       user
     });
   } catch (err) {
@@ -59,6 +63,11 @@ const registerArtigano = async (req, res) => {
       message: err.message || 'Errore nella registrazione'
     });
   }
+};
+
+// JWT Token
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 };
 
 module.exports = { 

@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
       body: JSON.stringify({ email, password })
     })
       .then(response => {
+        console.log('Risposta del server:', response);
         if (!response.ok) {
           throw new Error("Credenziali errate");
         }
@@ -31,16 +32,15 @@ document.addEventListener("DOMContentLoaded", function () {
       .then(data => {
         const user = data.user;
 
+        console.log('Dati ricevuti:', data);
+
         localStorage.setItem("user", JSON.stringify(user));
         
         switch(user.ruolo) {
-          case "admin":
+          case 1:
             window.location.href = "adminview.html";
             break;
-          case "cliente":
-            window.location.href = "homereg.html";
-            break;
-          case "artigiano":
+          case 2 || 3:
             window.location.href = "homereg.html";
             break;
           default:
