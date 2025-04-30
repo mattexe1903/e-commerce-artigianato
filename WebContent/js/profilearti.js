@@ -10,7 +10,6 @@ fetch('/api/dati-cliente')
     datiCliente.innerHTML = `
       <p><strong>Nome:</strong> ${cliente.nome} ${cliente.cognome}</p>
       <p><strong>Email:</strong> ${cliente.email}</p>
-      <p><strong>Telefono:</strong> ${cliente.telefono}</p>
       <p><strong>Indirizzo:</strong> ${cliente.indirizzo}</p>
     `;
   });
@@ -108,7 +107,7 @@ fetch('/api/dashboard')
         labels: data.mesi,
         datasets: [{
           label: 'Guadagni',
-          data: data.gadagni,
+          data: data.guadagni,
           borderColor: '#f5b400',
           backgroundColor: 'rgba(245,180,0,0.2)',
           fill: true

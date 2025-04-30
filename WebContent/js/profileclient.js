@@ -4,17 +4,28 @@ document.getElementById("home-btn").addEventListener("click", () => {
 
 window.onload = async () => {
   try {
-    // Recupera dati utente
-    const resUtente = await fetch('/api/utente');
+    // Recupera ID utente dal localStorage
+    const utenteId = localStorage.getItem("id");
+
+    if (!utenteId) {
+      alert("ID utente non trovato");
+      throw new Error("ID utente non trovato");
+    }
+
+    // Recupera dati utente dal backend
+    const resUtente = await fetch(`/api/user/${utenteId}`);
     if (!resUtente.ok) throw new Error("Errore nel recupero dati utente");
+
     const utente = await resUtente.json();
 
+    // Mostra i dati nella pagina
     const datiUtente = document.getElementById("dati-utente");
     datiUtente.innerHTML = `
-      <p><strong>Nome:</strong> ${utente.nome} ${utente.cognome}</p>
-      <p><strong>Email:</strong> ${utente.email}</p>
-      <p><strong>Telefono:</strong> ${utente.telefono}</p>
-    `;
+  <p><strong>Nome:</strong> ${utente.nome} ${utente.cognome}</p>
+  <p><strong>Email:</strong> ${utente.email}</p>
+  <p><strong>Indirizzo:</strong> ${utente.indirizzo}</p>
+`;
+
 
     // Recupera ordini utente
     const resOrdini = await fetch('/api/utente/ordini');
