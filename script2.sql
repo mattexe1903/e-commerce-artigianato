@@ -74,7 +74,12 @@ INSERT INTO utenti
 VALUES
     ('Mario', 'Rossi', 'mario.rossi@gmail.com', 'password123', 1);
 
-
+-- Creazione della tabella per la gestione delle informazioni extra per gli artigiani.
+CREATE TABLE artigiani_informazioni(
+    id INTEGER REFERENCES utenti(id) PRIMARY KEY,
+    iban TEXT NOT NULL,
+    mansione TEXT NOT NULL
+);
 
 -- TO DO BETTER
 CREATE TABLE indirizzo
