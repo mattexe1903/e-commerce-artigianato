@@ -18,8 +18,15 @@ const getUserById = async (id) => {
   return result.rows[0];
 }
 
+const getArtigianiById = async (id) => {
+  const result = await pool.query('SELECT * FROM artigiani WHERE id = $1', [id]);
+  return result.rows[0];
+}
+
+
 module.exports = {
   getUserByEmail,
   createUser, 
-  getUserById
+  getUserById,
+  getArtigianiById
 };
