@@ -14,7 +14,7 @@ const createUser = async (nome, cognome, email, password, ruolo) => {
 }
 
 const getUserById = async (id) => {
-  const result = await pool.query('SELECT * FROM utenti WHERE id = $1', [id]);
+  const result = await pool.query('SELECT * FROM utenti JOIN indirizzo ON(utenti.id = indirizzo.idutente) WHERE utenti.id = $1', [id]);
   return result.rows[0];
 }
 
@@ -26,7 +26,7 @@ const getArtigianiById = async (id) => {
 
 module.exports = {
   getUserByEmail,
-  createUser, 
+  createUser,
   getUserById,
   getArtigianiById
 };
