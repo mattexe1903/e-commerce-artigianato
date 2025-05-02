@@ -4,18 +4,18 @@ const productController = require('../controllers/productController');
 const pool = require('../db');
 
 // Route per ottenere tutti i prodotti
-router.get('/produtcs', productController.getAllProducts);
+router.get('/products', productController.getAllProducts);
 
 // Route per ottenere un prodotto specifico
-router.get('/produtcs/:id', productController.getProductById);
+router.get('/products/:id', productController.getProductById);
 
 // Route per creare un nuovo prodotto
-router.post('/produtcs', productController.createProduct);
+router.post('/products', productController.createProduct);
 
 // Route per aggiornare un prodotto esistente
-router.put('/produtcs/:id', productController.updateProduct);
+router.put('/products/:id', productController.updateProduct);
 
 // Route per eliminare un prodotto
-router.delete('/produtcs/:id', productController.deleteProduct);
+router.delete('/products/:id', productController.deleteProduct);
 
 module.exports = router;
