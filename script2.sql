@@ -72,7 +72,9 @@ CREATE TABLE utenti
 INSERT INTO utenti
     (nome, cognome, email, password, ruolo)
 VALUES
-    ('Mario', 'Rossi', 'mario.rossi@gmail.com', 'password123', 1);
+    ('Mario', 'Rossi', 'mario.rossi@gmail.com', 'password123', 2),
+    ('Admin', 'Admin', 'admin@gmail.com', 'admin123', 1),
+    ('Giovanni', 'Verdi', 'artigiano@gmail.com', 'password123', 3);
 
 -- Creazione della tabella per la gestione delle informazioni extra per gli artigiani.
 CREATE TABLE artigiani_informazioni(
@@ -109,14 +111,6 @@ CREATE TABLE preferiti
     idUtente INTEGER REFERENCES utenti(id),
     idProdotto INTEGER REFERENCES prodotti(id),
     PRIMARY KEY (idUtente, idProdotto)
-);
-
-CREATE TABLE artigiani
-(
-    idUtente INTEGER REFERENCES utenti(id),
-    iban TEXT NOT NULL,
-    -- meglio usare TEXT per evitare problemi con numeri grandi
-    mestiere TEXT NOT NULL
 );
 
 CREATE TABLE carrello
