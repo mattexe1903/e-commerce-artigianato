@@ -115,8 +115,7 @@ CREATE TABLE preferiti
     PRIMARY KEY (idUtente, idProdotto)
 );
 
---NEWS FROM SCRIPT 2
-
+-- Creazione della tabella per la gestione dei carrelli
 CREATE TABLE carrello
 (
     id SERIAL PRIMARY KEY NOT NULL,
@@ -124,6 +123,7 @@ CREATE TABLE carrello
     data_creazione TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Creazione della tabella per la gestione dei prodotti nel carrello
 CREATE TABLE carrello_prodotti
 (
     id SERIAL PRIMARY KEY NOT NULL,
@@ -133,6 +133,7 @@ CREATE TABLE carrello_prodotti
     data_creazione TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Creazione della tabella per la gestione degli ordini
 CREATE TABLE ordine
 (
     id SERIAL PRIMARY KEY NOT NULL,
@@ -143,6 +144,7 @@ CREATE TABLE ordine
     indirizzo INTEGER REFERENCES indirizzo(id)
 );
 
+-- Creazione della tabella per la gestione dei prodotti negli ordini
 CREATE TABLE ordine_prodotti
 (
     id SERIAL PRIMARY KEY NOT NULL,
@@ -152,6 +154,7 @@ CREATE TABLE ordine_prodotti
     prezzo_singolo DECIMAL(10, 2) NOT NULL,
 );
 
+-- Creazione della tabella per la gestione delle segnalazioni
 CREATE TABLE segnalazioni (
     id SERIAL PRIMARY KEY NOT NULL,
     id_utente INTEGER REFERENCES utenti(id) ON DELETE CASCADE,
