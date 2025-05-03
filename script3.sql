@@ -151,3 +151,14 @@ CREATE TABLE ordine_prodotti
     quantita INTEGER NOT NULL,
     prezzo_singolo DECIMAL(10, 2) NOT NULL,
 );
+
+CREATE TABLE segnalazioni (
+    id SERIAL PRIMARY KEY NOT NULL,
+    id_utente INTEGER REFERENCES utenti(id) ON DELETE CASCADE,
+    titolo VARCHAR(255) NOT NULL,
+    messaggio TEXT NOT NULL,
+    stato VARCHAR(50) DEFAULT 'nuova' CHECK (stato IN ('nuova', 'in lavorazione', 'risolta', 'archiviata')),
+    data_invio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    data_risoluzione TIMESTAMP,
+    id_admin INTEGER REFERENCES utenti(id) ON DELETE SET NULL
+);
