@@ -1,4 +1,4 @@
--- Script per la creazione del database e delle tabelle per un sistema di gestione di un e-commerce
+-- Script per la creazione delle tabelle per un sistema di gestione di un e-commerce
 
 --Creazione della tabella per la gestione dei ruoli con i relativi inserimenti inziali.
 CREATE TABLE ruoli
