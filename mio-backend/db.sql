@@ -1,2 +1,2 @@
-SELECT * FROM prodotti
-ORDER BY id ASC 
+UPDATE prodotti
+SET categoria = 'gioielli';

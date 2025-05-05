@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function getUserId() {
-  return new URLSearchParams(window.location.search).get("id") || "123";
+  return new URLSearchParams(window.location.search).get("id");
 }
 
 function vaiAllaPaginaProdotto(idProdotto) {
@@ -14,21 +14,13 @@ function vaiAllaPaginaProdotto(idProdotto) {
 }
 
 function vaiAlProfilo() {
-  const userString = localStorage.getItem("user");
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  if (!userString) {
-    console.error("Nessun utente trovato nel localStorage");
-    return;
-  }
-
-  const user = JSON.parse(userString);
-
-  if (user.ruolo === "cliente") {
-    window.location.href = "profileclient.html";
-  } else if (user.ruolo === "artigiano") {
-    window.location.href = "profilearti.html";
+  if (user && user.id) {
+    window.location.href = "profile.html";
   } else {
-    console.error("Ruolo non riconosciuto:", user.ruolo);
+    alert("Devi essere autenticato per accedere al profilo.");
+    window.location.href = "login.html"; // oppure home.html
   }
 }
 
@@ -73,10 +65,9 @@ function applicaFiltri() {
     if (disponibilita === "non_disponibile") return parseInt(a.dataset.disponibile) - parseInt(b.dataset.disponibile);
     return 0;
   });
-
   lista.innerHTML = "";
   filtrati.forEach(p => lista.appendChild(p));
-}
+};
 
 async function aggiornaCarrello() {
   try {
@@ -93,56 +84,63 @@ async function aggiornaCarrello() {
 }
 
 async function caricaNuoviArrivi() {
+  const track = document.getElementById("carousel-track");
+
   try {
-    const res = await fetch('/api/products/new');
-    const nuoviProdotti = await res.json();
+    const response = await fetch('http://localhost:3000/api/nuovi-arrivi'); // Cambia l'endpoint se diverso
+    const prodotti = await response.json();
 
-    const track = document.getElementById("carousel-track");
-    track.innerHTML = "";
-
-    nuoviProdotti.forEach(p => {
-      const div = document.createElement("div");
-      div.className = "product";
-      div.onclick = () => vaiAllaPaginaProdotto(p.id);
+    prodotti.forEach(prodotto => {
+      const div = document.createElement('div');
+      div.className = 'product';
+      div.onclick = () => vaiAllaPaginaProdotto(prodotto.id);
       div.innerHTML = `
-        <img src="${p.image}" alt="${p.name}">
-        <div>${p.name}</div>
-        <div>€${p.price.toFixed(2)}</div>
-      `;
+      <img src="${prodotto.immagine}" alt="${prodotto.nome}">
+      <div>${prodotto.nome}</div>
+      <div>€${prodotto.prezzo.toFixed(2)}</div>
+    `;
       track.appendChild(div);
     });
-
-    // Duplica per effetto carousel
+    // Duplica il contenuto per effetto carousel infinito
     track.innerHTML += track.innerHTML;
-  } catch (err) {
-    console.error("Errore nel caricamento dei nuovi arrivi:", err);
+  } catch (error) {
+    console.error('Errore nel caricare i nuovi arrivi:', error);
   }
 }
 
 async function caricaTuttiProdotti() {
+  const lista = document.getElementById("product-list");
+  lista.innerHTML = ""; // Pulisce prima la lista
+
   try {
-    const res = await fetch('/api/products');
-    const prodotti = await res.json();
+    const response = await fetch('http://localhost:3000/api/products');
+    if (!response.ok) {
+      throw new Error(`Errore HTTP: ${response.status}`);
+    }
 
-    const lista = document.getElementById("product-list");
-    lista.innerHTML = "";
+    const dati = await response.json();
+    const arrayProdotti = Array.isArray(dati.products) ? dati.products : [];
 
-    prodotti.forEach(p => {
-      const div = document.createElement("div");
-      div.className = "product";
-      div.dataset.id = p.id;
-      div.dataset.prezzo = p.price;
-      div.dataset.disponibile = p.available ? "1" : "0";
-      div.dataset.categoria = p.category;
-      div.onclick = () => vaiAllaPaginaProdotto(p.id);
+    arrayProdotti.forEach(prodotto => {
+      const div = document.createElement('div');
+      div.className = 'product';
+      div.dataset.prezzo = prodotto.prezzo ?? '';
+      div.dataset.disponibile = prodotto.quantita > 0 ? '1' : '0';
+      div.dataset.categoria = prodotto.categoria ?? '';
+      div.onclick = () => vaiAllaPaginaProdotto(prodotto.id);
+
       div.innerHTML = `
-        <img src="${p.image}" alt="${p.name}">
-        <div>${p.name}</div>
-        <div>€${p.price.toFixed(2)}</div>
+        <img src="${prodotto.foto || 'placeholder.jpg'}" alt="${prodotto.nome || 'Senza Nome'}" style="width:100px;height:auto;">
+        <div class="product-name">${prodotto.nome || 'Nome mancante'}</div>
+        <div class="product-price">€ ${Number(prodotto.prezzo).toFixed(2)}</div>
       `;
+
       lista.appendChild(div);
     });
-  } catch (err) {
-    console.error("Errore nel caricamento dei prodotti:", err);
+
+  } catch (error) {
+    console.error('Errore nel caricare i prodotti:', error);
+    lista.innerHTML = "<p>Errore nel caricare i prodotti.</p>";
   }
 }
+ 
