@@ -13,30 +13,14 @@ function vaiAllaPaginaProdotto(idProdotto) {
   window.location.href = `productsview.html?id=${idProdotto}&user=${userId}`;
 }
 
-function vaiAlProfiloFromStorage() {
-  const email = localStorage.getItem("userEmail");
-  if (email) {
-    vaiAlProfilo(email);
+function vaiAlProfilo() {
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  if (user && user.id) {
+    window.location.href = "profile.html";
   } else {
-    console.error("Email utente non trovata nel localStorage.");
-  }
-}
-
-async function vaiAlProfilo(email) {
-  try {
-    const userId = getUserId();
-    const res = await fetch(`/api/user/${userId}`);
-    const user = await res.json();
-
-    if (user.role === "client") {
-      window.location.href = "profileclient.html";
-    } else if (user.role === "arti") {
-      window.location.href = "profilearti.html";
-    } else {
-      console.error("Ruolo utente non riconosciuto:", user.role);
-    }
-  } catch (err) {
-    console.error("Errore recupero utente:", err);
+    alert("Devi essere autenticato per accedere al profilo.");
+    window.location.href = "login.html"; // oppure home.html
   }
 }
 
