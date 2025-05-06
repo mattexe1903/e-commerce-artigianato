@@ -14,7 +14,7 @@ const login = async (email, password) => {
     nome: user.user_name,
     cognome: user.surname,
     email: user.email,
-    ruolo: user.user_role, 
+    ruolo: user.user_role,
     dataCreazione: user.creation_date
   };
 };
@@ -45,8 +45,14 @@ const saveArtigianoDetails = async (userId, craft, iban) => {
   return newArtigiano;
 }
 
+const artisanIsActive = async (userId) => {
+  const artisan_state = await userModel.getArtigianoByUserId(userId);
+  return artisan_state;
+}
+
 module.exports = {
-  login, 
+  login,
   register,
-  saveArtigianoDetails
+  saveArtigianoDetails,
+  artisanIsActive
 };

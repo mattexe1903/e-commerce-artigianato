@@ -23,7 +23,7 @@ const login = async (req, res) => {
 
 //TODO: GENERAZIONE TOKEN
 const register = async (req, res) => {
-  const { nome, cognome, email, password, conferma} = req.body;
+  const { nome, cognome, email, password, conferma } = req.body;
 
   if (password !== conferma) {
     return res.status(400).json({
@@ -64,16 +64,25 @@ const registerArtigiano = async (req, res) => {
     if (tipo_artigiano && iban) {
       console.log('userId: ', user.user_id);
       const newArtisan = await authService.saveArtigianoDetails(user.user_id, tipo_artigiano, iban);
-      console.log(newArtisan); // Log dei dettagli dell'artigiano
+      console.log(newArtisan);
     }
 
-    res.status(201).json({
-      success: true,
-      message: 'Registrazione riuscita',
-      user
-    });
+    const artisan_state = await authService.artisanIsActive(user.user_id);
+    console.log('artisan_state:', artisan_state);
+    if (artisan_state != 2) {
+      return res.status(400).json({
+        success: false,
+        message: 'richiesta in attesa di approvazione o rifiutata'
+      });
+    } else {
+      res.status(201).json({
+        success: true,
+        message: 'Registrazione riuscita',
+        user
+      });
+    }
   } catch (err) {
-    console.error('Errore durante la registrazione dell\'artigiano:', err); // Log dell'errore
+    console.error('Errore durante la registrazione dell\'artigiano:', err);
     res.status(500).json({
       success: false,
       message: err.message || 'Errore nella registrazione'
