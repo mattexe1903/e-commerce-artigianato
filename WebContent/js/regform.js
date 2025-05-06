@@ -46,33 +46,37 @@ window.onload = () => {
         },
         body: JSON.stringify({ datiBase, datiExtra })
       })
-        .then(response => {
+        .then(async response => {
+          const data = await response.json();
+
           if (!response.ok) {
-            throw new Error("Registrazione fallita. Controlla i dati.");
+            // Usa il messaggio del backend, se presente
+            throw new Error(data.message || "Registrazione fallita. Controlla i dati.");
           }
-          return response.json();
+
+          return data;
         })
         .then(data => {
+          // Se arriviamo qui, la registrazione è andata a buon fine
           const user = data.user;
-
           localStorage.setItem("user", JSON.stringify(user));
-
           window.location.href = "homereg.html";
         })
         .catch(error => {
-          errorMessage.style.display = "block";
-          errorMessage.textContent = error.message || "Errore di connessione.";
+          // Mostra il messaggio restituito dal backend
+          alert(error.message || "Errore di connessione.");
         });
 
+
       //  INVIA A ADMIN
-      const segnalazioneAdmin = {
+      /*const segnalazioneAdmin = {
         nome: datiBase.nome,
         cognome: datiBase.cognome,
         mansione: datiExtra.tipo_artigiano,
         iban: datiExtra.iban
       };
       console.log("Invia segnalazione all’admin:", segnalazioneAdmin);
-
+*/
     } else {
 
       console.log("Dati cliente:", datiBase);
