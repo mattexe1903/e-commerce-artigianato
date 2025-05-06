@@ -23,10 +23,18 @@ const getArtigianiById = async (id) => {
   return result.rows[0];
 }
 
+const createArtigiano = async (userId, craft, iban) => {
+  const result = await pool.query(
+    'INSERT INTO info_artisan (artisan_id, craft, iban, artisan_state) VALUES ($1, $2, $3, 1) RETURNING *',
+    [userId, craft, iban]
+  );
+  return result.rows[0];
+}
 
 module.exports = {
   getUserByEmail,
   createUser,
   getUserById,
-  getArtigianiById
+  getArtigianiById, 
+  createArtigiano
 };

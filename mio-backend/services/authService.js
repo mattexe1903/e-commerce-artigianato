@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+//const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel');
 
 const login = async (email, password) => {
@@ -15,26 +15,38 @@ const login = async (email, password) => {
     cognome: user.surname,
     email: user.email,
     ruolo: user.user_role, 
-    dataCreazoine: user.creation_date
+    dataCreazione: user.creation_date
   };
 };
 
 const register = async (nome, cognome, email, password, ruolo) => {
   const existingUser = await userModel.getUserByEmail(email);
+  console.log(existingUser);
   if (existingUser) throw new Error('Email già registrata');
 
   //const hashedPassword = await bcrypt.hash(password, 10);
   const hashedPassword = password;
+  //PROBLEMA: NON ARRIVANO I PARAMETRI
+  console.log("Dati in ingresso a createUser:", { nome, cognome, email, hashedPassword, ruolo });
   const newUser = await userModel.createUser(nome, cognome, email, hashedPassword, ruolo);
 
   return {
-    id: newUser.user_id,
-    nome: newUser.user_nome,
+    user_id: newUser.user_id,
+    user_name: newUser.user_name,
     email: newUser.email
   };
 }
 
+const saveArtigianoDetails = async (userId, craft, iban) => {
+  //const existingArtigiano = await userModel.getArtigianoByUserId(userId);
+  //if (existingArtigiano) throw new Error('Artigiano già registrato');
+
+  const newArtigiano = await userModel.createArtigiano(userId, craft, iban);
+  return newArtigiano;
+}
+
 module.exports = {
   login, 
-  register
+  register,
+  saveArtigianoDetails
 };
