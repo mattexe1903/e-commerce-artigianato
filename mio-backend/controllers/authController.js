@@ -50,7 +50,7 @@ const register = async (req, res) => {
 const registerArtigano = async (req, res) => {
   const { nome, cognome, email, password} = req.body;
   try {
-    const user = await authService.register(nome, cognome, email, password, 'artigiano');
+    const user = await authService.register(nome, cognome, email, password, 3);
     res.status(201).json({
       success: true,
       message: 'Registrazione riuscita',
