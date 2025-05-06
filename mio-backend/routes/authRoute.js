@@ -10,6 +10,6 @@ router.post('/login', authController.login);
 router.post('/register', authController.register);
 
 // Route registrazione artigiano
-router.post('/registerArtigano', authController.registerArtigano);
+router.post('/registerArtigano', authController.registerArtigiano);
 
 module.exports = router;

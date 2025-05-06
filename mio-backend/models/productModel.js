@@ -11,7 +11,7 @@ const getProductById = async (id) => {
 }
 
 const createProduct = async (productData) => {
-  const { nome, descrizione, prezzo, immagine, quantita, utenteId, categoria } = productData;
+  const { name, description, price, imageUrl, quantita, utenteId, categoria } = productData;
 
   const result = await pool.query(
     'INSERT INTO products (product_name, photo_description, price, photo) VALUES ($1, $2, $3, $4) RETURNING *',

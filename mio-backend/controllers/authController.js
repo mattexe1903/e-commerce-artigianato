@@ -47,24 +47,44 @@ const register = async (req, res) => {
 };
 
 
-const registerArtigano = async (req, res) => {
-  const { nome, cognome, email, password } = req.body;
+const registerArtigiano = async (req, res) => {
+  const { nome, cognome, email, password, tipo_artigiano, iban } = req.body;
+
+  try {
+    const existingUser = await authService.findUserByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: 'Questa email è già registrata.'
+      });
+    }
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: 'Errore durante la verifica dell\'email.'
+    });
+  }
 
   try {
     const user = await authService.register(nome, cognome, email, password, 3);
+
+    if (tipo_artigiano && iban) {
+      await authService.saveArtigianoDetails(user.id, tipo_artigiano, iban);
+    }
+
     res.status(201).json({
       success: true,
       message: 'Registrazione riuscita',
       user
     });
-  }
-  catch (err) {
+  } catch (err) {
     res.status(400).json({
       success: false,
       message: err.message || 'Errore nella registrazione'
     });
   }
 };
+
 
 // JWT Token
 const generateToken = (id) => {
@@ -74,5 +94,5 @@ const generateToken = (id) => {
 module.exports = {
   login,
   register,
-  registerArtigano
+  registerArtigiano
 };
