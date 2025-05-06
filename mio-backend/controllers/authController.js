@@ -69,10 +69,11 @@ const registerArtigiano = async (req, res) => {
 
     const artisan_state = await authService.artisanIsActive(user.user_id);
     console.log('artisan_state:', artisan_state);
+    
     if (artisan_state != 2) {
       return res.status(400).json({
         success: false,
-        message: 'richiesta in attesa di approvazione o rifiutata'
+        message: 'Richiesta in attesa di approvazione o rifiutata'
       });
     } else {
       res.status(201).json({

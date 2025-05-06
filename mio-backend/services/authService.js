@@ -46,7 +46,7 @@ const saveArtigianoDetails = async (userId, craft, iban) => {
 }
 
 const artisanIsActive = async (userId) => {
-  const artisan_state = await userModel.getArtigianoByUserId(userId);
+  const artisan_state = await userModel.getArtisanStateById(userId);
   return artisan_state;
 }
 
