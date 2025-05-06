@@ -5,7 +5,7 @@ const login = async (email, password) => {
   const user = await userModel.getUserByEmail(email);
   if (!user) throw new Error('Credenziali non valide');
 
- // const validPassword = await bcrypt.compare(password, user.password);
+  //const validPassword = await bcrypt.compare(password, user.password);
   const validPassword = password === user.user_password;
   if (!validPassword) throw new Error('Credenziali non valide');
 
@@ -28,8 +28,8 @@ const register = async (nome, cognome, email, password, ruolo, indirizzo) => {
   const newUser = await userModel.createUser(nome, cognome, email, hashedPassword, ruolo);
 
   return {
-    id: newUser.id,
-    nome: newUser.nome,
+    id: newUser.user_id,
+    nome: newUser.user_nome,
     email: newUser.email
   };
 }
