@@ -21,6 +21,7 @@ const login = async (req, res) => {
   }
 };
 
+//TODO: GENERAZIONE TOKEN
 const register = async (req, res) => {
   const { nome, cognome, email, password, conferma} = req.body;
 
@@ -46,7 +47,7 @@ const register = async (req, res) => {
   }
 };
 
-
+//TODO: GENERAZIONE TOKEN
 const registerArtigiano = async (req, res) => {
   const { nome, cognome, email, password, tipo_artigiano, iban } = req.body;
 
@@ -67,9 +68,10 @@ const registerArtigiano = async (req, res) => {
 
   try {
     const user = await authService.register(nome, cognome, email, password, 3);
-
+    console.log(user);
     if (tipo_artigiano && iban) {
-      await authService.saveArtigianoDetails(user.user_id, tipo_artigiano, iban);
+      const newArtisan = await authService.saveArtigianoDetails(user.user_id, tipo_artigiano, iban);
+      console.log(newArtisan);
     }
 
     res.status(201).json({
