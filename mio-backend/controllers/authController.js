@@ -6,7 +6,7 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await authService.login(email, password);
-    const token = generateToken(user.id); 
+    const token = generateToken(user.user_id); 
     res.status(200).json({
       success: true,
       message: 'Login riuscito',
@@ -22,7 +22,7 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
-  const { nome, cognome, email, password, conferma, indirizzo } = req.body;
+  const { nome, cognome, email, password, conferma } = req.body;
 
   if (password !== conferma) {
     return res.status(400).json({
@@ -32,7 +32,7 @@ const register = async (req, res) => {
   }
 
   try {
-    const user = await authService.register(nome, cognome, email, password, 'cliente', indirizzo);
+    const user = await authService.register(nome, cognome, email, password, 2);
     res.status(201).json({
       success: true,
       message: 'Registrazione riuscita',
@@ -49,8 +49,9 @@ const register = async (req, res) => {
 
 const registerArtigano = async (req, res) => {
   const { nome, cognome, email, password} = req.body;
+
   try {
-    const user = await authService.register(nome, cognome, email, password, 'artigiano');
+    const user = await authService.register(nome, cognome, email, password, 3);
     res.status(201).json({
       success: true,
       message: 'Registrazione riuscita',
