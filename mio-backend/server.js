@@ -1,6 +1,6 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
 const pool = require('./db');
 
 const app = express();
@@ -17,6 +17,17 @@ app.use('/api', userRoutes);
 
 app.get('/', (req, res) => {
     res.send('Benvenuto nel backend dell\'e-commerce!');
+});
+
+// SOLO PER TESTING: Recupera tutti gli utenti (non sicuro per produzione)
+app.get('/utenti', async (req, res) => {
+  try {
+    const allUsers = await pool.query('SELECT * FROM utenti');
+    res.json(allUsers.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Errore nel recupero degli utenti');
+  }
 });
 
 const PORT = process.env.PORT || 3000;

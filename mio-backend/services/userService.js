@@ -10,6 +10,17 @@ const getUserInfo = async (userId) => {
     }
 }; 
 
+const getArtigianiInfo = async (userId) => {
+    try {
+        const artigianiInfo = await userModel.getArtigianiById(userId);
+        return artigianiInfo;
+    } catch (error) {
+        console.error('Error fetching artigiani info:', error);
+        throw error;
+    }
+}
+
 module.exports = {
-    getUserInfo
+    getUserInfo,
+    getArtigianiInfo
 };
