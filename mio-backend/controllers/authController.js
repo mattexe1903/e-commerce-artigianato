@@ -49,29 +49,22 @@ const register = async (req, res) => {
 
 //TODO: GENERAZIONE TOKEN
 const registerArtigiano = async (req, res) => {
-  const { nome, cognome, email, password, tipo_artigiano, iban } = req.body;
+  console.log("Dati ricevuti nel controller:", req.body);
+  const { datiBase, datiExtra } = req.body;
 
-  try {
-    const existingUser = await authService.findUserByEmail(email);
-    if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        message: 'Questa email è già registrata.'
-      });
-    }
-  } catch (err) {
-    return res.status(500).json({
-      success: false,
-      message: 'Errore durante la verifica dell\'email.'
-    });
-  }
+  console.log("datiBase:", datiBase);
+  console.log("datiExtra:", datiExtra);
+
+  const { nome, cognome, email, password } = datiBase;
+  const { tipo_artigiano, iban } = datiExtra;
 
   try {
     const user = await authService.register(nome, cognome, email, password, 3);
-    console.log(user);
+    console.log('utente registrato', user);
     if (tipo_artigiano && iban) {
+      console.log('userId: ', user.user_id);
       const newArtisan = await authService.saveArtigianoDetails(user.user_id, tipo_artigiano, iban);
-      console.log(newArtisan);
+      console.log(newArtisan); // Log dei dettagli dell'artigiano
     }
 
     res.status(201).json({
@@ -80,12 +73,14 @@ const registerArtigiano = async (req, res) => {
       user
     });
   } catch (err) {
-    res.status(400).json({
+    console.error('Errore durante la registrazione dell\'artigiano:', err); // Log dell'errore
+    res.status(500).json({
       success: false,
       message: err.message || 'Errore nella registrazione'
     });
   }
 };
+
 
 
 // JWT Token
