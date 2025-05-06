@@ -80,7 +80,8 @@ VALUES
 CREATE TABLE info_artisan(
     artisan_id INTEGER REFERENCES users(user_id) PRIMARY KEY,
     iban TEXT NOT NULL,
-    craft TEXT NOT NULL
+    craft TEXT NOT NULL, 
+    artisan_state TEXT NOT NULL CHECK (artisan_state IN ('in attesa', 'accettato', 'rifiutato')),
 );
 
 -- Creazione della tabella per la gestione delle informazioni di spedizione
