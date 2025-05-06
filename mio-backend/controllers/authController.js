@@ -21,8 +21,9 @@ const login = async (req, res) => {
   }
 };
 
+//TODO: GENERAZIONE TOKEN
 const register = async (req, res) => {
-  const { nome, cognome, email, password, conferma } = req.body;
+  const { nome, cognome, email, password, conferma} = req.body;
 
   if (password !== conferma) {
     return res.status(400).json({
@@ -46,19 +47,39 @@ const register = async (req, res) => {
   }
 };
 
+//TODO: GENERAZIONE TOKEN
+const registerArtigiano = async (req, res) => {
+  const { nome, cognome, email, password, tipo_artigiano, iban } = req.body;
 
-const registerArtigano = async (req, res) => {
-  const { nome, cognome, email, password } = req.body;
+  try {
+    const existingUser = await authService.findUserByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: 'Questa email è già registrata.'
+      });
+    }
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: 'Errore durante la verifica dell\'email.'
+    });
+  }
 
   try {
     const user = await authService.register(nome, cognome, email, password, 3);
+    console.log(user);
+    if (tipo_artigiano && iban) {
+      const newArtisan = await authService.saveArtigianoDetails(user.user_id, tipo_artigiano, iban);
+      console.log(newArtisan);
+    }
+
     res.status(201).json({
       success: true,
       message: 'Registrazione riuscita',
       user
     });
-  }
-  catch (err) {
+  } catch (err) {
     res.status(400).json({
       success: false,
       message: err.message || 'Errore nella registrazione'
@@ -74,5 +95,5 @@ const generateToken = (id) => {
 module.exports = {
   login,
   register,
-  registerArtigano
+  registerArtigiano
 };
