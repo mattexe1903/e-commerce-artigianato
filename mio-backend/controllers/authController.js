@@ -6,7 +6,7 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await authService.login(email, password);
-    const token = generateToken(user.user_id); 
+    const token = generateToken(user.user_id);
     res.status(200).json({
       success: true,
       message: 'Login riuscito',
@@ -48,7 +48,7 @@ const register = async (req, res) => {
 
 
 const registerArtigano = async (req, res) => {
-  const { nome, cognome, email, password} = req.body;
+  const { nome, cognome, email, password } = req.body;
 
   try {
     const user = await authService.register(nome, cognome, email, password, 3);
@@ -71,8 +71,8 @@ const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 };
 
-module.exports = { 
-  login, 
+module.exports = {
+  login,
   register,
   registerArtigano
 };

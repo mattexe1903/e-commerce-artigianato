@@ -15,7 +15,7 @@ const addToCart = async (userId, productId, quantity) => {
 
   if (cartResult.rows.length === 0) {
     const createCartResult = await pool.query(
-      'INSERT INTO carts (userId) VALUES ($1) RETURNING cart_id',
+      'INSERT INTO carts (user_id) VALUES ($1) RETURNING cart_id',
       [userId]
     );
     cartId = createCartResult.rows[0].cart_id;
