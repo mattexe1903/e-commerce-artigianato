@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-const pool = require('../db');
+const { protect } = require('../middleware/userMiddleware');
 
 // Route restituzione informazioni utente
-router.get('/user/:id', userController.getUserInfo);
+router.get('/user/:id', protect,  userController.getUserInfo);
 
+router.get('/user/:id/infoartigiani', protect, userController.getArtigianiInfo);
 
 module.exports = router;
