@@ -88,7 +88,6 @@ VALUES
     ('in attesa'),
     ('accettato'),
     ('rifiutato'),
-    ('in lavorazione'),
     ('completato'),
     ('annullato'),
     ('nuova'),
