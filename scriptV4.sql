@@ -21,7 +21,7 @@ CREATE TABLE permissions
     permission_name TEXT NOT NULL UNIQUE
 );
 
-INSERT INTO permission
+INSERT INTO permissions
     (permission_name)
 VALUES
     ('login'),
@@ -50,7 +50,7 @@ CREATE TABLE roles_permissions
 );
 
 -- TO DO BETTER:
-INSERT INTO role_permissiom
+INSERT INTO roles_permissions
     (permission_id, role_id, permission_type)
 values
     (1, 1, 'W'),
@@ -70,7 +70,7 @@ CREATE TABLE users
 );
 
 INSERT INTO users
-    (user_nome, surname, email, user_password, user_role)
+    (user_name, surname, email, user_password, user_role)
 VALUES
     ('Mario', 'Rossi', 'mario.rossi@gmail.com', 'password123', 2),
     ('Admin', 'Admin', 'admin@gmail.com', 'admin123', 1),
@@ -139,7 +139,7 @@ CREATE TABLE orders
     order_id SERIAL PRIMARY KEY NOT NULL,
     user_id INTEGER REFERENCES users(user_id),
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    order_state TEXT NOT NULL CHECK (stato IN ('in attesa', 'in lavorazione', 'completato', 'annullato')),
+    order_state TEXT NOT NULL CHECK (order_state IN ('in attesa', 'in lavorazione', 'completato', 'annullato')),
     total DECIMAL(10, 2) NOT NULL,
     addres_id INTEGER REFERENCES address(addres_id)
 );
@@ -151,7 +151,7 @@ CREATE TABLE orders_products
     order_id INTEGER REFERENCES orders(order_id),
     product_id INTEGER REFERENCES products(product_id),
     quantity INTEGER NOT NULL,
-    single_price DECIMAL(10, 2) NOT NULL,
+    single_price DECIMAL(10, 2) NOT NULL
 );
 
 -- Creazione della tabella per la gestione delle segnalazioni
@@ -160,7 +160,7 @@ CREATE TABLE reports (
     user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
     report_message TEXT NOT NULL,
-    report_state VARCHAR(50) DEFAULT 'nuova' CHECK (stato IN ('nuova', 'in lavorazione', 'risolta', 'archiviata')),
+    report_state VARCHAR(50) DEFAULT 'nuova' CHECK (report_state IN ('nuova', 'in lavorazione', 'risolta', 'archiviata')),
     sent_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     resolution_date TIMESTAMP,
     admin_id INTEGER REFERENCES users(user_id) ON DELETE SET NULL
