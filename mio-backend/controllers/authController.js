@@ -6,6 +6,15 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await authService.login(email, password);
+
+    const artisan_state = await authService.artisanIsActive(user.user_id);
+    if(artisan_state!=null && artisan_state != 2) {
+      return res.status(400).json({
+        success: false,
+        message: 'Richiesta in attesa di approvazione o rifiutata'
+      });
+    }
+
     const token = generateToken(user.user_id);
     res.status(200).json({
       success: true,
