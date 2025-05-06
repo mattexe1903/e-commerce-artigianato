@@ -24,6 +24,13 @@ const login = async (req, res) => {
 const register = async (req, res) => {
   const { nome, cognome, email, password, conferma, indirizzo } = req.body;
 
+  if (!nome || !cognome || !email || !password || !conferma) {
+    return res.status(400).json({
+      success: false,
+      message: 'Tutti i campi sono obbligatori'
+    });
+  }
+
   if (password !== conferma) {
     return res.status(400).json({
       success: false,
@@ -49,6 +56,14 @@ const register = async (req, res) => {
 
 const registerArtigano = async (req, res) => {
   const { nome, cognome, email, password} = req.body;
+
+  if (!nome || !cognome || !email || !password) {
+    return res.status(400).json({
+      success: false,
+      message: 'Tutti i campi sono obbligatori'
+    });
+  }
+
   try {
     const user = await authService.register(nome, cognome, email, password, 3);
     res.status(201).json({
