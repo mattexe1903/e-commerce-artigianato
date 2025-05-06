@@ -22,7 +22,7 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
-  const { nome, cognome, email, password, conferma } = req.body;
+  const { nome, cognome, email, password, conferma} = req.body;
 
   if (password !== conferma) {
     return res.status(400).json({

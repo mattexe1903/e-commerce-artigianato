@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
   <meta charset="UTF-8">
   <title>Lokal - Home</title>
@@ -11,44 +12,60 @@
       background-color: #3b3434;
       color: #fff;
     }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #3b3434;
+      color: #fff;
+    }
 
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 30px;
+      padding: 15px 30px;
       background-color: #000;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
-      flex-wrap: wrap;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+      min-height: 37px;
     }
 
     .logo {
       font-size: 24px;
       font-weight: bold;
       color: #f5b400;
+      flex: 0 0 200px;
+      text-align: center;
     }
 
     .header-buttons {
       display: flex;
-      gap: 10px;
-      margin-top: 10px;
+      gap: 8px;
     }
 
     .header-buttons button {
-      padding: 10px 15px;
+      padding: 6px 10px;
       background-color: #f5b400;
       color: #000;
       font-weight: bold;
       border: none;
-      border-radius: 8px;
+      border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s;
+      font-size: 14px;
     }
 
     .header-buttons button:hover {
       background-color: #d49f00;
     }
+    .header-buttons button:hover {
+      background-color: #d49f00;
+    }
 
+    /* --- CONTENUTO --- */
+    section {
+      padding: 20px;
+    }
+    /* --- CONTENUTO --- */
     section {
       padding: 20px;
     }
@@ -59,7 +76,6 @@
       margin-bottom: 20px;
     }
 
-    /* Carousel stile treno */
     .carousel-container {
       overflow: hidden;
       width: 100%;
@@ -78,6 +94,7 @@
       0% {
         transform: translateX(0);
       }
+
       100% {
         transform: translateX(-50%);
       }
@@ -93,7 +110,7 @@
       background-color: #000;
       border-radius: 12px;
       padding: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
       transition: transform 0.2s;
       cursor: pointer;
       text-align: center;
@@ -113,6 +130,7 @@
       margin-bottom: 10px;
     }
 
+    /* Filtri */
     .filter-container {
       margin-top: 20px;
     }
@@ -137,15 +155,24 @@
       color: #f5b400;
     }
 
+    /* --- Responsive --- */
     @media (max-width: 768px) {
       header {
         flex-direction: column;
         align-items: flex-start;
+        padding: 15px 20px;
+      }
+
+      .logo {
+        font-size: 20px;
+        text-align: left;
+        margin-bottom: 10px;
       }
 
       .header-buttons {
-        margin-top: 10px;
+        justify-content: flex-end;
         flex-wrap: wrap;
+        padding: 0;
       }
 
       .carousel-track {
@@ -162,6 +189,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <header>
@@ -176,33 +204,7 @@
     <h2>Nuovi arrivi</h2>
     <div class="carousel-container">
       <div class="carousel-track" id="carousel-track">
-        <!-- 🔶 INIZIO DATI DA DB: nuovi arrivi -->
-        <div class="product" onclick="vaiAllaPaginaProdotto(1)">
-          <img src="../images/prodotto1.jpg" alt="Prodotto 1">
-          <div>Nome prodotto 1</div>
-          <div>€19.99</div>
-        </div>
-        <div class="product" onclick="vaiAllaPaginaProdotto(2)">
-          <img src="../images/prodotto2.jpg" alt="Prodotto 2">
-          <div>Nome prodotto 2</div>
-          <div>€24.99</div>
-        </div>
-        <div class="product" onclick="vaiAllaPaginaProdotto(3)">
-          <img src="../images/prodotto3.jpg" alt="Prodotto 3">
-          <div>Nome prodotto 3</div>
-          <div>€29.99</div>
-        </div>
-        <div class="product" onclick="vaiAllaPaginaProdotto(4)">
-          <img src="../images/prodotto4.jpg" alt="Prodotto 4">
-          <div>Nome prodotto 4</div>
-          <div>€34.99</div>
-        </div>
-        <div class="product" onclick="vaiAllaPaginaProdotto(5)">
-          <img src="../images/prodotto5.jpg" alt="Prodotto 5">
-          <div>Nome prodotto 5</div>
-          <div>€44.99</div>
-        </div>
-        <!-- 🔁 Duplica per effetto treno -->
+        <!-- Prodotti caricati dinamicamente -->
       </div>
     </div>
   </section>
@@ -237,22 +239,7 @@
     </div>
 
     <div class="product-list" id="product-list">
-      <!-- 🔶 Esempi statici: da sostituire con i dati dal DB -->
-      <div class="product" data-prezzo="39.99" data-disponibile="1" data-categoria="vetro" onclick="vaiAllaPaginaProdotto(10)">
-        <img src="../images/prodotto10.jpg" alt="Prodotto 10">
-        <div>Nome prodotto 10</div>
-        <div>€39.99</div>
-      </div>
-      <div class="product" data-prezzo="29.99" data-disponibile="0" data-categoria="legno" onclick="vaiAllaPaginaProdotto(11)">
-        <img src="../images/prodotto11.jpg" alt="Prodotto 11">
-        <div>Nome prodotto 11</div>
-        <div>€29.99</div>
-      </div>
-      <div class="product" data-prezzo="19.99" data-disponibile="1" data-categoria="metallo" onclick="vaiAllaPaginaProdotto(12)">
-        <img src="../images/prodotto12.jpg" alt="Prodotto 12">
-        <div>Nome prodotto 12</div>
-        <div>€19.99</div>
-      </div>
+      <!-- Qui verranno caricati dinamicamente tutti i prodotti -->
     </div>
   </section>
 
@@ -260,11 +247,71 @@
     function vaiAllaPaginaProdotto(idProdotto) {
       window.location.href = `html/productsview.html?id=${idProdotto}`;
     }
-
     function toggleFiltri() {
       const menu = document.getElementById("menu-filtri");
       menu.style.display = menu.style.display === "none" ? "block" : "none";
     }
+    async function caricaNuoviArrivi() {
+      const track = document.getElementById("carousel-track");
+
+      try {
+        const response = await fetch('http://localhost:3000/api/nuovi-arrivi'); // Cambia l'endpoint se diverso
+        const prodotti = await response.json();
+
+        prodotti.forEach(prodotto => {
+          const div = document.createElement('div');
+          div.className = 'product';
+          div.onclick = () => vaiAllaPaginaProdotto(prodotto.id);
+          div.innerHTML = `
+          <img src="${prodotto.immagine}" alt="${prodotto.nome}">
+          <div>${prodotto.nome}</div>
+          <div>€${prodotto.prezzo.toFixed(2)}</div>
+        `;
+          track.appendChild(div);
+        });
+        // Duplica il contenuto per effetto carousel infinito
+        track.innerHTML += track.innerHTML;
+      } catch (error) {
+        console.error('Errore nel caricare i nuovi arrivi:', error);
+      }
+    }
+
+    async function caricaProdotti() {
+  const lista = document.getElementById("product-list");
+  lista.innerHTML = ""; // Pulisce prima la lista
+
+  try {
+    const response = await fetch('http://localhost:3000/api/products');
+    if (!response.ok) {
+      throw new Error(`Errore HTTP: ${response.status}`);
+    }
+
+    const dati = await response.json();
+    const arrayProdotti = Array.isArray(dati.products) ? dati.products : [];
+
+    arrayProdotti.forEach(prodotto => {
+      const div = document.createElement('div');
+      div.className = 'product';
+      div.dataset.prezzo = prodotto.prezzo ?? '';
+      div.dataset.disponibile = prodotto.quantita > 0 ? '1' : '0';
+      div.dataset.categoria = prodotto.categoria ?? '';
+      div.onclick = () => vaiAllaPaginaProdotto(prodotto.id);
+
+      div.innerHTML = `
+        <img src="${prodotto.foto || 'placeholder.jpg'}" alt="${prodotto.nome || 'Senza Nome'}" style="width:100px;height:auto;">
+        <div class="product-name">${prodotto.nome || 'Nome mancante'}</div>
+        <div class="product-price">€ ${Number(prodotto.prezzo).toFixed(2)}</div>
+      `;
+
+      lista.appendChild(div);
+    });
+
+  } catch (error) {
+    console.error('Errore nel caricare i prodotti:', error);
+    lista.innerHTML = "<p>Errore nel caricare i prodotti.</p>";
+  }
+}
+
 
     function applicaFiltri() {
       const categoria = document.getElementById("filtro-categoria").value;
@@ -280,29 +327,23 @@
       });
 
       filtrati.sort((a, b) => {
-        if (a.dataset.categoria < b.dataset.categoria) return -1;
-        if (a.dataset.categoria > b.dataset.categoria) return 1;
-
         if (ordinePrezzo === "asc") return parseFloat(a.dataset.prezzo) - parseFloat(b.dataset.prezzo);
         if (ordinePrezzo === "desc") return parseFloat(b.dataset.prezzo) - parseFloat(a.dataset.prezzo);
-
         if (disponibilita === "disponibile") return parseInt(b.dataset.disponibile) - parseInt(a.dataset.disponibile);
         if (disponibilita === "non_disponibile") return parseInt(a.dataset.disponibile) - parseInt(b.dataset.disponibile);
-
         return 0;
       });
-
       lista.innerHTML = "";
       filtrati.forEach(p => lista.appendChild(p));
-    }
+    };
 
-    // Duplica il carousel per il loop continuo effetto treno
+    // Caricamento dei dati al caricamento della pagina
     window.addEventListener("load", () => {
-      const track = document.getElementById("carousel-track");
-      const prodotti = track.innerHTML;
-      track.innerHTML += prodotti;
+      caricaNuoviArrivi();
+      caricaProdotti();
     });
   </script>
 
 </body>
+
 </html>

@@ -1,107 +1,64 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const cart = [
-      { id: 1, name: "Felpa Gialla", info: "Taglia M, Cotone", price: 29.99, quantity: 2 },
-      { id: 2, name: "Jeans Slim", info: "Taglia 32, Blu", price: 49.99, quantity: 1 }
-    ];
-  
-    const cartItemsContainer = document.getElementById("cart-items");
-    const summaryItems = document.getElementById("summary-items");
-    const totalItemsSpan = document.getElementById("total-items");
-    const itemsPriceSpan = document.getElementById("items-price");
-    const totalPriceSpan = document.getElementById("total-price");
-    const cartContent = document.getElementById("cart-content");
-    const emptyCart = document.getElementById("empty-cart");
-  
-    const modal = document.getElementById("modal");
-    const removeInput = document.getElementById("remove-quantity");
-    const modalItemName = document.getElementById("modal-item-name");
-  
-    let selectedItem = null;
-  
-    function renderCart() {
-      if (cart.length === 0) {
-        cartContent.style.display = "none";
-        emptyCart.style.display = "block";
-        return;
-      }
-  
-      cartContent.style.display = "flex";
-      emptyCart.style.display = "none";
-      cartItemsContainer.innerHTML = "";
-      summaryItems.innerHTML = "";
-  
-      let totalItems = 0;
-      let itemsTotal = 0;
-  
-      cart.forEach(item => {
-        const row = document.createElement("div");
-        row.className = "cart-item";
-        row.innerHTML = `
-          <span>${item.name}</span>
-          <span>${item.info}</span>
-          <span>€${item.price.toFixed(2)}</span>
-          <span>${item.quantity}</span>
-          <span><button onclick="openModal(${item.id})">🗑️</button></span>
-        `;
-        cartItemsContainer.appendChild(row);
-  
-        const summaryRow = document.createElement("p");
-        summaryRow.textContent = `${item.name} x${item.quantity} = €${(item.price * item.quantity).toFixed(2)}`;
-        summaryItems.appendChild(summaryRow);
-  
-        totalItems += item.quantity;
-        itemsTotal += item.price * item.quantity;
-      });
-  
-      totalItemsSpan.textContent = totalItems;
-      itemsPriceSpan.textContent = itemsTotal.toFixed(2);
-      totalPriceSpan.textContent = (itemsTotal + 5.99).toFixed(2);
+  caricaCarrello();
+});
+
+function getUserId() {
+  return new URLSearchParams(window.location.search).get("user") || "123";
+}
+
+async function caricaCarrello() {
+  try {
+    const userId = getUserId();
+    const res = await fetch(`/api/cart/${userId}`);
+    const prodotti = await res.json();
+
+    const lista = document.getElementById("lista-prodotti");
+    lista.innerHTML = "";
+
+    if (prodotti.length === 0) {
+      lista.innerHTML = "<p>Il carrello è vuoto.</p>";
+      aggiornaTotale(0);
+      return;
     }
-  
-    window.openModal = (id) => {
-      selectedItem = cart.find(i => i.id === id);
-      if (selectedItem) {
-        modalItemName.textContent = `${selectedItem.name} (Disponibili: ${selectedItem.quantity})`;
-        removeInput.max = selectedItem.quantity;
-        removeInput.value = 1;
-        modal.style.display = "flex";
-      }
-      errorMsg.style.display = "none";
-    };
-  
-    window.closeModal = () => {
-      modal.style.display = "none";
-      selectedItem = null;
-    };
-  
-    window.confirmPartialRemove = () => {
-        const qtyToRemove = parseInt(removeInput.value, 10);
-        const errorMsg = document.getElementById("modal-error");
-      
-        if (!selectedItem || isNaN(qtyToRemove) || qtyToRemove < 1) return;
-      
-        if (qtyToRemove > selectedItem.quantity) {
-          errorMsg.style.display = "block";
-          errorMsg.textContent = `Puoi rimuovere al massimo ${selectedItem.quantity} unità.`;
-          return;
-        }
-      
-        errorMsg.style.display = "none";
-      
-        selectedItem.quantity -= qtyToRemove;
-        if (selectedItem.quantity === 0) {
-          const index = cart.findIndex(i => i.id === selectedItem.id);
-          if (index > -1) cart.splice(index, 1);
-        }
-      
-        closeModal();
-        renderCart();
-      };      
-  
-    window.proceedOrder = () => {
-      location.href = "procediordine.html";
-    };
-  
-    renderCart();
-  });
-  
+
+    prodotti.forEach(p => {
+      const div = document.createElement("div");
+      div.className = "prodotto-carrello";
+      div.innerHTML = `
+        <p>${p.name} - €${p.price.toFixed(2)}</p>
+        <button onclick="rimuoviDalCarrello('${p.id}')">Rimuovi</button>
+      `;
+      lista.appendChild(div);
+    });
+
+    const totale = prodotti.reduce((acc, p) => acc + p.price, 0);
+    aggiornaTotale(totale);
+  } catch (err) {
+    console.error("Errore caricamento carrello:", err);
+  }
+}
+
+async function rimuoviDalCarrello(idProdotto) {
+  try {
+    const userId = getUserId();
+    await fetch(`/api/cart/remove`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId, productId: idProdotto }),
+    });
+
+    await caricaCarrello(); // 🔥 Ricarica dinamicamente dopo rimozione
+  } catch (err) {
+    console.error("Errore rimozione prodotto:", err);
+  }
+}
+
+function aggiornaTotale(totale) {
+  document.getElementById("totale-carrello").innerText = `Totale: €${totale.toFixed(2)}`;
+}
+
+function paga() {
+  const userId = getUserId();
+  alert("verrai reindirizzato alla pagina di pagamento.");
+  window.location.href = `payment.html?user=${userId}`;
+}

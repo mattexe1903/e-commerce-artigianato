@@ -40,15 +40,35 @@ const getProductById = async (req, res) => {
 };
 
 const createProduct = async (req, res) => {
-  const {name, description, price, imageUrl} = req.body;
+  const {
+    nome,
+    descrizione,
+    prezzo,
+    quantita,
+    immagine,
+    utenteId,
+    categoria
+  } = req.body;
+
   try {
-    const newProduct = await productService.createProduct({name, description, price, imageUrl});
+    // Assicurati che questi campi esistano nel modello di prodotto
+    const newProduct = await productService.createProduct({
+      nome,
+      descrizione,
+      prezzo,
+      quantita,
+      immagine,
+      utenteId,
+      categoria
+    });
+
     res.status(201).json({
       success: true,
       message: 'Prodotto creato con successo',
       product: newProduct
     });
   } catch (err) {
+    console.error('Errore durante la creazione del prodotto:', err)
     res.status(500).json({
       success: false,
       message: err.message || 'Errore nella creazione del prodotto'
