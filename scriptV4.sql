@@ -76,12 +76,32 @@ VALUES
     ('Admin', 'Admin', 'admin@gmail.com', 'admin123', 1),
     ('Giovanni', 'Verdi', 'artigiano@gmail.com', 'password123', 3);
 
+
+CREATE TABLE states(
+    state_id SERIAL PRIMARY KEY NOT NULL,
+    state_name TEXT NOT NULL UNIQUE
+);
+
+INSERT INTO states
+    (state_name)
+VALUES
+    ('in attesa'),
+    ('accettato'),
+    ('rifiutato'),
+    ('in lavorazione'),
+    ('completato'),
+    ('annullato'),
+    ('nuova'),
+    ('in lavorazione'),
+    ('risolta'),
+    ('archiviata');
+
 -- Creazione della tabella per la gestione delle informazioni extra per gli artigiani.
 CREATE TABLE info_artisan(
     artisan_id INTEGER REFERENCES users(user_id) PRIMARY KEY,
     iban TEXT NOT NULL,
     craft TEXT NOT NULL, 
-    artisan_state TEXT NOT NULL CHECK (artisan_state IN ('in attesa', 'accettato', 'rifiutato')),
+    artisan_state INTEGER REFERENCES states(state_id)
 );
 
 -- Creazione della tabella per la gestione delle informazioni di spedizione
@@ -140,7 +160,7 @@ CREATE TABLE orders
     order_id SERIAL PRIMARY KEY NOT NULL,
     user_id INTEGER REFERENCES users(user_id),
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    order_state TEXT NOT NULL CHECK (order_state IN ('in attesa', 'in lavorazione', 'completato', 'annullato')),
+    order_state INTEGER REFERENCES states(state_id),
     total DECIMAL(10, 2) NOT NULL,
     addres_id INTEGER REFERENCES address(addres_id)
 );
@@ -161,7 +181,7 @@ CREATE TABLE reports (
     user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
     report_message TEXT NOT NULL,
-    report_state VARCHAR(50) DEFAULT 'nuova' CHECK (report_state IN ('nuova', 'in lavorazione', 'risolta', 'archiviata')),
+    report_state INTEGER REFERENCES states(state_id),
     sent_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     resolution_date TIMESTAMP,
     admin_id INTEGER REFERENCES users(user_id) ON DELETE SET NULL
