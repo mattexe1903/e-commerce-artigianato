@@ -7,8 +7,14 @@ const login = async (req, res) => {
   try {
     const user = await authService.login(email, password);
 
-    const artisan_state = await authService.artisanIsActive(user.user_id);
-    if(artisan_state!=null && artisan_state != 2) {
+    console.log('Dati ricevuti:', user);
+
+    const artisan_state_raw = await authService.artisanIsActive(user.user_id);
+    console.log('artisan_state:', artisan_state_raw);
+
+    const stato = artisan_state_raw?.artisan_state;
+
+    if (stato !== undefined && stato !== 2) {
       return res.status(400).json({
         success: false,
         message: 'Richiesta in attesa di approvazione o rifiutata'
@@ -78,7 +84,7 @@ const registerArtigiano = async (req, res) => {
 
     const artisan_state = await authService.artisanIsActive(user.user_id);
     console.log('artisan_state:', artisan_state);
-    
+
     if (artisan_state != 2) {
       return res.status(400).json({
         success: false,

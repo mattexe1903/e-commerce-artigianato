@@ -10,12 +10,12 @@ const login = async (email, password) => {
   if (!validPassword) throw new Error('Credenziali non valide');
 
   return {
-    id: user.user_id,
-    nome: user.user_name,
-    cognome: user.surname,
+    user_id: user.user_id,
+    user_name: user.user_name,
+    surname: user.surname,
     email: user.email,
-    ruolo: user.user_role,
-    dataCreazione: user.creation_date
+    user_role: user.user_role,
+    creation_date: user.creation_date
   };
 };
 

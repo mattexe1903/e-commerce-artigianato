@@ -50,20 +50,17 @@ window.onload = () => {
           const data = await response.json();
 
           if (!response.ok) {
-            // Usa il messaggio del backend, se presente
             throw new Error(data.message || "Registrazione fallita. Controlla i dati.");
           }
 
           return data;
         })
         .then(data => {
-          // Se arriviamo qui, la registrazione è andata a buon fine
           const user = data.user;
           localStorage.setItem("user", JSON.stringify(user));
           window.location.href = "homereg.html";
         })
         .catch(error => {
-          // Mostra il messaggio restituito dal backend
           alert(error.message || "Errore di connessione.");
         });
 
