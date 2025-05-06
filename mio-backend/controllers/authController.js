@@ -22,7 +22,7 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
-  const { nome, cognome, email, password, conferma, indirizzo } = req.body;
+  const { nome, cognome, email, password, conferma} = req.body;
 
   if (password !== conferma) {
     return res.status(400).json({
@@ -32,7 +32,7 @@ const register = async (req, res) => {
   }
 
   try {
-    const user = await authService.register(nome, cognome, email, password, 2, indirizzo);
+    const user = await authService.register(nome, cognome, email, password, 2);
     res.status(201).json({
       success: true,
       message: 'Registrazione riuscita',

@@ -16,22 +16,18 @@ window.onload = () => {
   const form = document.getElementById('form-cliente');
   form.addEventListener('submit', function (e) {
     e.preventDefault();
+    const errorMessage = document.getElementById('error-message');
 
     const datiBase = {
       nome: form.nome.value.trim(),
       cognome: form.cognome.value.trim(),
-      indirizzo: form.indirizzo.value.trim(),
+      //indirizzo: form.indirizzo.value.trim(),
       email: form.email.value.trim(),
       password: form.password.value.trim(),
-      conferma: form.conferma.value.trim(),
-      ruolo: 'cliente'
+      conferma: form.conferma.value.trim()
     };
-
-    if (datiBase.password !== datiBase.conferma) {
-      alert("Le password non coincidono.");
-      return;
-    }
-
+    
+    
     if (tipo === 'artigiano') {
       const datiExtra = {
         tipo_artigiano: form.tipo_artigiano.value.trim(),
