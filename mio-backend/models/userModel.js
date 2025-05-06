@@ -1,14 +1,14 @@
 const pool = require('../db');
 
 const getUserByEmail = async (email) => {
-  const result = await pool.query('SELECT * FROM utenti WHERE email = $1', [email]);
+  const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
   return result.rows[0];
 };
 
-const createUser = async (nome, cognome, email, password, ruolo) => {
+const createUser = async (nome, cognome, email, password) => {
   const result = await pool.query(
-    'INSERT INTO utenti (nome, cognome, email, password, ruolo) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-    [nome, cognome, email, password]
+    'INSERT INTO users (user_name, surname, email, user_password, role) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+    [nome, cognome, email, password, 1]
   );
   return result.rows[0];
 }

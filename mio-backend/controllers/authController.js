@@ -6,7 +6,7 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await authService.login(email, password);
-    const token = generateToken(user.id); 
+    const token = generateToken(user.user_id); 
     res.status(200).json({
       success: true,
       message: 'Login riuscito',
@@ -32,7 +32,7 @@ const register = async (req, res) => {
   }
 
   try {
-    const user = await authService.register(nome, cognome, email, password, 'cliente', indirizzo);
+    const user = await authService.register(nome, cognome, email, password, 2, indirizzo);
     res.status(201).json({
       success: true,
       message: 'Registrazione riuscita',
