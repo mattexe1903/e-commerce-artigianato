@@ -40,7 +40,10 @@ document.addEventListener("DOMContentLoaded", function () {
           case 1:
             window.location.href = "adminview.html";
             break;
-          case 2 || 3:
+          case 2:
+            window.location.href = "homereg.html";
+            break;
+          case 3:
             window.location.href = "homereg.html";
             break;
           default:

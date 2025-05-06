@@ -16,10 +16,10 @@ document.getElementById("home-btn").addEventListener("click", () => {
   
       // Set UI generale
       document.getElementById("titolo-bentornato").innerText = `Benvenuto, ${user.nome}`;
-      document.getElementById("sidebar-title").innerText = ruolo === "artigiano" ? "Lokal" : "Profilo";
+      document.getElementById("sidebar-title").innerText = ruolo === 3 ? "Lokal" : "Profilo";
   
       // Aggiungi sezioni extra per artigiano
-      if (ruolo === "artigiano") {
+      if (ruolo === 3) {
         document.getElementById("inventario").classList.remove("hidden");
         document.getElementById("prenotazioni").classList.remove("hidden");
         document.getElementById("dashboard").classList.remove("hidden");
@@ -148,7 +148,3 @@ document.getElementById("home-btn").addEventListener("click", () => {
       alert("C'è stato un errore nel caricamento del profilo.");
     }
   };
-<<<<<<< HEAD
-  
-=======
->>>>>>> origin/frontend
