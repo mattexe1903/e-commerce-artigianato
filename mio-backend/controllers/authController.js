@@ -69,7 +69,7 @@ const registerArtigiano = async (req, res) => {
     const user = await authService.register(nome, cognome, email, password, 3);
 
     if (tipo_artigiano && iban) {
-      await authService.saveArtigianoDetails(user.id, tipo_artigiano, iban);
+      await authService.saveArtigianoDetails(user.user_id, tipo_artigiano, iban);
     }
 
     res.status(201).json({

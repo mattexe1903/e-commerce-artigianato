@@ -25,7 +25,7 @@ const getArtigianiById = async (id) => {
 
 const createArtigiano = async (userId, craft, iban) => {
   const result = await pool.query(
-    'INSERT INTO info_artisan (user_id, craft, iban) VALUES ($1, $2, $3) RETURNING *',
+    'INSERT INTO info_artisan (user_id, craft, iban, artisan_state) VALUES ($1, $2, $3, 1) RETURNING *',
     [userId, craft, iban]
   );
   return result.rows[0];
