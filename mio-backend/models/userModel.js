@@ -31,10 +31,16 @@ const createArtigiano = async (userId, craft, iban) => {
   return result.rows[0];
 }
 
+const getArtisanStateById = async (id) => {
+  const result = await pool.query('SELECT artisan_state FROM info_artisan WHERE artisan_id = $1', [id]);
+  return result.rows[0];
+}
+
 module.exports = {
   getUserByEmail,
   createUser,
   getUserById,
   getArtigianiById, 
-  createArtigiano
+  createArtigiano,
+  getArtisanStateById
 };
