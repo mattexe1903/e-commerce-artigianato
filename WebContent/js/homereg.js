@@ -23,7 +23,10 @@ function vaiAlProfilo() {
     window.location.href = "login.html"; // oppure home.html
   }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/frontend
 
 function logout() {
   alert("Logout effettuato");

@@ -148,4 +148,7 @@ document.getElementById("home-btn").addEventListener("click", () => {
       alert("C'è stato un errore nel caricamento del profilo.");
     }
   };
+<<<<<<< HEAD
   
+=======
+>>>>>>> origin/frontend
