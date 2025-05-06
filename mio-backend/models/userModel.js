@@ -14,7 +14,7 @@ const createUser = async (nome, cognome, email, password, role) => {
 }
 
 const getUserById = async (id) => {
-  const result = await pool.query('SELECT * FROM utenti JOIN indirizzo ON(utenti.id = indirizzo.idutente) WHERE utenti.id = $1', [id]);
+  const result = await pool.query('SELECT * FROM users JOIN address ON(users.users_id = address.user_id) WHERE user.user_id = $1', [id]);
   return result.rows[0];
 }
 
