@@ -20,16 +20,34 @@ document.addEventListener("DOMContentLoaded", function () {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     })
-      .then(response => {
-        if (!response.ok) throw new Error("Credenziali errate");
-        return response.json();
+      .then(async response => {
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Registrazione fallita. Controlla i dati.");
+        }
+
+        return data;
       })
       .then(data => {
         const user = data.user;
-        localStorage.setItem("user", JSON.stringify(user));
-        switch(user.ruolo) {
-          case 1: window.location.href = "adminview.html"; break;
-          case 2: case 3: window.location.href = "homereg.html"; break;
+
+        //console.log('token:', data.token);
+
+        localStorage.setItem("token", JSON.stringify(data.token));
+
+        //console.log("user role", user.user_role);
+
+        switch (user.user_role) {
+          case 1:
+            window.location.href = "adminview.html";
+            break;
+          case 2:
+            window.location.href = "homereg.html";
+            break;
+          case 3:
+            window.location.href = "homereg.html";
+            break;
           default:
             errorMessage.style.display = "block";
             errorMessage.textContent = "Ruolo non riconosciuto.";

@@ -14,14 +14,43 @@ function vaiAllaPaginaProdotto(idProdotto) {
 }
 
 function vaiAlProfilo() {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const token = JSON.parse(localStorage.getItem("token"));
+  console.log("Token:", token);
 
-  if (user && user.id) {
-    window.location.href = "profile.html";
-  } else {
-    alert("Devi essere autenticato per accedere al profilo.");
-    window.location.href = "login.html"; // oppure home.html
-  }
+  fetch('http://localhost:3000/api/user', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+    .then(async response => {
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Registrazione fallita. Controlla i dati.");
+      }
+
+      return data;
+    })
+    .then(data => {
+      switch (data.user_role) {
+        case 1:
+        case 2:
+          window.location.href = "profile.html";
+          break;
+        case 3:
+          window.location.href = "profile.html";
+          break;
+        default:
+          errorMessage.style.display = "block";
+          errorMessage.textContent = "Ruolo non riconosciuto.";
+          return;
+      }
+    })
+    .catch(error => {
+      errorMessage.style.display = "block";
+      errorMessage.textContent = error.message || "Errore di connessione.";
+    });
 }
 function logout() {
   alert("Logout effettuato");
@@ -141,4 +170,3 @@ async function caricaTuttiProdotti() {
     lista.innerHTML = "<p>Errore nel caricare i prodotti.</p>";
   }
 }
- 
