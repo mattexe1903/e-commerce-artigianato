@@ -18,6 +18,9 @@ window.onload = () => {
     e.preventDefault();
     const errorMessage = document.getElementById('error-message');
 
+
+    //TO DO: CONTROLLO PASSWORD E CONFERMA PASSWORD
+
     const datiBase = {
       nome: form.nome.value.trim(),
       cognome: form.cognome.value.trim(),
@@ -26,8 +29,8 @@ window.onload = () => {
       password: form.password.value.trim(),
       conferma: form.conferma.value.trim()
     };
-    
-    
+
+
     if (tipo === 'artigiano') {
       const datiExtra = {
         tipo_artigiano: form.tipo_artigiano.value.trim(),
@@ -43,33 +46,34 @@ window.onload = () => {
         },
         body: JSON.stringify({ datiBase, datiExtra })
       })
-        .then(response => {
+        .then(async response => {
+          const data = await response.json();
+
           if (!response.ok) {
-            throw new Error("Registrazione fallita. Controlla i dati.");
+            throw new Error(data.message || "Registrazione fallita. Controlla i dati.");
           }
-          return response.json();
+
+          return data;
         })
         .then(data => {
           const user = data.user;
-
           localStorage.setItem("user", JSON.stringify(user));
-
           window.location.href = "homereg.html";
         })
         .catch(error => {
-          errorMessage.style.display = "block";
-          errorMessage.textContent = error.message || "Errore di connessione.";
+          alert(error.message || "Errore di connessione.");
         });
 
+
       //  INVIA A ADMIN
-      const segnalazioneAdmin = {
+      /*const segnalazioneAdmin = {
         nome: datiBase.nome,
         cognome: datiBase.cognome,
         mansione: datiExtra.tipo_artigiano,
         iban: datiExtra.iban
       };
       console.log("Invia segnalazione all’admin:", segnalazioneAdmin);
-
+*/
     } else {
 
       console.log("Dati cliente:", datiBase);

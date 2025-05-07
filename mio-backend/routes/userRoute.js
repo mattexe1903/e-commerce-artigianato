@@ -4,7 +4,7 @@ const userController = require('../controllers/userController');
 const { protect } = require('../middleware/userMiddleware');
 
 // Route restituzione informazioni utente
-router.get('/user/:id', protect,  userController.getUserInfo);
+router.get('/user', protect,  userController.getUserInfo);
 
 router.get('/user/:id/infoartigiani', protect, userController.getArtigianiInfo);
 

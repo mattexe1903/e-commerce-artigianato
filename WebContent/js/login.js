@@ -22,21 +22,25 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       body: JSON.stringify({ email, password })
     })
-      .then(response => {
-        console.log('Risposta del server:', response);
+      .then(async response => {
+        const data = await response.json();
+
         if (!response.ok) {
-          throw new Error("Credenziali errate");
+          throw new Error(data.message || "Registrazione fallita. Controlla i dati.");
         }
-        return response.json();
+
+        return data;
       })
       .then(data => {
         const user = data.user;
 
-        console.log('Dati ricevuti:', data);
+        //console.log('token:', data.token);
 
-        localStorage.setItem("user", JSON.stringify(user));
-        
-        switch(user.ruolo) {
+        localStorage.setItem("token", JSON.stringify(data.token));
+
+        //console.log("user role", user.user_role);
+
+        switch (user.user_role) {
           case 1:
             window.location.href = "adminview.html";
             break;
