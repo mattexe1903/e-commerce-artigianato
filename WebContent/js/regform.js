@@ -21,7 +21,6 @@ window.onload = () => {
     const datiBase = {
       nome: form.nome.value.trim(),
       cognome: form.cognome.value.trim(),
-      //indirizzo: form.indirizzo.value.trim(),
       email: form.email.value.trim(),
       password: form.password.value.trim(),
       conferma: form.conferma.value.trim()

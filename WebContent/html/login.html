@@ -12,6 +12,7 @@
       <a href="../home.html" style="color: inherit; text-decoration: none;">Lokal</a>
     </div>
   </header>
+
   <div class="login-container">
     <h1>Accedi al tuo account</h1>
     
@@ -21,14 +22,18 @@
       <label for="Email">Email</label>
       <input type="email" id="email" name="Email" />
 
+      <div class="password-label-row">
         <label for="password">Password</label>
-        <div class="password-container">
-            <input type="password" id="password" name="password" />
-          </div>
-          <p class="toggle-text">
-            <a href="#" id="togglePassword">Mostra password</a>
-          </p>
-          
+        <a href="#" id="forgotPassword">Password dimenticata?</a>
+      </div>
+
+      <div class="password-container">
+        <input type="password" id="password" name="password" />
+      </div>
+
+      <p class="toggle-text">
+        <a href="#" id="togglePassword">Mostra password</a>
+      </p>
 
       <button type="submit" id="loginBtn">Accedi</button>
 
@@ -39,6 +44,18 @@
         Hai problemi di accesso? <a href="#" id="supportLink">premi qui</a>
       </p>
     </form>
+  </div>
+
+  <!-- Modal per reset password -->
+  <div id="forgotModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Recupera Password</h2>
+      <label for="resetEmail">Inserisci la tua email</label>
+      <input type="email" id="resetEmail" />
+      <button id="sendReset">Invia</button>
+      <p id="resetMessage" class="link-text"></p>
+    </div>
   </div>
 
   <script src="../js/login.js"></script>
