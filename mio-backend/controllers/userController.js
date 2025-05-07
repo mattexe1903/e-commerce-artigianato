@@ -2,8 +2,8 @@ const userService = require('../services/userService');
 
 const getUserInfo = async (req, res) => {
   try {
-    const userId = req.users.id;
-    const userInfo = await userService.getUserInfo(userId);
+    const userInfo = req.user;
+    console.log('User info:', userInfo);
     if (!userInfo) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -12,7 +12,7 @@ const getUserInfo = async (req, res) => {
     console.error('Error fetching user info:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
-}; 
+};
 
 const getArtigianiInfo = async (req, res) => {
   try {
