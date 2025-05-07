@@ -1,25 +1,35 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const pool = require('./db');
 
 const app = express();
+
+// Middleware di base
 app.use(cors());
 app.use(express.json());
 
+// Servire file statici (es. immagini)
+app.use('/images', express.static(path.join(__dirname, '..', 'WebContent', 'images')));
+
+
+// Import delle routes
 const authRoutes = require('./routes/authRoute');
-const productRoutes = require('./routes/productRoute');
+const productRoutes = require('./routes/productRoute'); // <-- nome corretto
 const userRoutes = require('./routes/userRoute');
 
+// Uso delle routes
 app.use('/api', authRoutes);
 app.use('/api', productRoutes);
 app.use('/api', userRoutes);
 
+// Route di base
 app.get('/', (req, res) => {
-    res.send('Benvenuto nel backend dell\'e-commerce!');
+  res.send('Benvenuto nel backend dell\'e-commerce!');
 });
 
-// SOLO PER TESTING: Recupera tutti gli utenti (non sicuro per produzione)
+// SOLO PER TESTING: Recupera tutti gli utenti
 app.get('/utenti', async (req, res) => {
   try {
     const allUsers = await pool.query('SELECT * FROM utenti');
@@ -30,7 +40,8 @@ app.get('/utenti', async (req, res) => {
   }
 });
 
+// Avvio del server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server avviato su http://localhost:${PORT}`);
+  console.log(`✅ Server avviato su http://localhost:${PORT}`);
 });

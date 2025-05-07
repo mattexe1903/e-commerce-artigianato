@@ -18,33 +18,26 @@ document.getElementById("image-upload").addEventListener("change", function () {
 // Invio del prodotto al database
 function creaProdotto() {
   const nome = document.getElementById("product-name").value;
-  const categoria = document.getElementById("product-category").value;
   const descrizione = document.getElementById("product-description-text").value;
   const prezzo = parseFloat(document.getElementById("product-price").value);
   const quantita = parseInt(document.getElementById("product-quantity").value);
-  const immagine = document.getElementById("product-img").src;
+  const file = document.getElementById("image-upload").files[0];
 
-  // Verifica che tutti i campi siano compilati
-  if (!nome || !categoria || !descrizione || isNaN(prezzo) || isNaN(quantita) || !immagine) {
-    alert("Compila tutti i campi prima di procedere.");
+  if (!nome || !descrizione || isNaN(prezzo) || isNaN(quantita) || !file) {
+    alert("Compila tutti i campi e seleziona un'immagine.");
     return;
   }
-  const prodotto = {
-    nome,
-    categoria,
-    descrizione,
-    prezzo,
-    quantita,
-    immagine,
-    utenteId
-  };
 
-  fetch('http://localhost:3000/api/products', { // <-- Corretto qui
+  const formData = new FormData();
+  formData.append("product_name", nome);
+  formData.append("photo_description", descrizione);
+  formData.append("price", prezzo);
+  formData.append("quantity", quantita);
+  formData.append("photo", file);
+
+  fetch('http://localhost:3000/api/products', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(prodotto)
+    body: formData
   })
   .then(res => {
     if (!res.ok) throw new Error("Errore nella creazione del prodotto");

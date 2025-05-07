@@ -1,3 +1,5 @@
+const path = require('path');
+const fs = require('fs');
 const productService = require('../services/productService');
 
 const getAllProducts = async (req, res) => {
@@ -21,46 +23,41 @@ const getProductById = async (req, res) => {
   try {
     const product = await productService.getProductById(id);
     if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: 'Prodotto non trovato'
-      });
+      return res.status(404).json({ success: false, message: 'Prodotto non trovato' });
     }
-    res.status(200).json({
-      success: true,
-      message: 'Prodotto recuperato con successo',
-      product
-    });
+    res.status(200).json({ success: true, message: 'Prodotto recuperato', product });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err.message || 'Errore nel recupero del prodotto'
-    });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
 const createProduct = async (req, res) => {
-  const {
-    nome,
-    descrizione,
-    prezzo,
-    quantita,
-    immagine,
-    utenteId,
-    categoria
-  } = req.body;
+  const { product_name, photo_description, price, quantity } = req.body;
 
   try {
-    // Assicurati che questi campi esistano nel modello di prodotto
+    // Crea il prodotto senza immagine per ottenere il product_id
     const newProduct = await productService.createProduct({
-      nome,
-      descrizione,
-      prezzo,
-      quantita,
-      immagine,
-      utenteId,
-      categoria
+      product_name,
+      photo: 'placeholder.jpg', // Immagine temporanea
+      photo_description,
+      price,
+      quantity
     });
+
+    // Se è stato caricato un file
+    if (req.file) {
+      const extension = path.extname(req.file.originalname);
+      const newFileName = `${newProduct.product_id}${extension}`;
+      const oldPath = req.file.path;
+      const newPath = path.join('images', newFileName);
+
+      // Rinominare/muovere il file
+      fs.renameSync(oldPath, newPath);
+
+      // Aggiornare il record del prodotto con il nuovo nome dell'immagine
+      await productService.updateProductPhoto(newProduct.product_id, newFileName);
+      newProduct.photo = newFileName;
+    }
 
     res.status(201).json({
       success: true,
@@ -68,7 +65,6 @@ const createProduct = async (req, res) => {
       product: newProduct
     });
   } catch (err) {
-    console.error('Errore durante la creazione del prodotto:', err)
     res.status(500).json({
       success: false,
       message: err.message || 'Errore nella creazione del prodotto'
@@ -76,58 +72,82 @@ const createProduct = async (req, res) => {
   }
 };
 
+
 const updateProduct = async (req, res) => {
   const { id } = req.params;
-  const { name, description, price, imageUrl } = req.body;
+  const { product_name, photo_description, price, quantity } = req.body;
+
   try {
-    const updatedProduct = await productService.updateProduct(id, { name, description, price, imageUrl });
+    const updatedProduct = await productService.updateProduct(id, {
+      product_name,
+      photo_description,
+      price,
+      quantity
+    });
+
     if (!updatedProduct) {
-      return res.status(404).json({
-        success: false,
-        message: 'Prodotto non trovato'
-      });
+      return res.status(404).json({ success: false, message: 'Prodotto non trovato' });
     }
+
     res.status(200).json({
       success: true,
-      message: 'Prodotto aggiornato con successo',
+      message: 'Prodotto aggiornato',
       product: updatedProduct
     });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err.message || 'Errore nell\'aggiornamento del prodotto'
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+const updateProductPhoto = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const product = await productService.getProductById(id);
+    if (!product) {
+      return res.status(404).json({ success: false, message: 'Prodotto non trovato' });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'Nessun file fornito' });
+    }
+
+    const extension = path.extname(req.file.originalname);
+    const fileName = `${id}${extension}`;
+    const newPath = path.join(__dirname, '..', 'WebContent', 'images', fileName);
+
+    fs.renameSync(req.file.path, newPath);
+
+    await productService.updateProductPhoto(id, fileName);
+
+    res.status(200).json({
+      success: true,
+      message: 'Foto aggiornata con successo',
+      photo: fileName
     });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
 const deleteProduct = async (req, res) => {
   const { id } = req.params;
   try {
-    const deletedProduct = await productService.deleteProduct(id);
-    if (!deletedProduct) {
-      return res.status(404).json({
-        success: false,
-        message: 'Prodotto non trovato'
-      });
+    const deleted = await productService.deleteProduct(id);
+    if (!deleted) {
+      return res.status(404).json({ success: false, message: 'Prodotto non trovato' });
     }
-    res.status(200).json({
-      success: true,
-      message: 'Prodotto eliminato con successo',
-      product: deletedProduct
-    });
+    res.status(200).json({ success: true, message: 'Prodotto eliminato' });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err.message || 'Errore nell\'eliminazione del prodotto'
-    });
-  } 
+    res.status(500).json({ success: false, message: err.message });
+  }
 };
 
-
 module.exports = {
-    getAllProducts, 
-    getProductById,
-    createProduct,
-    updateProduct, 
-    deleteProduct
+  getAllProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  updateProductPhoto,
+  deleteProduct
 };
