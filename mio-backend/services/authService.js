@@ -1,4 +1,4 @@
-//const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel');
 
 const login = async (email, password) => {
