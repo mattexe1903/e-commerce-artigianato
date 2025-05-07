@@ -9,13 +9,13 @@ window.onload = async function () {
       const data = await response.json();
       const prodotto = data.product;
 
-      document.getElementById('product-img').src = prodotto.foto;
-      document.getElementById('product-name').innerText = prodotto.nome;
-      document.getElementById('product-category').innerText = prodotto.categoria || "N/A";
-      document.getElementById('product-description-text').innerText = prodotto.descrizione;
-      document.getElementById('product-price').innerText = `€${Number(prodotto.prezzo).toFixed(2)}`;
-      document.getElementById('product-quantity').innerText = prodotto.quantita;
-      document.getElementById('quantity-input').max = prodotto.quantita;
+      document.getElementById('product-img').src = prodotto.photo;
+      document.getElementById('product-name').innerText = prodotto.product_name;
+      document.getElementById('product-category').innerText = prodotto.category || "N/A";
+      document.getElementById('product-description-text').innerText = prodotto.photo_description || "N/A";
+      document.getElementById('product-price').innerText = `€${Number(prodotto.price).toFixed(2)}`;
+      document.getElementById('product-quantity').innerText = prodotto.quantity;
+      document.getElementById('quantity-input').max = prodotto.quantity;
 
     } catch (error) {
       console.error("Errore nel recupero del prodotto:", error);

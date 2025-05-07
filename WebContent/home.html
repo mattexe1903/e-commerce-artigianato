@@ -292,15 +292,15 @@
     arrayProdotti.forEach(prodotto => {
       const div = document.createElement('div');
       div.className = 'product';
-      div.dataset.prezzo = prodotto.prezzo ?? '';
-      div.dataset.disponibile = prodotto.quantita > 0 ? '1' : '0';
-      div.dataset.categoria = prodotto.categoria ?? '';
-      div.onclick = () => vaiAllaPaginaProdotto(prodotto.id);
+      div.dataset.prezzo = prodotto.price ?? '';
+      div.dataset.disponibile = prodotto.quantity > 0 ? '1' : '0';
+      div.dataset.categoria = prodotto.category ?? '';
+      div.onclick = () => vaiAllaPaginaProdotto(prodotto.product_id);
 
       div.innerHTML = `
-        <img src="${prodotto.foto || 'placeholder.jpg'}" alt="${prodotto.nome || 'Senza Nome'}" style="width:100px;height:auto;">
-        <div class="product-name">${prodotto.nome || 'Nome mancante'}</div>
-        <div class="product-price">€ ${Number(prodotto.prezzo).toFixed(2)}</div>
+        <img src="${prodotto.photo || 'placeholder.jpg'}" alt="${prodotto.product_id || 'Senza Nome'}" style="width:100px;height:auto;">
+        <div class="product-name">${prodotto.product_name || 'Nome mancante'}</div>
+        <div class="product-price">€ ${Number(prodotto.price).toFixed(2)}</div>
       `;
 
       lista.appendChild(div);
