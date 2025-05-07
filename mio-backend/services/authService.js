@@ -5,8 +5,8 @@ const login = async (email, password) => {
   const user = await userModel.getUserByEmail(email);
   if (!user) throw new Error('Credenziali non valide');
 
-  //const validPassword = await bcrypt.compare(password, user.password);
-  const validPassword = password === user.user_password;
+  const validPassword = await bcrypt.compare(password, user.password);
+  //const validPassword = password === user.user_password;
   if (!validPassword) throw new Error('Credenziali non valide');
 
   return {
@@ -24,10 +24,8 @@ const register = async (nome, cognome, email, password, ruolo) => {
   console.log(existingUser);
   if (existingUser) throw new Error('Email già registrata');
 
-  //const hashedPassword = await bcrypt.hash(password, 10);
-  const hashedPassword = password;
-  //PROBLEMA: NON ARRIVANO I PARAMETRI
-  console.log("Dati in ingresso a createUser:", { nome, cognome, email, hashedPassword, ruolo });
+  const hashedPassword = await bcrypt.hash(password, 10);
+  //const hashedPassword = password;
   const newUser = await userModel.createUser(nome, cognome, email, hashedPassword, ruolo);
 
   return {
