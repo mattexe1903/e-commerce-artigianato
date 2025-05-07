@@ -7,7 +7,7 @@ const login = async (req, res) => {
   try {
     const user = await authService.login(email, password);
 
-    console.log('Dati ricevuti:', user);
+    //console.log('Dati ricevuti:', user);
 
     const artisan_state_raw = await authService.artisanIsActive(user.user_id);
     console.log('artisan_state:', artisan_state_raw);
@@ -22,6 +22,7 @@ const login = async (req, res) => {
     }
 
     const token = generateToken(user.user_id);
+    console.log('Token generato:', token);
     res.status(200).json({
       success: true,
       message: 'Login riuscito',
