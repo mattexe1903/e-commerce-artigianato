@@ -12,4 +12,7 @@ router.post('/register', authController.register);
 // Route registrazione artigiano
 router.post('/registerArtigiano', authController.registerArtigiano);
 
+// Route recupero password
+router.post('/recoverPassword', authController.recoverPassword);
+
 module.exports = router;

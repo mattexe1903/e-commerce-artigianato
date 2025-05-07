@@ -1,7 +1,7 @@
 const pool = require('../db');
 
-const getUserByEmail = async (email) => {
-  const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+const getUserIdByEmail = async (email) => {
+  const result = await pool.query('SELECT user_id, user_password FROM users WHERE email = $1', [email]);
   return result.rows[0];
 };
 
@@ -37,7 +37,7 @@ const getArtisanStateById = async (id) => {
 }
 
 module.exports = {
-  getUserByEmail,
+  getUserIdByEmail,
   createUser,
   getUserById,
   getArtigianiById, 

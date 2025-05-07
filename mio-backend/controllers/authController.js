@@ -5,11 +5,11 @@ const jwt = require('jsonwebtoken');
 const login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await authService.login(email, password);
+    const { user_id } = await authService.login(email, password);
 
-    //console.log('Dati ricevuti:', user);
+    console.log('Dati ricevuti:', user_id);
 
-    const artisan_state_raw = await authService.artisanIsActive(user.user_id);
+    const artisan_state_raw = await authService.artisanIsActive(user_id);
     console.log('artisan_state:', artisan_state_raw);
 
     const stato = artisan_state_raw?.artisan_state;
@@ -21,13 +21,11 @@ const login = async (req, res) => {
       });
     }
 
-    const token = generateToken(user.user_id);
-    console.log('Token generato:', token);
+    const token = generateToken(user_id);
     res.status(200).json({
       success: true,
       message: 'Login riuscito',
-      token,
-      user
+      token
     });
   } catch (err) {
     res.status(401).json({
