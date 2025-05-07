@@ -52,16 +52,11 @@ window.onload = () => {
           if (!response.ok) {
             throw new Error(data.message || "Registrazione fallita. Controlla i dati.");
           }
-
           return data;
-        })
-        .then(data => {
-          const user = data.user;
-          localStorage.setItem("user", JSON.stringify(user));
-          window.location.href = "homereg.html";
         })
         .catch(error => {
           alert(error.message || "Errore di connessione.");
+          window.location.href = "login.html";
         });
 
 

@@ -89,7 +89,7 @@ const registerArtigiano = async (req, res) => {
     if (artisan_state != 2) {
       return res.status(400).json({
         success: false,
-        message: 'Richiesta in attesa di approvazione o rifiutata'
+        message: 'Richiesta in attesa di approvazione'
       });
     } else {
       res.status(201).json({
