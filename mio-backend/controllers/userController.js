@@ -28,8 +28,23 @@ const getArtigianiInfo = async (req, res) => {
   }
 };
 
+const getUserInformation = async (req, res) => {
+  try {
+    const user = req.user;
+    console.log('dati:', user);
+    const userId = req.user.user_id;
+    const addresses = await userService.getUserInformation(userId);
+    console.log('User addresses:', addresses);
+    return res.status(200).json({ addresses, user });
+  } catch (error) {
+    console.error('Error fetching user addresses:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 
 module.exports = {
-    getUserInfo, 
-    getArtigianiInfo
+  getUserInfo,
+  getArtigianiInfo,
+  getUserInformation
 }

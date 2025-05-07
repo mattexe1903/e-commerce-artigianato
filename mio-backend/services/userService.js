@@ -20,7 +20,18 @@ const getArtigianiInfo = async (userId) => {
     }
 }
 
+const getUserInformation = async (userId) => {
+    try {
+        const addresses = await userModel.getUserAddresses(userId);
+        return addresses;
+    } catch (error) {
+        console.error('Error fetching user addresses:', error);
+        throw error;
+    }
+};
+
 module.exports = {
     getUserInfo,
-    getArtigianiInfo
+    getArtigianiInfo,
+    getUserInformation
 };

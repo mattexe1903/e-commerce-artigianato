@@ -4,42 +4,62 @@ document.getElementById("home-btn").addEventListener("click", () => {
   
   window.onload = async () => {
     try {
-      const userString = localStorage.getItem("user");
-      const user = JSON.parse(userString);
-      const utenteId = user.id;
-      const ruolo = user.ruolo; // "cliente" o "artigiano"
+      const token = JSON.parse(localStorage.getItem("token"));
+      console.log(token);
+      console.log('sono dentro');
+      fetch('http://localhost:3000/api/userInfo', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+        .then(async response => {
+          const data = await response.json();
+    
+          if (!response.ok) {
+            throw new Error(data.message || "Registrazione fallita. Controlla i dati.");
+          }
+          
+          console.log('response', data);
+          return data;
+        })
+
+      .then(async data => {
+        const user = data.user;
+        const ruolo = user.ruolo;
+        const address = data.addresses;
   
-      if (!utenteId || !ruolo) {
-        alert("Informazioni utente mancanti");
-        throw new Error("Dati utente non validi");
-      }
+        // Set UI generale
+        document.getElementById("titolo-bentornato").innerText = `Benvenuto, ${user.user_name}`;
+        document.getElementById("sidebar-title").innerText = ruolo === 3 ? "Lokal" : "Profilo";
   
-      // Set UI generale
-      document.getElementById("titolo-bentornato").innerText = `Benvenuto, ${user.nome}`;
-      document.getElementById("sidebar-title").innerText = ruolo === 3 ? "Lokal" : "Profilo";
+        // Aggiungi sezioni extra per artigiano
+        if (ruolo === 3) {
+          document.getElementById("inventario").classList.remove("hidden");
+          document.getElementById("prenotazioni").classList.remove("hidden");
+          document.getElementById("dashboard").classList.remove("hidden");
   
-      // Aggiungi sezioni extra per artigiano
-      if (ruolo === 3) {
-        document.getElementById("inventario").classList.remove("hidden");
-        document.getElementById("prenotazioni").classList.remove("hidden");
-        document.getElementById("dashboard").classList.remove("hidden");
+          const navList = document.getElementById("nav-list");
+          ["Inventario", "Prenotazioni", "Dashboard"].forEach((item, i) => {
+            const li = document.createElement("li");
+            li.innerHTML = `<a href="#${item.toLowerCase()}">${item}</a>`;
+            navList.insertBefore(li, navList.lastElementChild);
+          });
+        }
   
-        const navList = document.getElementById("nav-list");
-        ["Inventario", "Prenotazioni", "Dashboard"].forEach((item, i) => {
-          const li = document.createElement("li");
-          li.innerHTML = `<a href="#${item.toLowerCase()}">${item}</a>`;
-          navList.insertBefore(li, navList.lastElementChild);
-        });
-      }
-  
-      // Mostra dati utente
-      const datiUtente = document.getElementById("dati-utente");
-      datiUtente.innerHTML = `
-        <p><strong>Nome:</strong> ${user.nome} ${user.cognome}</p>
-        <p><strong>Email:</strong> ${user.email}</p>
-        <p><strong>Indirizzo:</strong> ${user.indirizzo}</p>
-      `;
-  
+        // Mostra dati utente
+        const datiUtente = document.getElementById("dati-utente");
+        let indirizzo = "Indirizzo mancante";
+        if (address && address.length > 0) {
+          indirizzo = adresse.map(addr => `${addr.street}, ${addr.city}`).join(", ");
+        }
+        
+        datiUtente.innerHTML = `
+          <p><strong>Nome:</strong> ${user.user_name} ${user.surname}</p>
+          <p><strong>Email:</strong> ${user.email}</p>
+          <p><strong>Indirizzo:</strong> ${indirizzo}</p>
+        `;
+      })
       // Ordini
       const resOrdini = await fetch('/api/utente/ordini');
       const ordini = await resOrdini.json();
