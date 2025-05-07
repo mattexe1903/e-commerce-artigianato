@@ -34,11 +34,11 @@ document.addEventListener("DOMContentLoaded", function () {
       .then(data => {
         const user = data.user;
 
-        console.log('Dati ricevuti:', data);
+        //console.log('token:', data.token);
 
-        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", JSON.stringify(data.token));
 
-        console.log("user role", user.user_role);
+        //console.log("user role", user.user_role);
 
         switch (user.user_role) {
           case 1:
