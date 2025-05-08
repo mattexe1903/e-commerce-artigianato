@@ -30,15 +30,11 @@ document.addEventListener("DOMContentLoaded", function () {
         return data;
       })
       .then(data => {
-        const user = data.user;
-
-        //console.log('token:', data.token);
+        const role = data.user_role;
 
         localStorage.setItem("token", JSON.stringify(data.token));
-
-        //console.log("user role", user.user_role);
-
-        switch (user.user_role) {
+        
+        switch (role) {
           case 1:
             window.location.href = "adminview.html";
             break;
