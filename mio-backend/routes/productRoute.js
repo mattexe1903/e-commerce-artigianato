@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const upload = require('../middleware/uploadMiddleware'); // Usa il middleware centralizzato
 const productController = require('../controllers/productController');
+const favouriteController = require('../controllers/favouriteController');
+const { protect } = require('../middleware/userMiddleware');
+
 
 // Route per ottenere tutti i prodotti
 router.get('/products', productController.getAllProducts);
@@ -20,5 +23,8 @@ router.patch('/products/:id/photo', upload.single('photo'), productController.up
 
 // Route per eliminare un prodotto
 router.delete('/products/:id', productController.deleteProduct);
+
+// Route per aggiungere un prodotto ai preferiti
+router.post('/addToFavourites', protect, favouriteController.addProductToFavourites);
 
 module.exports = router;
