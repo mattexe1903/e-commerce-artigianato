@@ -27,4 +27,10 @@ router.delete('/products/:id', productController.deleteProduct);
 // Route per aggiungere un prodotto ai preferiti
 router.post('/addToFavourites', protect, favouriteController.addProductToFavourites);
 
+// Route per rimuovere un prodotto dai preferiti
+router.delete('/removeFromFavourites', protect, favouriteController.removeProductFromFavourites);
+
+// Route per ottenere tutti i prodotti preferiti dell'utente
+router.get('/favourites', protect, favouriteController.getAllFavourites);
+
 module.exports = router;

@@ -18,8 +18,17 @@ const removeProductFromFavourites = async (userId, productId) => {
     }
 }
 
+const getAllFavourites = async (userId) => {
+    try {
+        const result = await favouriteModel.getAllFavourites(userId);
+        return result;
+    } catch (error) {
+        throw new Error('Errore nel recupero dei preferiti: ' + error.message);
+    }
+};
 
 module.exports = {
     addProductToFavourites, 
-    removeProductFromFavourites
+    removeProductFromFavourites,
+    getAllFavourites
 };

@@ -1,12 +1,13 @@
 const pool = require('../db');
 
+//TODO: change name table into favourites
+
 const getAllFavourites = async (userId) => {
-    const result = await pool.query('SELECT * FROM favourites WHERE user_id = $1', [userId]);
+    const result = await pool.query('SELECT * FROM favorites WHERE user_id = $1', [userId]);
     return result.rows;
 }
 
 const addProductToFavourites = async (userId, productId) => {
-    //TODO: change name table into favourites
     const result = await pool.query('INSERT INTO favorites (user_id, product_id) VALUES ($1, $2) RETURNING *', [userId, productId]);
     return result.rows[0];
 }
@@ -17,6 +18,7 @@ const removeProductFromFavourites = async (userId, productId) => {
 }
 
 module.exports = {
-    addProductToFavourites, 
-    removeProductFromFavourites
+    addProductToFavourites,
+    removeProductFromFavourites,
+    getAllFavourites
 };
