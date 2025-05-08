@@ -126,15 +126,16 @@ async function confirmPartialRemove() {
 
   try {
     const token = getToken();
-    const userId = getUserId();
+    console.log("Token:", token);
+    console.log("prodottoSelezionato", prodottoSelezionato.product_id);
 
-    const res = await fetch(`http://localhost:3000/api/cart/remove/${prodottoSelezionato.id}`, {
+    const res = await fetch(`http://localhost:3000/api/cart/remove`, {
       method: "DELETE",
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ userId, quantity: qty })
+      body: JSON.stringify({ product_id: prodottoSelezionato.product_id, quantity: qty })
     });
 
     if (!res.ok) {

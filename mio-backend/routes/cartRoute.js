@@ -10,7 +10,7 @@ router.get('/cart/:id', protect, cartController.getCartInfo);
 router.post('/cart/add', protect, cartController.addToCart);
 
 // rimuovi un prodotto dal carrello
-router.delete('/cart/remove/:id', protect, cartController.removeFromCart);
+router.delete('/cart/remove', protect, cartController.removeFromCart);
 
 // svuota tutto il carrello
 router.delete('/cart/clear', protect, cartController.clearCart);

@@ -32,10 +32,43 @@ const addToCart = async (userId, productId, quantity) => {
 };
 
 
-const removeFromCart = async (id) => {
-  const result = await pool.query('DELETE FROM carts_products WHERE product_id = $1 RETURNING *', [id]);
-  return result.rows[0];
-}
+const removeFromCart = async (userId, productId, quantityToRemove) => {
+  const cartResult = await pool.query(
+    'SELECT cart_id FROM carts WHERE user_id = $1',
+    [userId]
+  );
+
+  if (cartResult.rows.length === 0) {
+    throw new Error("Carrello non trovato per l'utente");
+  }
+
+  const cartId = cartResult.rows[0].cart_id;
+
+  const existing = await pool.query(
+    'SELECT quantity FROM carts_products WHERE cart_id = $1 AND product_id = $2',
+    [cartId, productId]
+  );
+
+  if (existing.rows.length === 0) {
+    throw new Error("Prodotto non trovato nel carrello");
+  }
+
+  const currentQty = existing.rows[0].quantity;
+
+  if (quantityToRemove >= currentQty) {
+    const result = await pool.query(
+      'DELETE FROM carts_products WHERE cart_id = $1 AND product_id = $2 RETURNING *',
+      [cartId, productId]
+    );
+    return result.rows[0];
+  } else {
+    const result = await pool.query(
+      'UPDATE carts_products SET quantity = quantity - $1 WHERE cart_id = $2 AND product_id = $3 RETURNING *',
+      [quantityToRemove, cartId, productId]
+    );
+    return result.rows[0];
+  }
+};
 
 const clearCart = async (userId) => {
   const cartResult = await pool.query(
