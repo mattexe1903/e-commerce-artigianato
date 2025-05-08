@@ -6,7 +6,6 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await authService.login(email, password);
-    const token = generateToken(user.user_id);
 
     const artisan_state_raw = await authService.artisanIsActive(user.user_id);
     const stato = artisan_state_raw?.artisan_state;
@@ -17,10 +16,12 @@ const login = async (req, res) => {
       });
     }
 
+    const token = generateToken(user.user_id);
     res.status(200).json({
       success: true,
       message: 'Login riuscito',
-      token
+      token, 
+      user_role: user.user_role
     });
   } catch (err) {
     res.status(401).json({
