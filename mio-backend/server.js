@@ -18,11 +18,13 @@ app.use('/images', express.static(path.join(__dirname, '..', 'WebContent', 'imag
 const authRoutes = require('./routes/authRoute');
 const productRoutes = require('./routes/productRoute'); // <-- nome corretto
 const userRoutes = require('./routes/userRoute');
+const cartRoutes = require('./routes/cartRoute'); // <-- nome corretto
 
 // Uso delle routes
 app.use('/api', authRoutes);
 app.use('/api', productRoutes);
 app.use('/api', userRoutes);
+app.use('/api', cartRoutes);
 
 // Route di base
 app.get('/', (req, res) => {

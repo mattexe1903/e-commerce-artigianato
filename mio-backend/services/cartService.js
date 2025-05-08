@@ -1,7 +1,7 @@
 const cartModel = require('../models/cartModel');
 
-const getCartInfo = async () => {
-  const cart = await cartModel.getCartInfo();
+const getCartInfo = async (userId) => {
+  const cart = await cartModel.getCartInfo(userId);
   return cart;
 }
 

@@ -62,31 +62,41 @@ async function aggiungiAlCarrello() {
   const prodottoId = new URLSearchParams(window.location.search).get('id');
   const quantita = parseInt(document.getElementById('quantity-input').value);
   const maxQuantita = parseInt(document.getElementById('quantity-input').max);
-  const user = JSON.parse(localStorage.getItem("user"));
+  const token = JSON.parse(localStorage.getItem("token"));
 
-  if (!user) {
+  if (!token) {
     document.getElementById('login-popup').style.display = 'flex';
     return;
   }
 
-  if (!prodottoId || isNaN(quantita) || quantita < 1 || quantita > maxQuantita) return;
-
+  if (!prodottoId || isNaN(quantita) || quantita < 1 || quantita > maxQuantita) {
+    alert("Quantità non valida.");
+    return;
+  }
+  console.log("token qui:", token);
   try {
-    const response = await fetch(`/api/carrello`, {
+    const response = await fetch('http://localhost:3000/api/cart/add', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prodottoId, quantita })
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ productId: prodottoId, quantity: quantita })
     });
 
     if (response.ok) {
       alert("Prodotto aggiunto al carrello!");
     } else if (response.status === 401) {
       document.getElementById('login-popup').style.display = 'flex';
+    } else {
+      const errData = await response.json();
+      alert(`Errore: ${errData.message || 'Impossibile aggiungere al carrello.'}`);
     }
   } catch (error) {
     console.error("Errore durante l'aggiunta al carrello:", error);
   }
 }
+
 
 function verificaQuantita() {
   const input = document.getElementById('quantity-input');

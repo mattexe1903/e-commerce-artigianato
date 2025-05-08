@@ -5,8 +5,19 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function getUserId() {
-  return new URLSearchParams(window.location.search).get("id");
+  const token = JSON.parse(localStorage.getItem("token"));
+  if (!token) return null;
+
+  try {
+    const payloadBase64 = token.split('.')[1];
+    const decodedPayload = JSON.parse(atob(payloadBase64));
+    return decodedPayload.id || decodedPayload.user_id || null;
+  } catch (error) {
+    console.error("Errore nel decodificare il token:", error);
+    return null;
+  }
 }
+
 
 function vaiAllaPaginaProdotto(idProdotto) {
   const userId = getUserId();
@@ -98,17 +109,51 @@ function applicaFiltri() {
 
 async function aggiornaCarrello() {
   try {
-    const userId = getUserId();
-    const res = await fetch(`/api/cart/${userId}`);
-    const prodottiNelCarrello = await res.json();
+    const token = JSON.parse(localStorage.getItem("token"));
+    if (!token) throw new Error("Token non disponibile. Effettua il login.");
 
-    const totale = prodottiNelCarrello.reduce((acc, p) => acc + p.price, 0);
+    const userId = getUserId();
+    if (!userId) throw new Error("ID utente non disponibile.");
+
+    const response = await fetch(`http://localhost:3000/api/cart/${userId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const resJson = await response.json();
+
+    if (!response.ok) {
+      throw new Error(resJson.message || "Errore nel recupero del carrello.");
+    }
+
+    const prodottiNelCarrello = resJson.cart;
+
+    if (!Array.isArray(prodottiNelCarrello)) {
+      throw new Error("Formato dati non valido per il carrello.");
+    }
+
+    console.log("Prodotti nel carrello:", prodottiNelCarrello);
+
+    const totale = prodottiNelCarrello.reduce((acc, item) => {
+      const prezzo = item.product?.price || item.price || 0;
+      const quantita = item.quantity || 1;
+      return acc + (prezzo * quantita);
+    }, 0);
+    
+
     document.getElementById("cart-count").innerText = `(${prodottiNelCarrello.length})`;
     document.getElementById("cart-total").innerText = `€${totale.toFixed(2)}`;
-  } catch (err) {
-    console.error("Errore aggiornamento carrello:", err);
+
+  } catch (error) {
+    console.error("Errore aggiornamento carrello:", error.message || error);
   }
 }
+
+
+
 
 async function caricaNuoviArrivi() {
   const track = document.getElementById("carousel-track");
