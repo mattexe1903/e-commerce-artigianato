@@ -124,7 +124,30 @@ CREATE TABLE products
     photo_description TEXT NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     quantity INT NOT NULL,
+    category_id INTEGER REFERENCES categories(category_id),
     creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Inserimento di dati fittizzi per la tabella dei prodotti
+INSERT INTO products (product_name, photo, photo_description, price, quantity, category_id)
+VALUES
+('Smartphone Galaxy X10', '/images/1.jpg', 'Smartphone con display AMOLED da 6.5 pollici', 699.99, 50, 1),
+('Laptop UltraBook Z5', '/images/2.jpg', 'Laptop leggero con processore Intel i7', 1299.00, 30, 2),
+('Auricolari Wireless Pro', '/images/3.jpg', 'Auricolari Bluetooth con cancellazione del rumore', 149.90, 100, 3),
+('Smartwatch Fit360', '/images/4.jpg', 'Orologio smart per il monitoraggio della salute', 199.50, 75, 4),
+('Monitor 4K Vision27', '/images/5.jpg', 'Monitor 4K UHD da 27 pollici con HDR', 379.99, 40, 2),
+('Tastiera Meccanica RGB', '/images/6.jpg', 'Tastiera da gaming con retroilluminazione RGB', 89.00, 60, 5),
+('Mouse Ergonomico Pro', '/images/7.jpg', 'Mouse ergonomico per utilizzo prolungato', 49.95, 80, 5),
+('Tablet MediaTab 10', '/images/8.jpg', 'Tablet da 10 pollici con sistema Android', 299.99, 45, 1),
+('Cuffie Over-Ear Studio', '/images/9.jpg', 'Cuffie ad alta fedeltà per uso professionale', 219.99, 25, 3),
+('Webcam Full HD ZoomCam', '/images/10.jpg', 'Webcam 1080p con microfono integrato', 79.99, 35, 4);
+
+
+-- Creazione della tabella per la gestione delle categorie
+CREATE TABLE categories
+(
+    category_id SERIAL PRIMARY KEY NOT NULL,
+    category_name TEXT NOT NULL UNIQUE
 );
 
 -- Creazione della tabella per la gestione dei prodotti preferiti
