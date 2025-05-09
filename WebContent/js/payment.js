@@ -10,34 +10,37 @@ function getToken() {
 }
 
 async function loadUserData() {
-  const token = getToken(); // Verifica che getToken() restituisca un token valido
-
+  const token = getToken(); 
+  
   try {
     const response = await fetch('http://localhost:3000/api/userInfo', {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
     const data = await response.json();
-    console.log("Dati ricevuti dal backend:", data); // Verifica cosa ricevi dal backend
 
     const user = data.user;
-    const address = data.addresses || [];
+    const address = data.addresses && data.addresses[0];
 
-    const nameField = document.getElementById("address-name");
-    const surnameField = document.getElementById("address-surname");
+    document.getElementById("address-name").textContent = user.user_name;
+    document.getElementById("address-surname").textContent = user.surname;
 
-    if (nameField && surnameField) {
-      nameField.value = user.user_name || "";
-      surnameField.value = user.surname || "";
+    if (address) {
+      document.getElementById("address-street").value = address.street_address || "";
+      document.getElementById("address-city").value = address.city || "";
+      document.getElementById("address-zip").value = address.cap || "";
+      document.getElementById("address-province").value = address.province || "";
     } else {
-      console.error("I campi di nome e cognome non sono stati trovati.");
+      document.getElementById("address-street").value = "";
+      document.getElementById("address-city").value = "";
+      document.getElementById("address-zip").value = "";
+      document.getElementById("address-province").value = "";
     }
-
-    
   } catch (err) {
     console.error("Errore caricamento dati utente:", err);
   }
 }
+
 
 
 async function loadCartData(userId) {
