@@ -54,7 +54,10 @@ const updatePassword = async (userId, newPassword) => {
   }
 };
 
-
+const getArtisanStateById = async (id) => {
+  const result = await pool.query('SELECT artisan_state FROM info_artisan WHERE artisan_id = $1', [id]);
+  return result.rows[0];
+}
 
 // Funzione per ottenere gli indirizzi di un utente
 const getUserAddresses = async (userId) => {
@@ -66,6 +69,7 @@ module.exports = {
   getUserByEmail,
   createUser,
   getUserById,
+  getArtisanStateById,
   updatePassword, 
   getUserAddresses
 };

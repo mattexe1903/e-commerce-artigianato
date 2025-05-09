@@ -8,14 +8,14 @@ const login = async (req, res) => {
     const user = await authService.login(email, password);
     console.log(user);
 
-    /*const artisan_state_raw = await authService.artisanIsActive(user.user_id);
+    const artisan_state_raw = await authService.artisanIsActive(user.user_id);
     const stato = artisan_state_raw?.artisan_state;
     if (stato !== undefined && stato !== 2) {
       return res.status(400).json({
         success: false,
         message: 'Richiesta in attesa di approvazione o rifiutata'
       });
-    }*/
+    }
 
     const token = generateToken(user.user_id);
     res.status(200).json({
