@@ -173,29 +173,45 @@ async function aggiornaCarrello() {
 async function caricaNuoviArrivi() {
   const track = document.getElementById("carousel-track");
 
+  if (!track) {
+    console.error("Elemento carousel-track non trovato nel DOM.");
+    return;
+  }
+
   try {
-    const response = await fetch('http://localhost:3000/api/nuovi-arrivi'); // Cambia l'endpoint se diverso
-    const prodotti = await response.json();
+    const response = await fetch('http://localhost:3000/api/latest');
+    
+    if (!response.ok) throw new Error(`Errore HTTP: ${response.status}`);
+
+    const dati = await response.json();
+
+    const prodotti = Array.isArray(dati.products) ? dati.products : [];
 
     prodotti.forEach(prodotto => {
       const div = document.createElement('div');
       div.className = 'product';
-      div.onclick = () => vaiAllaPaginaProdotto(prodotto.id);
+      div.onclick = () => vaiAllaPaginaProdotto(prodotto.product_id);
+
+      const immagineURL = `http://localhost:3000${prodotto.photo || '/images/placeholder.jpg'}`;
+
       div.innerHTML = `
-      <img src="${prodotto.immagine}" alt="${prodotto.nome}">
-      <div>${prodotto.nome}</div>
-      <div>€${prodotto.prezzo.toFixed(2)}</div>
-    `;
+        <img src="${immagineURL}" 
+             alt="${prodotto.product_name || 'Prodotto senza nome'}">
+        <div>${prodotto.product_name || 'Nome mancante'}</div>
+        <div>€${parseFloat(prodotto.price || 0).toFixed(2)}</div>
+      `;
+
+      console.log('Aggiunto prodotto:', prodotto.product_name); 
       track.appendChild(div);
     });
-    // Duplica il contenuto per effetto carousel infinito
+
     track.innerHTML += track.innerHTML;
   } catch (error) {
     console.error('Errore nel caricare i nuovi arrivi:', error);
   }
 }
 
-let prodottiList = []; 
+let prodottiList = [];
 
 async function caricaTuttiProdotti() {
   const lista = document.getElementById("product-list");
@@ -228,7 +244,6 @@ async function caricaTuttiProdotti() {
 
       lista.appendChild(div);
     });
-
   } catch (error) {
     console.error('Errore nel caricare i prodotti:', error);
     lista.innerHTML = "<p>Errore nel caricare i prodotti.</p>";
