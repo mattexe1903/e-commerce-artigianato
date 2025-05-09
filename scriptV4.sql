@@ -150,6 +150,24 @@ CREATE TABLE categories
     category_name TEXT NOT NULL UNIQUE
 );
 
+INSERT INTO categories (category_name) VALUES
+('Gioielli'),
+('Ceramica e Terracotta'),
+('Lavorazione del Legno'),
+('Tessili e Ricami'),
+('Accessori Moda'),
+('Saponi e Cosmetici Naturali'),
+('Carta e Cartoleria'),
+('Decorazioni per la Casa'),
+('Candele Artigianali'),
+('Vetri Artistici'),
+('Oggetti in Cuoio'),
+('Bambole e Peluche Fatti a Mano'),
+('Arte e Dipinti'),
+('Mobili Artigianali'),
+('Strumenti Musicali Fatti a Mano');
+
+
 -- Creazione della tabella per la gestione dei prodotti preferiti
 CREATE TABLE favorites
 (
