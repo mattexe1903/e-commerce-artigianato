@@ -64,9 +64,11 @@ function vaiAlProfilo() {
     });
 }
 function logout() {
+  localStorage.removeItem("token");  // Rimuove il token salvato
   alert("Logout effettuato");
-  window.location.href = "../home.html";
+  window.location.href = "../home.html";  // Reindirizza alla home pubblica
 }
+
 
 function vaiAlCarrello() {
   const userId = getUserId();

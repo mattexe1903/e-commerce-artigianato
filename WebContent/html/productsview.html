@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dettaglio prodotto</title>
   <link rel="stylesheet" href="../css/productsview.css">
 </head>
+
 <body>
   <header>
     <div class="logo">
-      <a href="homereg.html" style="color: inherit; text-decoration: none;">Lokal</a>
+      <a id="lokal-link" style="color: inherit; text-decoration: none; cursor: pointer;">Lokal</a>
     </div>
   </header>
 
@@ -48,9 +50,11 @@
     <div class="popup-content">
       <p>Solo gli utenti loggati possono aggiungere ai preferiti o al carrello.</p>
       <button onclick="window.location.href='login.html'">Accedi</button>
+      <button onclick="chiudiPopup()" style="margin-left: 10px;">Chiudi</button>
     </div>
   </div>
 
   <script src="../js/productsview.js"></script>
 </body>
+
 </html>
