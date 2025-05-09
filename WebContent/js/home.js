@@ -10,33 +10,50 @@ function toggleFiltri() {
 let prodottiList = [];
 
 async function caricaNuoviArrivi() {
-    const track = document.getElementById("carousel-track");
+  const track = document.getElementById("carousel-track");
 
-    try {
-        const response = await fetch('http://localhost:3000/api/latest');
-        const dati = await response.json();
-        const prodotti = Array.isArray(dati.products) ? dati.products : [];
+  if (!track) {
+    console.error("Elemento carousel-track non trovato nel DOM.");
+    return;
+  }
 
-        prodotti.forEach(prodotto => {
-            const div = document.createElement('div');
-            div.className = 'product';
-            div.onclick = () => vaiAllaPaginaProdotto(prodotto.product_id);
+  try {
+    const response = await fetch('http://localhost:3000/api/latest');
 
-            const immagineURL = `http://localhost:3000${prodotto.photo || '/images/placeholder.jpg'}`;
+    if (!response.ok) throw new Error(`Errore HTTP: ${response.status}`);
 
-            div.innerHTML = `
-        <img src="${immagineURL}" alt="${prodotto.product_name || 'Prodotto'}">
-        <div>${prodotto.product_name}</div>
-        <div>€${parseFloat(prodotto.price || 0).toFixed(2)}</div>
+    const dati = await response.json();
+
+    const prodotti = Array.isArray(dati.products) ? dati.products : [];
+
+    prodotti.forEach(prodotto => {
+      const div = document.createElement('div');
+      div.className = 'product';
+      div.onclick = () => vaiAllaPaginaProdotto(prodotto.product_id);
+
+      div.innerHTML = `
+        <img src="${prodotto.photo ? `http://localhost:3000${prodotto.photo}` : 'http://localhost:3000/images/placeholder.jpg'}"
+        alt="${prodotto.product_id || 'Senza Nome'}"
+        style="width:100px;height:auto;">
+        <div class="product-name">${prodotto.product_name || 'Nome mancante'}</div>
+        <div class="product-price">€ ${Number(prodotto.price).toFixed(2)}</div>
       `;
-            track.appendChild(div);
-        });
 
-        // Per effetto infinito
-        track.innerHTML += track.innerHTML;
-    } catch (err) {
-        console.error('Errore nel caricare i nuovi arrivi:', err);
-    }
+      console.log('Aggiunto prodotto:', prodotto.product_name);
+      track.appendChild(div);
+    });
+
+    nodes.forEach(n => {
+      const clone = n.cloneNode(true);
+      const id = clone.querySelector("img")?.alt;
+      if (id) {
+        clone.onclick = () => vaiAllaPaginaProdotto(id);
+      }
+      track.appendChild(clone);
+    });
+  } catch (error) {
+    console.error('Errore nel caricare i nuovi arrivi:', error);
+  }
 }
 
 async function caricaTuttiProdotti() {
