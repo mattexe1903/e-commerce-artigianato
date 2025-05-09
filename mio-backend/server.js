@@ -16,15 +16,17 @@ app.use('/images', express.static(path.join(__dirname, '..', 'WebContent', 'imag
 
 // Import delle routes
 const authRoutes = require('./routes/authRoute');
-const productRoutes = require('./routes/productRoute'); // <-- nome corretto
+const productRoutes = require('./routes/productRoute');
 const userRoutes = require('./routes/userRoute');
-const cartRoutes = require('./routes/cartRoute'); // <-- nome corretto
+const cartRoutes = require('./routes/cartRoute');
+const categoryRoutes = require('./routes/categoryRoute');
 
 // Uso delle routes
 app.use('/api', authRoutes);
 app.use('/api', productRoutes);
 app.use('/api', userRoutes);
 app.use('/api', cartRoutes);
+app.use('/api', categoryRoutes);
 
 // Route di base
 app.get('/', (req, res) => {

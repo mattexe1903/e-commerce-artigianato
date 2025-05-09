@@ -6,29 +6,14 @@ function getToken() {
   return JSON.parse(localStorage.getItem("token"));
 }
 
-function getUserId() {
-  const token = getToken();
-  if (!token) return null;
-
-  try {
-    const payloadBase64 = token.split('.')[1];
-    const decodedPayload = JSON.parse(atob(payloadBase64));
-    return decodedPayload.id || decodedPayload.user_id || null;
-  } catch (error) {
-    console.error("Errore nel decodificare il token:", error);
-    return null;
-  }
-}
-
 let prodottiCarrello = [];
 
 async function caricaCarrello() {
   try {
-    const userId = getUserId();
     const token = getToken();
-    if (!userId || !token) throw new Error("Utente non autenticato.");
+    if (!token) throw new Error("Utente non autenticato.");
 
-    const res = await fetch(`http://localhost:3000/api/cart/${userId}`, {
+    const res = await fetch(`http://localhost:3000/api/cart`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -126,15 +111,16 @@ async function confirmPartialRemove() {
 
   try {
     const token = getToken();
-    const userId = getUserId();
+    console.log("Token:", token);
+    console.log("prodottoSelezionato", prodottoSelezionato.product_id);
 
-    const res = await fetch(`http://localhost:3000/api/cart/remove/${prodottoSelezionato.id}`, {
+    const res = await fetch(`http://localhost:3000/api/cart/remove`, {
       method: "DELETE",
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ userId, quantity: qty })
+      body: JSON.stringify({ product_id: prodottoSelezionato.product_id, quantity: qty })
     });
 
     if (!res.ok) {
@@ -150,12 +136,12 @@ async function confirmPartialRemove() {
 }
 
 function proceedOrder() {
-  const userId = getUserId();
-  if (!userId) {
+  const token = getToken();
+  if (!token) {
     alert("Devi essere loggato per procedere al pagamento.");
     return;
   }
 
   alert("Verrai reindirizzato alla pagina di pagamento...");
-  window.location.href = `payment.html?user=${userId}`;
+  window.location.href = `payment.html?user=${token}`;
 }

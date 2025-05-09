@@ -2,26 +2,13 @@ document.addEventListener("DOMContentLoaded", () => {
   aggiornaCarrello();
   caricaNuoviArrivi();
   caricaTuttiProdotti();
+  aggiornaCarrello();
+  caricaCategorie();
 });
 
-function getUserId() {
-  const token = JSON.parse(localStorage.getItem("token"));
-  if (!token) return null;
-
-  try {
-    const payloadBase64 = token.split('.')[1];
-    const decodedPayload = JSON.parse(atob(payloadBase64));
-    return decodedPayload.id || decodedPayload.user_id || null;
-  } catch (error) {
-    console.error("Errore nel decodificare il token:", error);
-    return null;
-  }
-}
-
-
 function vaiAllaPaginaProdotto(idProdotto) {
-  const userId = getUserId();
-  window.location.href = `productsview.html?id=${idProdotto}&user=${userId}`;
+  const token = JSON.parse(localStorage.getItem("token"));
+  window.location.href = `productsview.html?id=${idProdotto}&user=${token}`;
 }
 
 function vaiAlProfilo() {
@@ -63,6 +50,7 @@ function vaiAlProfilo() {
       errorMessage.textContent = error.message || "Errore di connessione.";
     });
 }
+
 function logout() {
   localStorage.removeItem("token");  // Rimuove il token salvato
   alert("Logout effettuato");
@@ -71,8 +59,8 @@ function logout() {
 
 
 function vaiAlCarrello() {
-  const userId = getUserId();
-  window.location.href = `cart.html?user=${userId}`;
+  const token = JSON.parse(localStorage.getItem("token"));
+  window.location.href = `cart.html?user=${token}`;
 }
 
 function toggleAccountMenu() {
@@ -114,10 +102,7 @@ async function aggiornaCarrello() {
     const token = JSON.parse(localStorage.getItem("token"));
     if (!token) throw new Error("Token non disponibile. Effettua il login.");
 
-    const userId = getUserId();
-    if (!userId) throw new Error("ID utente non disponibile.");
-
-    const response = await fetch(`http://localhost:3000/api/cart/${userId}`, {
+    const response = await fetch(`http://localhost:3000/api/cart`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -144,7 +129,7 @@ async function aggiornaCarrello() {
       const quantita = item.quantity || 1;
       return acc + (prezzo * quantita);
     }, 0);
-    
+
 
     document.getElementById("cart-count").innerText = `(${prodottiNelCarrello.length})`;
     document.getElementById("cart-total").innerText = `€${totale.toFixed(2)}`;
@@ -153,9 +138,6 @@ async function aggiornaCarrello() {
     console.error("Errore aggiornamento carrello:", error.message || error);
   }
 }
-
-
-
 
 async function caricaNuoviArrivi() {
   const track = document.getElementById("carousel-track");
@@ -200,7 +182,7 @@ async function caricaTuttiProdotti() {
       div.className = 'product';
       div.dataset.prezzo = prodotto.price ?? '';
       div.dataset.disponibile = prodotto.quantity > 0 ? '1' : '0';
-      div.dataset.categoria = prodotto.category ?? '';
+      div.dataset.categoria = prodotto.category_name ?? '';
       div.onclick = () => vaiAllaPaginaProdotto(prodotto.product_id);
 
       div.innerHTML = `
@@ -217,5 +199,32 @@ async function caricaTuttiProdotti() {
   } catch (error) {
     console.error('Errore nel caricare i prodotti:', error);
     lista.innerHTML = "<p>Errore nel caricare i prodotti.</p>";
+  }
+}
+
+async function caricaCategorie() {
+  const selectCategoria = document.getElementById("filtro-categoria");
+  selectCategoria.innerHTML = "";
+
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "Tutte le categorie";
+  selectCategoria.appendChild(defaultOption);
+
+  try {
+    const response = await fetch('http://localhost:3000/api/categories');
+    if (!response.ok) throw new Error("Errore nel recupero delle categorie");
+
+    const result = await response.json();
+    const categorie = result.categories;
+
+    categorie.forEach(c => {
+      const option = document.createElement("option");
+      option.value = c.category_name;
+      option.textContent = c.category_name;
+      selectCategoria.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Errore nel caricamento delle categorie:", error);
   }
 }

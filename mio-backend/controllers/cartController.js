@@ -42,9 +42,12 @@ const addToCart = async (req, res) => {
 };
 
 const removeFromCart = async (req, res) => {
-  const { id } = req.params;
+  const user_id = req.user.user_id;
+  const quantity = req.body.quantity || 1;
+  const product_id = req.body.product_id;
+
   try {
-    const updatedCart = await cartService.removeFromCart(id);
+    const updatedCart = await cartService.removeFromCart(user_id, product_id, quantity);
     if (!updatedCart) {
       return res.status(404).json({
         success: false,

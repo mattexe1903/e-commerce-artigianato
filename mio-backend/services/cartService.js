@@ -10,8 +10,8 @@ const addToCart = async (userId, productId, quantity) => {
   return cart;
 }
 
-const removeFromCart = async (id) => {
-  const cart = await cartModel.removeFromCart(id);
+const removeFromCart = async (userId, productId, quantity ) => {
+  const cart = await cartModel.removeFromCart(userId, productId, quantity);
   return cart;
 }
 

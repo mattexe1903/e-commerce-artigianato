@@ -21,7 +21,7 @@ window.onload = async function () {
       : 'http://localhost:3000/images/placeholder.jpg';
 
     document.getElementById('product-name').innerText = datiProdotto.product_name || "Senza nome";
-    document.getElementById('product-category').innerText = datiProdotto.category || "Non specificata";
+    document.getElementById('product-category').innerText = datiProdotto.category_name || "Non specificata";
     document.getElementById('product-description-text').innerText = datiProdotto.photo_description || "Nessuna descrizione disponibile";
     document.getElementById('product-price').innerText = `€${Number(datiProdotto.price).toFixed(2)}`;
     document.getElementById('product-quantity').innerText = datiProdotto.quantity || 0;
