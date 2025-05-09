@@ -10,9 +10,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Servire file statici (es. immagini)
+// Servire file statici (immagini, CSS, JS, HTML)
+app.use(express.static(path.join(__dirname, '..', 'WebContent')));
 app.use('/images', express.static(path.join(__dirname, '..', 'WebContent', 'images')));
-
 
 // Import delle routes
 const authRoutes = require('./routes/authRoute');
@@ -31,6 +31,11 @@ app.use('/api', categoryRoutes);
 // Route di base
 app.get('/', (req, res) => {
   res.send('Benvenuto nel backend dell\'e-commerce!');
+});
+
+// Rotta per servire reset-password.html come /reset-password
+app.get('/reset-password', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'WebContent', 'html', 'reset-password.html'));
 });
 
 // SOLO PER TESTING: Recupera tutti gli utenti

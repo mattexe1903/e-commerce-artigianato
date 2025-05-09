@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return data;
       })
       .then(data => {
+        console.log("Login successful:", data);
         const role = data.user_role;
 
         localStorage.setItem("token", JSON.stringify(data.token));
@@ -104,15 +105,17 @@ document.addEventListener("DOMContentLoaded", function () {
   
     if (!email) {
       resetMessage.textContent = "Il campo email non può essere vuoto.";
+      resetMessage.style.color = "red";
       return;
     }
   
     if (!emailRegex.test(email)) {
       resetMessage.textContent = "Formato email non valido. Es: nome@dominio.com";
+      resetMessage.style.color = "red";
       return;
     }
   
-    fetch('http://localhost:3000/api/send-reset-email', {      //todo
+    fetch('http://localhost:3000/api/send-reset-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })
@@ -122,10 +125,12 @@ document.addEventListener("DOMContentLoaded", function () {
         return res.json();
       })
       .then(data => {
-        resetMessage.textContent = "Email inviata! Controlla la tua casella.";
+         resetMessage.textContent = "Email inviata! Controlla la tua casella.";
+         resetMessage.style.color = "lightgreen";
       })
       .catch(err => {
         resetMessage.textContent = err.message || "Errore durante l'invio.";
+        resetMessage.style.color = "red";
       });
   });
 });

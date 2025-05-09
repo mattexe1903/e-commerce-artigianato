@@ -10,4 +10,8 @@ router.get('/userInfo', protect, userController.getUserInformation);
 
 router.get('/user/:id/infoartigiani', protect, userController.getArtigianiInfo);
 
+router.post('/send-reset-email', userController.sendResetEmail);
+
+router.post('/reset-password', userController.resetPassword);
+
 module.exports = router;

@@ -30,8 +30,33 @@ const getUserInformation = async (userId) => {
     }
 };
 
+// Aggiunta della funzione per aggiornare la password
+const updatePassword = async (userId, newPassword) => {
+    try {
+        // Chiama il model per aggiornare la password
+        const updatedUser = await userModel.updatePassword(userId, newPassword);
+        return updatedUser;
+    } catch (error) {
+        console.error('Error updating password:', error);
+        throw error;
+    }
+};
+
+const getUserByEmail = async (email) => {
+    try {
+        const user = await userModel.getUserByEmail(email);
+        return user;
+    } catch (error) {
+        console.error('Error fetching user by email:', error);
+        throw error;
+    }
+};
+
+
 module.exports = {
     getUserInfo,
     getArtigianiInfo,
-    getUserInformation
+    getUserInformation,
+    updatePassword,
+    getUserByEmail
 };
