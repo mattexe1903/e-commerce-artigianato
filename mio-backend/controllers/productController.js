@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const productService = require('../services/productService');
+const { get } = require('http');
 
 const getAllProducts = async (req, res) => {
   try {
@@ -72,7 +73,6 @@ const createProduct = async (req, res) => {
   }
 };
 
-
 const updateProduct = async (req, res) => {
   const { id } = req.params;
   const { product_name, photo_description, price, quantity } = req.body;
@@ -143,11 +143,28 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+const getLatestProducts = async (req, res) => {
+  try {
+    const latestProducts = await productService.getLatestProducts();
+    res.status(200).json({
+      success: true,
+      message: 'Prodotti più recenti recuperati con successo',
+      products: latestProducts
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Errore nel recupero dei prodotti più recenti'
+    });
+  }
+}
+
 module.exports = {
   getAllProducts,
   getProductById,
   createProduct,
   updateProduct,
   updateProductPhoto,
-  deleteProduct
+  deleteProduct, 
+  getLatestProducts
 };

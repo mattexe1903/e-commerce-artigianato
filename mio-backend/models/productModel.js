@@ -59,11 +59,22 @@ const deleteProduct = async (id) => {
   return result.rows[0];
 };
 
+const getLatestProducts = async () => {
+  const result = await pool.query(
+    `SELECT * FROM products 
+     JOIN categories ON (products.category_id = categories.category_id) 
+     ORDER BY creation_date DESC 
+     LIMIT 10`
+  );
+  return result.rows;
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
   createProduct,
   updateProduct,
   updateProductImage,
-  deleteProduct
+  deleteProduct, 
+  getLatestProducts
 };
