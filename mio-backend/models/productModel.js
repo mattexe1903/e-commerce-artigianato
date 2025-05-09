@@ -6,7 +6,7 @@ const getAllProducts = async () => {
 };
 
 const getProductById = async (id) => {
-  const result = await pool.query('SELECT * FROM products WHERE product_id = $1', [id]);
+  const result = await pool.query('SELECT * FROM products JOIN categories ON (products.category_id = categories.category_id )WHERE product_id = $1', [id]);
   return result.rows[0];
 };
 
