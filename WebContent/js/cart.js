@@ -6,20 +6,6 @@ function getToken() {
   return JSON.parse(localStorage.getItem("token"));
 }
 
-function getUserId() {
-  const token = getToken();
-  if (!token) return null;
-
-  try {
-    const payloadBase64 = token.split('.')[1];
-    const decodedPayload = JSON.parse(atob(payloadBase64));
-    return decodedPayload.id || decodedPayload.user_id || null;
-  } catch (error) {
-    console.error("Errore nel decodificare il token:", error);
-    return null;
-  }
-}
-
 let prodottiCarrello = [];
 
 async function caricaCarrello() {
@@ -150,12 +136,12 @@ async function confirmPartialRemove() {
 }
 
 function proceedOrder() {
-  const userId = getUserId();
-  if (!userId) {
+  const token = getToken();
+  if (!token) {
     alert("Devi essere loggato per procedere al pagamento.");
     return;
   }
 
   alert("Verrai reindirizzato alla pagina di pagamento...");
-  window.location.href = `payment.html?user=${userId}`;
+  window.location.href = `payment.html?user=${token}`;
 }
