@@ -1,6 +1,6 @@
 const pool = require('../db');
 
-const { getCartInfo, clearCart } = require('./cart');
+const { getCartInfo, clearCart } = require('../models/cartModel');
 
 const createOrderFromCart = async (userId, addressId) => {
   const client = await pool.connect();
