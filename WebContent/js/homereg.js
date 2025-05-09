@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   caricaNuoviArrivi();
   caricaTuttiProdotti();
   aggiornaCarrello();
+  caricaCategorie();
 });
 
 function vaiAllaPaginaProdotto(idProdotto) {
@@ -126,7 +127,7 @@ async function aggiornaCarrello() {
       const quantita = item.quantity || 1;
       return acc + (prezzo * quantita);
     }, 0);
-    
+
 
     document.getElementById("cart-count").innerText = `(${prodottiNelCarrello.length})`;
     document.getElementById("cart-total").innerText = `€${totale.toFixed(2)}`;
@@ -179,7 +180,7 @@ async function caricaTuttiProdotti() {
       div.className = 'product';
       div.dataset.prezzo = prodotto.price ?? '';
       div.dataset.disponibile = prodotto.quantity > 0 ? '1' : '0';
-      div.dataset.categoria = prodotto.category ?? '';
+      div.dataset.categoria = prodotto.category_name ?? '';
       div.onclick = () => vaiAllaPaginaProdotto(prodotto.product_id);
 
       div.innerHTML = `
@@ -196,5 +197,32 @@ async function caricaTuttiProdotti() {
   } catch (error) {
     console.error('Errore nel caricare i prodotti:', error);
     lista.innerHTML = "<p>Errore nel caricare i prodotti.</p>";
+  }
+}
+
+async function caricaCategorie() {
+  const selectCategoria = document.getElementById("filtro-categoria");
+  selectCategoria.innerHTML = "";
+
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "Tutte le categorie";
+  selectCategoria.appendChild(defaultOption);
+
+  try {
+    const response = await fetch('http://localhost:3000/api/categories');
+    if (!response.ok) throw new Error("Errore nel recupero delle categorie");
+
+    const result = await response.json();
+    const categorie = result.categories;
+
+    categorie.forEach(c => {
+      const option = document.createElement("option");
+      option.value = c.category_name;
+      option.textContent = c.category_name;
+      selectCategoria.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Errore nel caricamento delle categorie:", error);
   }
 }
