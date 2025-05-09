@@ -1,7 +1,7 @@
 const pool = require('../db');
 
 const getAllProducts = async () => {
-  const result = await pool.query('SELECT * FROM products');
+  const result = await pool.query('SELECT * FROM products JOIN categories ON (products.category_id = categories.category_id)');
   return result.rows;
 };
 
