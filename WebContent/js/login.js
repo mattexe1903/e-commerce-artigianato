@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
             window.location.href = "homereg.html";
             break;
           case 3:
-            window.location.href = "homereg.html";
+            window.location.href = "profile.html";
             break;
           default:
             errorMessage.style.display = "block";

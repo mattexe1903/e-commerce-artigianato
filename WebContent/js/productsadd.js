@@ -45,7 +45,7 @@ function creaProdotto() {
   })
   .then(data => {
     alert("Prodotto creato con successo!");
-    window.location.href = "profilearti.html";
+    window.location.href = "profile.html";
   })
   .catch(err => {
     console.error(err);

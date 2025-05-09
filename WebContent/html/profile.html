@@ -13,8 +13,8 @@
       <h2 id="sidebar-title">Profilo</h2>
       <ul id="nav-list">
         <li><a href="#dati">Dati</a></li>
-        <li><a href="#ordini">I miei ordini</a></li>
-        <li><a href="#preferiti">I miei preferiti</a></li>
+        <li id="sidebar-ordini"><a href="#ordini-section">I miei ordini</a></li>
+        <li id="sidebar-preferiti"><a href="#preferiti-section">I miei preferiti</a></li>
         <li><button id="home-btn">Home</button></li>
       </ul>
     </nav>
@@ -29,7 +29,7 @@
         <div id="dati-utente"></div>
       </section>
 
-      <section class="card" id="ordini">
+      <section class="card" id="ordini-section">
         <h2>I miei ordini</h2>
         <table id="tabella-ordini">
           <thead>
@@ -41,16 +41,16 @@
               <th>Stato</th>
             </tr>
           </thead>
-          <tbody id="ordini-list"></tbody> <!-- Cambia tbody per assegnare correttamente -->
+          <tbody id="ordini-list"></tbody>
         </table>
       </section>
 
-      <section class="card" id="preferiti">
+      <section class="card" id="preferiti-section">
         <h2>I miei preferiti</h2>
         <div class="grid-container" id="lista-preferiti"></div>
       </section>
 
-      <!-- Sezioni visibili solo per artigiano -->
+      <!-- Sezioni visibili solo per artigiani -->
       <section class="card hidden" id="inventario">
         <div class="inventario-header">
           <h2>Inventario</h2>
