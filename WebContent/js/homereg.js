@@ -200,7 +200,6 @@ async function caricaNuoviArrivi() {
         <div class="product-price">€ ${Number(prodotto.price).toFixed(2)}</div>
       `;
 
-      console.log('Aggiunto prodotto:', prodotto.product_name);
       track.appendChild(div);
     });
 

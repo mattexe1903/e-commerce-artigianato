@@ -1,39 +1,45 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const userId = getUserId(); // Recupera l'ID utente da sessione/cookie/URL
-
-  await loadUserData(userId);
-  await loadCartData(userId);
-
+  await loadUserData();
+  //await loadCartData(userId);
   setupPaymentSelection();
   setupSaveCheckboxes();
 });
 
-// 🔹 Recupera dati utente dal backend
-async function loadUserData(userId) {
+function getToken() {
+  return JSON.parse(localStorage.getItem("token"));
+}
+
+async function loadUserData() {
+  const token = getToken(); // Verifica che getToken() restituisca un token valido
+
   try {
-    const response = await fetch(`/api/user/${userId}`);
-    const user = await response.json();
+    const response = await fetch('http://localhost:3000/api/userInfo', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
 
-    document.getElementById("addr-name").value = user.name || "";
-    document.getElementById("addr-surname").value = user.surname || "";
-    document.getElementById("addr-street").value = user.address || "";
-    document.getElementById("addr-city").value = user.city || "";
-    document.getElementById("addr-cap").value = user.cap || "";
-    document.getElementById("addr-phone").value = user.phone || "";
+    const data = await response.json();
+    console.log("Dati ricevuti dal backend:", data); // Verifica cosa ricevi dal backend
 
-    if (user.payment && user.payment.type === "card") {
-      document.querySelector("[data-method='card']").click();
-      document.getElementById("payment-card").value = user.payment.card;
-      document.getElementById("payment-expiry").value = user.payment.expiry;
-      document.getElementById("payment-cvv").value = user.payment.cvv;
-      document.getElementById("payment-name").value = user.payment.name;
+    const user = data.user;
+    const address = data.addresses || [];
+
+    const nameField = document.getElementById("address-name");
+    const surnameField = document.getElementById("address-surname");
+
+    if (nameField && surnameField) {
+      nameField.value = user.user_name || "";
+      surnameField.value = user.surname || "";
+    } else {
+      console.error("I campi di nome e cognome non sono stati trovati.");
     }
+
+    
   } catch (err) {
     console.error("Errore caricamento dati utente:", err);
   }
 }
 
-// 🔹 Recupera riepilogo carrello dal backend
+
 async function loadCartData(userId) {
   try {
     const res = await fetch(`/api/cart/${userId}`);
@@ -66,7 +72,6 @@ async function loadCartData(userId) {
   }
 }
 
-// 🔹 Gestione visiva della selezione metodo di pagamento
 function setupPaymentSelection() {
   document.querySelectorAll(".pay-option").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -107,7 +112,6 @@ function setupPaymentSelection() {
   });
 }
 
-// 🔹 Gestione checkbox "salva indirizzo" e "salva pagamento"
 function setupSaveCheckboxes() {
   document.getElementById("save-address").addEventListener("change", e => {
     e.target.dataset.save = e.target.checked;
@@ -117,7 +121,6 @@ function setupSaveCheckboxes() {
   });
 }
 
-// 🔹 Invio ordine al backend
 async function sendOrder() {
   const userId = getUserId();
   const saveAddress = document.getElementById("save-address").checked;
@@ -168,7 +171,6 @@ async function sendOrder() {
   }
 }
 
-// 🔹 Estrai i dati dal form in base al metodo selezionato
 function getPaymentDetails(method) {
   if (method === "card") {
     return {
@@ -187,7 +189,6 @@ function getPaymentDetails(method) {
   return { type: method };
 }
 
-// 🔹 Mostra popup (modale)
 function showPopup(title, message, callback = null) {
   const popup = document.createElement("div");
   popup.className = "modal-overlay";
@@ -206,9 +207,4 @@ function showPopup(title, message, callback = null) {
     popup.remove();
     if (callback) callback();
   };
-}
-
-// 🔹 Recupera ID utente dall'URL (puoi modificarlo per usare sessione)
-function getUserId() {
-  return new URLSearchParams(window.location.search).get("id");
 }

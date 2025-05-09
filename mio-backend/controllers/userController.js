@@ -3,7 +3,6 @@ const userService = require('../services/userService');
 const getUserInfo = async (req, res) => {
   try {
     const userInfo = req.user;
-    console.log('User info:', userInfo);
     if (!userInfo) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -31,10 +30,8 @@ const getArtigianiInfo = async (req, res) => {
 const getUserInformation = async (req, res) => {
   try {
     const user = req.user;
-    console.log('dati:', user);
     const userId = req.user.user_id;
     const addresses = await userService.getUserInformation(userId);
-    console.log('User addresses:', addresses);
     return res.status(200).json({ addresses, user });
   } catch (error) {
     console.error('Error fetching user addresses:', error);
