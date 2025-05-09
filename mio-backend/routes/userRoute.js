@@ -10,4 +10,6 @@ router.get('/userInfo', protect, userController.getUserInformation);
 
 router.get('/user/:id/infoartigiani', protect, userController.getArtigianiInfo);
 
+router.get('/addAddress', protect, userController.addUserAddress);
+
 module.exports = router;
