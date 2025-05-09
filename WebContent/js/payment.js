@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
   await loadUserData();
-  //await loadCartData(userId);
+  await loadCartData();
   setupPaymentSelection();
   setupSaveCheckboxes();
 });
@@ -41,12 +41,21 @@ async function loadUserData() {
   }
 }
 
-
-
-async function loadCartData(userId) {
+async function loadCartData() {
   try {
-    const res = await fetch(`/api/cart/${userId}`);
-    const cart = await res.json();
+    const token = getToken();
+    if (!token) throw new Error("Utente non autenticato.");
+
+    const res = await fetch(`http://localhost:3000/api/cart`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Errore nel recupero carrello.");
+
+    const prodottiCarrello = data.cart || [];
 
     const summaryItems = document.getElementById("summary-items");
     const totalItemsSpan = document.getElementById("total-items");
@@ -58,23 +67,30 @@ async function loadCartData(userId) {
 
     summaryItems.innerHTML = "";
 
-    cart.forEach(item => {
+    prodottiCarrello.forEach(item => {
+      const nome = item.product_name || item.name || "Prodotto";
+      const prezzoUnitario = Number(item.product?.price || item.price || 0);
+      const quantita = item.quantity || 1;
+
       const row = document.createElement("p");
-      row.textContent = `${item.name} x${item.quantity} = €${(item.price * item.quantity).toFixed(2)}`;
+      row.textContent = `${nome} x${quantita} = €${(prezzoUnitario * quantita).toFixed(2)}`;
       summaryItems.appendChild(row);
 
-      totalItems += item.quantity;
-      itemsTotal += item.price * item.quantity;
+      totalItems += quantita;
+      itemsTotal += prezzoUnitario * quantita;
     });
+
+    const spedizione = 5.99;
 
     totalItemsSpan.textContent = totalItems;
     itemsPriceSpan.textContent = itemsTotal.toFixed(2);
-    totalPriceSpan.textContent = (itemsTotal + 5.99).toFixed(2); // Es. spedizione fissa
+    totalPriceSpan.textContent = (itemsTotal + spedizione).toFixed(2);
   } catch (err) {
-    console.error("Errore caricamento carrello:", err);
+    console.error("Errore caricamento carrello:", err.message || err);
   }
 }
 
+//TODO
 function setupPaymentSelection() {
   document.querySelectorAll(".pay-option").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -115,6 +131,7 @@ function setupPaymentSelection() {
   });
 }
 
+//TODO
 function setupSaveCheckboxes() {
   document.getElementById("save-address").addEventListener("change", e => {
     e.target.dataset.save = e.target.checked;
@@ -124,6 +141,7 @@ function setupSaveCheckboxes() {
   });
 }
 
+//TODO
 async function sendOrder() {
   const userId = getUserId();
   const saveAddress = document.getElementById("save-address").checked;
@@ -174,6 +192,7 @@ async function sendOrder() {
   }
 }
 
+//TODO
 function getPaymentDetails(method) {
   if (method === "card") {
     return {
@@ -192,6 +211,7 @@ function getPaymentDetails(method) {
   return { type: method };
 }
 
+//TODO
 function showPopup(title, message, callback = null) {
   const popup = document.createElement("div");
   popup.className = "modal-overlay";
