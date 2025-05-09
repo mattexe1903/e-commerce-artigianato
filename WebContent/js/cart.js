@@ -24,11 +24,10 @@ let prodottiCarrello = [];
 
 async function caricaCarrello() {
   try {
-    const userId = getUserId();
     const token = getToken();
-    if (!userId || !token) throw new Error("Utente non autenticato.");
+    if (!token) throw new Error("Utente non autenticato.");
 
-    const res = await fetch(`http://localhost:3000/api/cart/${userId}`, {
+    const res = await fetch(`http://localhost:3000/api/cart`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

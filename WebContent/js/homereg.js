@@ -2,26 +2,12 @@ document.addEventListener("DOMContentLoaded", () => {
   aggiornaCarrello();
   caricaNuoviArrivi();
   caricaTuttiProdotti();
+  aggiornaCarrello();
 });
 
-function getUserId() {
-  const token = JSON.parse(localStorage.getItem("token"));
-  if (!token) return null;
-
-  try {
-    const payloadBase64 = token.split('.')[1];
-    const decodedPayload = JSON.parse(atob(payloadBase64));
-    return decodedPayload.id || decodedPayload.user_id || null;
-  } catch (error) {
-    console.error("Errore nel decodificare il token:", error);
-    return null;
-  }
-}
-
-
 function vaiAllaPaginaProdotto(idProdotto) {
-  const userId = getUserId();
-  window.location.href = `productsview.html?id=${idProdotto}&user=${userId}`;
+  const token = JSON.parse(localStorage.getItem("token"));
+  window.location.href = `productsview.html?id=${idProdotto}&user=${token}`;
 }
 
 function vaiAlProfilo() {
@@ -63,14 +49,15 @@ function vaiAlProfilo() {
       errorMessage.textContent = error.message || "Errore di connessione.";
     });
 }
+
 function logout() {
   alert("Logout effettuato");
   window.location.href = "../home.html";
 }
 
 function vaiAlCarrello() {
-  const userId = getUserId();
-  window.location.href = `cart.html?user=${userId}`;
+  const token = JSON.parse(localStorage.getItem("token"));
+  window.location.href = `cart.html?user=${token}`;
 }
 
 function toggleAccountMenu() {
@@ -112,10 +99,7 @@ async function aggiornaCarrello() {
     const token = JSON.parse(localStorage.getItem("token"));
     if (!token) throw new Error("Token non disponibile. Effettua il login.");
 
-    const userId = getUserId();
-    if (!userId) throw new Error("ID utente non disponibile.");
-
-    const response = await fetch(`http://localhost:3000/api/cart/${userId}`, {
+    const response = await fetch(`http://localhost:3000/api/cart`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -151,9 +135,6 @@ async function aggiornaCarrello() {
     console.error("Errore aggiornamento carrello:", error.message || error);
   }
 }
-
-
-
 
 async function caricaNuoviArrivi() {
   const track = document.getElementById("carousel-track");
