@@ -6,7 +6,6 @@ require('dotenv').config();
 const getUserInfo = async (req, res) => {
   try {
     const userInfo = req.user;
-    console.log('User info:', userInfo);
     if (!userInfo) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -34,10 +33,8 @@ const getArtigianiInfo = async (req, res) => {
 const getUserInformation = async (req, res) => {
   try {
     const user = req.user;
-    console.log('dati:', user);
     const userId = req.user.user_id;
     const addresses = await userService.getUserInformation(userId);
-    console.log('User addresses:', addresses);
     return res.status(200).json({ addresses, user });
   } catch (error) {
     console.error('Error fetching user addresses:', error);
@@ -127,13 +124,29 @@ const resetPassword = async (req, res) => {
   } catch (error) {
     console.error('Errore durante il reset della password:', error);
     return res.status(500).json({ message: 'Errore durante il reset della password.' });
-  }
-};
+  }};
+  const addUserAddress = async (req, res) => {
+    try {
+      const userId = req.user.user_id;
+      const { street_address, city, cap, province } = req.body;
 
-module.exports = {
-  getUserInfo,
-  getArtigianiInfo,
-  getUserInformation,
-  sendResetEmail,
-  resetPassword // Esportiamo anche la funzione resetPassword
-};
+      if (!street_address || !city || !cap || !province) {
+        return res.status(400).json({ message: 'All fields are required' });
+      }
+
+      const address = await userService.addUserAddress(userId, street_address, city, cap, province);
+      return res.status(201).json(address);
+    } catch (error) {
+      console.error('Error adding address:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+
+  module.exports = {
+    getUserInfo,
+    getArtigianiInfo,
+    getUserInformation,
+    sendResetEmail,
+    resetPassword,
+    addUserAddress
+  };

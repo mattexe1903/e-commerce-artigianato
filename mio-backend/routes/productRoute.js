@@ -33,4 +33,7 @@ router.delete('/removeFromFavourites', protect, favouriteController.removeProduc
 // Route per ottenere tutti i prodotti preferiti dell'utente
 router.get('/favourites', protect, favouriteController.getAllFavourites);
 
+// Route per ottenere i prodotti più recenti
+router.get('/latest', productController.getLatestProducts);
+
 module.exports = router;

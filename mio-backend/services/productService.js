@@ -11,7 +11,6 @@ const getProductById = async (id) => {
 };
 
 const createProduct = async (productData) => {
-  // Nessun file gestito qui: multer lo ha già salvato e il controller lo rinominerà
   const newProduct = await productModel.createProduct(productData);
   return newProduct;
 };
@@ -29,11 +28,16 @@ const deleteProduct = async (id) => {
   return await productModel.deleteProduct(id);
 };
 
+const getLatestProducts = async () => {
+  return await productModel.getLatestProducts();
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
   createProduct,
   updateProduct,
   updateProductPhoto,
-  deleteProduct
+  deleteProduct,
+  getLatestProducts
 };

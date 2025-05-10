@@ -1,43 +1,63 @@
+let saveAddressFn;
+
 document.addEventListener("DOMContentLoaded", async () => {
-  const userId = getUserId(); // Recupera l'ID utente da sessione/cookie/URL
-
-  await loadUserData(userId);
-  await loadCartData(userId);
-
+  await loadUserData();
+  await loadCartData();
   setupPaymentSelection();
-  setupSaveCheckboxes();
+  saveAddressFn = await setupSaveCheckboxes();
 });
 
-// 🔹 Recupera dati utente dal backend
-async function loadUserData(userId) {
+function getToken() {
+  return JSON.parse(localStorage.getItem("token"));
+}
+
+async function loadUserData() {
+  const token = getToken();
+
   try {
-    const response = await fetch(`/api/user/${userId}`);
-    const user = await response.json();
+    const response = await fetch('http://localhost:3000/api/userInfo', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
 
-    document.getElementById("addr-name").value = user.name || "";
-    document.getElementById("addr-surname").value = user.surname || "";
-    document.getElementById("addr-street").value = user.address || "";
-    document.getElementById("addr-city").value = user.city || "";
-    document.getElementById("addr-cap").value = user.cap || "";
-    document.getElementById("addr-phone").value = user.phone || "";
+    const data = await response.json();
 
-    if (user.payment && user.payment.type === "card") {
-      document.querySelector("[data-method='card']").click();
-      document.getElementById("payment-card").value = user.payment.card;
-      document.getElementById("payment-expiry").value = user.payment.expiry;
-      document.getElementById("payment-cvv").value = user.payment.cvv;
-      document.getElementById("payment-name").value = user.payment.name;
+    const user = data.user;
+    const address = data.addresses && data.addresses[0];
+
+    document.getElementById("address-name").textContent = user.user_name;
+    document.getElementById("address-surname").textContent = user.surname;
+
+    if (address) {
+      document.getElementById("address-street").value = address.street_address || "";
+      document.getElementById("address-city").value = address.city || "";
+      document.getElementById("address-zip").value = address.cap || "";
+      document.getElementById("address-province").value = address.province || "";
+    } else {
+      document.getElementById("address-street").value = "";
+      document.getElementById("address-city").value = "";
+      document.getElementById("address-zip").value = "";
+      document.getElementById("address-province").value = "";
     }
   } catch (err) {
     console.error("Errore caricamento dati utente:", err);
   }
 }
 
-// 🔹 Recupera riepilogo carrello dal backend
-async function loadCartData(userId) {
+async function loadCartData() {
   try {
-    const res = await fetch(`/api/cart/${userId}`);
-    const cart = await res.json();
+    const token = getToken();
+    if (!token) throw new Error("Utente non autenticato.");
+
+    const res = await fetch(`http://localhost:3000/api/cart`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Errore nel recupero carrello.");
+
+    const prodottiCarrello = data.cart || [];
 
     const summaryItems = document.getElementById("summary-items");
     const totalItemsSpan = document.getElementById("total-items");
@@ -49,24 +69,30 @@ async function loadCartData(userId) {
 
     summaryItems.innerHTML = "";
 
-    cart.forEach(item => {
+    prodottiCarrello.forEach(item => {
+      const nome = item.product_name || item.name || "Prodotto";
+      const prezzoUnitario = Number(item.product?.price || item.price || 0);
+      const quantita = item.quantity || 1;
+
       const row = document.createElement("p");
-      row.textContent = `${item.name} x${item.quantity} = €${(item.price * item.quantity).toFixed(2)}`;
+      row.textContent = `${nome} x${quantita} = €${(prezzoUnitario * quantita).toFixed(2)}`;
       summaryItems.appendChild(row);
 
-      totalItems += item.quantity;
-      itemsTotal += item.price * item.quantity;
+      totalItems += quantita;
+      itemsTotal += prezzoUnitario * quantita;
     });
+
+    const spedizione = 5.99;
 
     totalItemsSpan.textContent = totalItems;
     itemsPriceSpan.textContent = itemsTotal.toFixed(2);
-    totalPriceSpan.textContent = (itemsTotal + 5.99).toFixed(2); // Es. spedizione fissa
+    totalPriceSpan.textContent = (itemsTotal + spedizione).toFixed(2);
   } catch (err) {
-    console.error("Errore caricamento carrello:", err);
+    console.error("Errore caricamento carrello:", err.message || err);
   }
 }
 
-// 🔹 Gestione visiva della selezione metodo di pagamento
+//TODO
 function setupPaymentSelection() {
   document.querySelectorAll(".pay-option").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -107,43 +133,67 @@ function setupPaymentSelection() {
   });
 }
 
-// 🔹 Gestione checkbox "salva indirizzo" e "salva pagamento"
-function setupSaveCheckboxes() {
-  document.getElementById("save-address").addEventListener("change", e => {
-    e.target.dataset.save = e.target.checked;
-  });
-  document.getElementById("save-payment").addEventListener("change", e => {
-    e.target.dataset.save = e.target.checked;
-  });
+//IN PROGRESS
+async function setupSaveCheckboxes() {
+  const addressCheckbox = document.getElementById("save-address");
+
+  const saveAddress = async (addressData) => {
+    const token = getToken();
+    const shouldSave = addressCheckbox.checked;
+
+    const response = await fetch('http://localhost:3000/api/addAddress', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        address: addressData,
+        saveForUser: shouldSave
+      })
+    });
+
+    if (!response.ok) {
+      console.error("Errore nel salvataggio dell'indirizzo:", await response.text());
+    } else {
+      console.log("Indirizzo salvato con successo.");
+    }
+  };
+
+  return saveAddress;
 }
 
-// 🔹 Invio ordine al backend
+//IN PROGRESS
 async function sendOrder() {
-  const userId = getUserId();
-  const saveAddress = document.getElementById("save-address").checked;
-  const savePayment = document.getElementById("save-payment").checked;
-  const paymentMethod = document.getElementById("payment-form").dataset.method;
+  const token = getToken();
+  const saveAddressChecked = document.getElementById("save-address").checked;
+  //const savePayment = document.getElementById("save-payment").checked;
+  //const paymentMethod = document.getElementById("payment-form").dataset.method;
 
-  if (!paymentMethod) {
+  /*if (!paymentMethod) {
     return showPopup("Errore", "Seleziona un metodo di pagamento.");
-  }
+  }*/
+
+  const addressData = {
+    street: document.getElementById("address-street").value,
+    city: document.getElementById("address-city").value,
+    cap: document.getElementById("address-zip").value,
+    province: document.getElementById("address-province").value,
+  };
 
   try {
+    if (saveAddressChecked && typeof saveAddressFn === "function") {
+      await saveAddressFn(addressData);
+    }
+
     const orderData = {
-      userId,
+      token,
       date: new Date().toISOString(),
-      paymentMethod,
-      address: {
-        name: document.getElementById("addr-name").value,
-        surname: document.getElementById("addr-surname").value,
-        street: document.getElementById("addr-street").value,
-        city: document.getElementById("addr-city").value,
-        cap: document.getElementById("addr-cap").value,
-        phone: document.getElementById("addr-phone").value,
-      },
-      paymentDetails: getPaymentDetails(paymentMethod),
-      saveAddress,
-      savePayment,
+      //paymentMethod,
+      address: addressData,
+      //paymentDetails: getPaymentDetails(paymentMethod),
+      saveAddress: saveAddressChecked,
+      //savePayment,
     };
 
     const res = await fetch("/api/order", {
@@ -153,9 +203,19 @@ async function sendOrder() {
     });
 
     const result = await res.json();
+    console.log("Risultato invio ordine:", result);
+    if (!res.ok) {
+      throw new Error(result.message || "Errore durante l'invio dell'ordine.");
+    }
 
     if (result.success) {
-      await fetch(`/api/cart/clear/${userId}`, { method: "POST" });
+      await fetch(`/api/cart/clear`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
       showPopup("Ordine completato", "Riceverai una mail con i dettagli.", () => {
         window.location.href = "/home";
       });
@@ -168,7 +228,8 @@ async function sendOrder() {
   }
 }
 
-// 🔹 Estrai i dati dal form in base al metodo selezionato
+
+//TODO
 function getPaymentDetails(method) {
   if (method === "card") {
     return {
@@ -187,7 +248,7 @@ function getPaymentDetails(method) {
   return { type: method };
 }
 
-// 🔹 Mostra popup (modale)
+//TODO
 function showPopup(title, message, callback = null) {
   const popup = document.createElement("div");
   popup.className = "modal-overlay";
@@ -206,9 +267,4 @@ function showPopup(title, message, callback = null) {
     popup.remove();
     if (callback) callback();
   };
-}
-
-// 🔹 Recupera ID utente dall'URL (puoi modificarlo per usare sessione)
-function getUserId() {
-  return new URLSearchParams(window.location.search).get("id");
 }

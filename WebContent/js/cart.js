@@ -23,7 +23,6 @@ async function caricaCarrello() {
     if (!res.ok) throw new Error(data.message || "Errore nel recupero carrello.");
 
     prodottiCarrello = data.cart || [];
-    console.log("Carrello:", prodottiCarrello);
 
     const sezioneVuota = document.getElementById("empty-cart");
     const contenutoCarrello = document.getElementById("cart-content");

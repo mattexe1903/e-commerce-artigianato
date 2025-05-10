@@ -52,11 +52,21 @@ const getUserByEmail = async (email) => {
     }
 };
 
+const addUserAddress = async (userId, street_address, city, cap, province) => {
+    try {
+        const address = await userModel.addUserAddress(userId, street_address, city, cap, province);
+        return address;
+    } catch (error) {
+        console.error('Error adding address:', error);
+        throw error;
+    }
+}; 
 
 module.exports = {
     getUserInfo,
     getArtigianiInfo,
     getUserInformation,
     updatePassword,
-    getUserByEmail
+    getUserByEmail,
+    addUserAddress
 };

@@ -20,6 +20,8 @@ const productRoutes = require('./routes/productRoute');
 const userRoutes = require('./routes/userRoute');
 const cartRoutes = require('./routes/cartRoute');
 const categoryRoutes = require('./routes/categoryRoute');
+const orderRoutes = require('./routes/orderRoute');
+const reportRoutes = require('./routes/reportRoute');
 
 // Uso delle routes
 app.use('/api', authRoutes);
@@ -27,6 +29,8 @@ app.use('/api', productRoutes);
 app.use('/api', userRoutes);
 app.use('/api', cartRoutes);
 app.use('/api', categoryRoutes);
+app.use('/api', orderRoutes);
+app.use('/api', reportRoutes);
 
 // Route di base
 app.get('/', (req, res) => {
