@@ -1,5 +1,4 @@
 const pool = require('../db');
-
 const { getCartInfo, clearCart } = require('../models/cartModel');
 
 const createOrderFromCart = async (userId, addressId) => {
@@ -39,10 +38,9 @@ const createOrderFromCart = async (userId, addressId) => {
     }
 
     await clearCart(userId);
-
     await client.query('COMMIT');
-    return { success: true, orderId };
 
+    return { success: true, orderId };
   } catch (error) {
     await client.query('ROLLBACK');
     console.error('Errore nella creazione ordine:', error.message);
@@ -52,6 +50,32 @@ const createOrderFromCart = async (userId, addressId) => {
   }
 };
 
+const addTempAddress = async (street_address, city, cap, province) => {
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    const result = await pool.query(
+      `INSERT INTO address (street_address, city, cap, province, country)
+           VALUES ($1, $2, $3, $4, 'Italia')
+           RETURNING addres_id`,
+      [street_address, city, cap, province]
+    );
+    finalAddressId = result.rows[0].addres_id;
+
+    await client.query('COMMIT');
+    return { success: true, addressId };
+  } catch (error) {
+    await client.query('ROLLBACK');
+    console.error('Errore nell\'aggiunta dell\'indirizzo temporaneo:', error.message);
+    return { success: false, error: error.message };
+  } finally {
+    client.release();
+  }
+};
+
 module.exports = {
-    createOrderFromCart
+  createOrderFromCart,
+  addTempAddress
 };
