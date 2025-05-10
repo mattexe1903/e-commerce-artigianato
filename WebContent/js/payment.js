@@ -207,7 +207,13 @@ async function sendOrder() {
     const result = await res.json();
 
     if (result.success) {
-      await fetch(`/api/cart/clear/${token}`, { method: "POST" });
+      await fetch(`/api/cart/clear`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
       showPopup("Ordine completato", "Riceverai una mail con i dettagli.", () => {
         window.location.href = "/home";
       });

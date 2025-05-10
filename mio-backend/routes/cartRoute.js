@@ -14,4 +14,5 @@ router.delete('/cart/remove', protect, cartController.removeFromCart);
 
 // svuota tutto il carrello
 router.delete('/cart/clear', protect, cartController.clearCart);
+
 module.exports = router;
