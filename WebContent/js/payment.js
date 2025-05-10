@@ -167,20 +167,18 @@ async function setupSaveCheckboxes() {
 async function sendOrder() {
   const token = getToken();
   const saveAddressChecked = document.getElementById("save-address").checked;
-  const savePayment = document.getElementById("save-payment").checked;
-  const paymentMethod = document.getElementById("payment-form").dataset.method;
+  //const savePayment = document.getElementById("save-payment").checked;
+  //const paymentMethod = document.getElementById("payment-form").dataset.method;
 
-  if (!paymentMethod) {
+  /*if (!paymentMethod) {
     return showPopup("Errore", "Seleziona un metodo di pagamento.");
-  }
+  }*/
 
   const addressData = {
-    name: document.getElementById("addr-name").value,
-    surname: document.getElementById("addr-surname").value,
-    street: document.getElementById("addr-street").value,
-    city: document.getElementById("addr-city").value,
-    cap: document.getElementById("addr-cap").value,
-    phone: document.getElementById("addr-phone").value,
+    street: document.getElementById("address-street").value,
+    city: document.getElementById("address-city").value,
+    cap: document.getElementById("address-zip").value,
+    province: document.getElementById("address-province").value,
   };
 
   try {
@@ -191,11 +189,11 @@ async function sendOrder() {
     const orderData = {
       token,
       date: new Date().toISOString(),
-      paymentMethod,
+      //paymentMethod,
       address: addressData,
-      paymentDetails: getPaymentDetails(paymentMethod),
+      //paymentDetails: getPaymentDetails(paymentMethod),
       saveAddress: saveAddressChecked,
-      savePayment,
+      //savePayment,
     };
 
     const res = await fetch("/api/order", {
@@ -205,6 +203,10 @@ async function sendOrder() {
     });
 
     const result = await res.json();
+    console.log("Risultato invio ordine:", result);
+    if (!res.ok) {
+      throw new Error(result.message || "Errore durante l'invio dell'ordine.");
+    }
 
     if (result.success) {
       await fetch(`/api/cart/clear`, {
