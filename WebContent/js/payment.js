@@ -1,8 +1,10 @@
+let saveAddressFn;
+
 document.addEventListener("DOMContentLoaded", async () => {
   await loadUserData();
   await loadCartData();
   setupPaymentSelection();
-  setupSaveCheckboxes();
+  saveAddressFn = await setupSaveCheckboxes();
 });
 
 function getToken() {
@@ -10,8 +12,8 @@ function getToken() {
 }
 
 async function loadUserData() {
-  const token = getToken(); 
-  
+  const token = getToken();
+
   try {
     const response = await fetch('http://localhost:3000/api/userInfo', {
       headers: { 'Authorization': `Bearer ${token}` }
@@ -131,20 +133,40 @@ function setupPaymentSelection() {
   });
 }
 
-//TODO
-function setupSaveCheckboxes() {
-  document.getElementById("save-address").addEventListener("change", e => {
-    e.target.dataset.save = e.target.checked;
-  });
-  document.getElementById("save-payment").addEventListener("change", e => {
-    e.target.dataset.save = e.target.checked;
-  });
+//IN PROGRESS
+async function setupSaveCheckboxes() {
+  const addressCheckbox = document.getElementById("save-address");
+
+  const saveAddress = async (addressData) => {
+    const token = getToken();
+    const shouldSave = addressCheckbox.checked;
+
+    const response = await fetch('http://localhost:3000/api/addAddress', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        address: addressData,
+        saveForUser: shouldSave
+      })
+    });
+
+    if (!response.ok) {
+      console.error("Errore nel salvataggio dell'indirizzo:", await response.text());
+    } else {
+      console.log("Indirizzo salvato con successo.");
+    }
+  };
+
+  return saveAddress;
 }
 
-//TODO
+//IN PROGRESS
 async function sendOrder() {
-  const userId = getUserId();
-  const saveAddress = document.getElementById("save-address").checked;
+  const token = getToken();
+  const saveAddressChecked = document.getElementById("save-address").checked;
   const savePayment = document.getElementById("save-payment").checked;
   const paymentMethod = document.getElementById("payment-form").dataset.method;
 
@@ -152,21 +174,27 @@ async function sendOrder() {
     return showPopup("Errore", "Seleziona un metodo di pagamento.");
   }
 
+  const addressData = {
+    name: document.getElementById("addr-name").value,
+    surname: document.getElementById("addr-surname").value,
+    street: document.getElementById("addr-street").value,
+    city: document.getElementById("addr-city").value,
+    cap: document.getElementById("addr-cap").value,
+    phone: document.getElementById("addr-phone").value,
+  };
+
   try {
+    if (saveAddressChecked && typeof saveAddressFn === "function") {
+      await saveAddressFn(addressData);
+    }
+
     const orderData = {
-      userId,
+      token,
       date: new Date().toISOString(),
       paymentMethod,
-      address: {
-        name: document.getElementById("addr-name").value,
-        surname: document.getElementById("addr-surname").value,
-        street: document.getElementById("addr-street").value,
-        city: document.getElementById("addr-city").value,
-        cap: document.getElementById("addr-cap").value,
-        phone: document.getElementById("addr-phone").value,
-      },
+      address: addressData,
       paymentDetails: getPaymentDetails(paymentMethod),
-      saveAddress,
+      saveAddress: saveAddressChecked,
       savePayment,
     };
 
@@ -179,7 +207,7 @@ async function sendOrder() {
     const result = await res.json();
 
     if (result.success) {
-      await fetch(`/api/cart/clear/${userId}`, { method: "POST" });
+      await fetch(`/api/cart/clear/${token}`, { method: "POST" });
       showPopup("Ordine completato", "Riceverai una mail con i dettagli.", () => {
         window.location.href = "/home";
       });
@@ -191,6 +219,7 @@ async function sendOrder() {
     showPopup("Errore", "Errore durante l'invio dell'ordine.");
   }
 }
+
 
 //TODO
 function getPaymentDetails(method) {
