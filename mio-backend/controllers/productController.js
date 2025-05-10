@@ -33,7 +33,7 @@ const getProductById = async (req, res) => {
 };
 
 const createProduct = async (req, res) => {
-  const { product_name, photo_description, price, quantity } = req.body;
+  const { product_name, photo_description, price, quantity,category_id } = req.body;
 
   try {
     // Crea il prodotto senza immagine per ottenere il product_id
@@ -42,7 +42,8 @@ const createProduct = async (req, res) => {
       photo: 'placeholder.jpg', // Immagine temporanea
       photo_description,
       price,
-      quantity
+      quantity,
+      category_id
     });
 
     // Se è stato caricato un file
@@ -75,14 +76,15 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   const { id } = req.params;
-  const { product_name, photo_description, price, quantity } = req.body;
+  const { product_name, photo_description, price, quantity, category_id } = req.body;
 
   try {
     const updatedProduct = await productService.updateProduct(id, {
       product_name,
       photo_description,
       price,
-      quantity
+      quantity,
+      category_id
     });
 
     if (!updatedProduct) {

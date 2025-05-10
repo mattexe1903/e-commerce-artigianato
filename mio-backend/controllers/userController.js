@@ -142,11 +142,23 @@ const resetPassword = async (req, res) => {
     }
   };
 
+  const getInventory = async (req, res) => {
+    try {
+      const userId = req.user.user_id;
+      const inventory = await userService.getInventory(userId);
+      return res.status(200).json(inventory);
+    } catch (error) {
+      console.error('Error fetching inventory:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+
   module.exports = {
     getUserInfo,
     getArtigianiInfo,
     getUserInformation,
     sendResetEmail,
     resetPassword,
-    addUserAddress
+    addUserAddress,
+    getInventory
   };

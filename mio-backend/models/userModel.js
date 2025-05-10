@@ -74,6 +74,11 @@ const addUserAddress = async (userId, street_address, city, cap, province) => {
   return result.rows[0];
 }
 
+const getInventory = async (userId) => {
+  const result = await pool.query('SELECT * FROM inventory JOIN products ON(inventory.product_id = products.product_id) WHERE user_id = $1', [userId]);
+  return result.rows;
+}
+
 module.exports = {
   getUserByEmail,
   createUser,
@@ -81,5 +86,6 @@ module.exports = {
   getArtisanStateById,
   updatePassword, 
   getUserAddresses,
-  addUserAddress
+  addUserAddress,
+  getInventory
 };

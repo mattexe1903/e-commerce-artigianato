@@ -62,11 +62,22 @@ const addUserAddress = async (userId, street_address, city, cap, province) => {
     }
 }; 
 
+const getInventory = async (userId) => {
+    try {
+        const inventory = await userModel.getInventory(userId);
+        return inventory;
+    } catch (error) {
+        console.error('Error fetching inventory:', error);
+        throw error;
+    }
+};
+
 module.exports = {
     getUserInfo,
     getArtigianiInfo,
     getUserInformation,
     updatePassword,
     getUserByEmail,
-    addUserAddress
+    addUserAddress,
+    getInventory
 };

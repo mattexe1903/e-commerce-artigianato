@@ -13,6 +13,9 @@ router.get('/user/:id/infoartigiani', protect, userController.getArtigianiInfo);
 router.post('/send-reset-email', userController.sendResetEmail);
 
 router.post('/reset-password', userController.resetPassword);
+
 router.get('/addAddress', protect, userController.addUserAddress);
+
+router.get('/getInventory', protect, userController.getInventory);
 
 module.exports = router;

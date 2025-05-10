@@ -44,7 +44,7 @@ window.onload = async () => {
 
     if (role === 3) {
       // ARTIGIANO
-      
+
       // Nascondi sezioni cliente
       ["ordini-section", "preferiti-section"].forEach(id => {
         document.getElementById(id)?.classList.add("hidden");
@@ -70,19 +70,32 @@ window.onload = async () => {
         navList.insertBefore(li, navList.lastElementChild);
       });
 
-      /* Carica inventario
-      const inventario = await (await fetch('/api/inventario')).json();
+
+      const resInventario = await fetch('http://localhost:3000/api/getInventory', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!resInventario.ok) throw new Error("Errore nel caricamento dell'inventario");
+
+      const inventario = await resInventario.json();
+      console.log("Inventario:", inventario);
       const inventarioList = document.getElementById("inventario-list");
       inventarioList.innerHTML = "";
-      inventario.forEach(i => {
-        const div = document.createElement("div");
-        div.classList.add("prodotto");
-        div.innerHTML = `
-          <p><strong>${i.nome}</strong></p>
-          <p>Prezzo: €${i.prezzo}</p>
+
+      if (inventario.length === 0) {
+        inventarioList.innerHTML = "<p>Inventario vuoto</p>";
+      } else {
+        inventario.forEach(i => {
+          const div = document.createElement("div");
+          div.classList.add("prodotto");
+          div.innerHTML = `
+          <p><strong>${i.product_name}</strong></p>
+          <p>Prezzo: €${i.price}</p>
+          <p>Quantità: ${i.quantity}</p>
         `;
-        inventarioList.appendChild(div);
-      });*/
+          div.onclick = () => window.location.href = `productsupdate.html?id=${i.product_id}`;
+          inventarioList.appendChild(div);
+        });
+      }
 
       document.getElementById("aggiungi-prodotto-btn").addEventListener("click", () => {
         window.location.href = "productsadd.html";
@@ -146,7 +159,7 @@ window.onload = async () => {
 
     } else {
       // CLIENTE
-      
+
       // ORDINI (se servono, decommenta)
       /*
       const resOrdini = await fetch('/api/utente/ordini');
