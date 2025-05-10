@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetBtn.disabled = true;
         localStorage.removeItem('resetToken');
 
-        // Reindirizza a login.html dopo 5 secondi
+        // TODO
         setTimeout(() => {
           window.location.href = 'login.html';
         }, 5000);
