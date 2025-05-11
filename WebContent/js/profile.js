@@ -7,7 +7,6 @@ window.onload = async () => {
     const tokenRaw = localStorage.getItem("token");
     const token = JSON.parse(tokenRaw);
 
-    // Caricamento dati utente
     const resUser = await fetch('http://localhost:3000/api/userInfo', {
       headers: { 'Authorization': `Bearer ${token}` }
     });
@@ -19,11 +18,9 @@ window.onload = async () => {
     const ruolo = user.ruolo;
     const address = data.addresses || [];
 
-    // UI utente
     document.getElementById("titolo-bentornato").innerText = `Benvenuto, ${user.user_name}`;
     document.getElementById("sidebar-title").innerText = ruolo === 3 ? "Lokal" : "Profilo";
 
-    // Dati utente
     const indirizzo = address.length
       ? address.map(a => `${a.street_address}, ${a.city}, ${a.cap}, ${a.province}, ${a.country}`).join(" | ")
       : "Indirizzo mancante";
@@ -35,7 +32,6 @@ window.onload = async () => {
     `;
 
     //TODO: Caricamento ordini
-    
     const resOrdini = await fetch('http://localhost:3000/api/getOrdersByUserId', {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -46,8 +42,41 @@ window.onload = async () => {
 
     console.log("ordini restituiti:", orderList);
 
+    const ordiniTable = document.getElementById("ordini-list");
+    ordiniTable.innerHTML = "";
 
-    // ✅ Caricamento preferiti (inline)
+    if (orderList.length === 0) {
+      ordiniTable.innerHTML = `
+    <tr>
+      <td colspan="5">Non hai ancora effettuato ordini.</td>
+    </tr>
+  `;
+    } else {
+      orderList.forEach(order => {
+        const tr = document.createElement("tr");
+
+        const articoli = order.products.map(p => `
+      <div style="margin-bottom: 0.5rem;">
+        <strong>${p.product_name}</strong><br/>
+        Quantità: ${p.quantity}<br/>
+        €${Number(p.single_price).toFixed(2)}
+      </div>
+    `).join("");
+
+        tr.innerHTML = `
+      <td>${new Date(order.order_date).toLocaleDateString()}</td>
+      <td>#${order.order_id}</td>
+      <td>€${Number(order.total).toFixed(2)}</td>
+      <td>${articoli}</td>
+      <td>${order.state_name}</td>
+    `;
+
+        ordiniTable.appendChild(tr);
+      });
+    }
+
+
+
     const res = await fetch('http://localhost:3000/api/favourites', {
       headers: {
         'Authorization': `Bearer ${token}`

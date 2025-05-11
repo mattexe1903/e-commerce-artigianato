@@ -78,7 +78,6 @@ const addTempAddress = async (street_address, city, cap, province) => {
   }
 };
 
-
 const findAddress = async (street_address, city, cap, province) => {
   const client = await pool.connect();
 
@@ -107,22 +106,44 @@ const getOrdersByUserId = async (userId) => {
   const client = await pool.connect();
 
   try {
-    const result = await client.query(
+    const ordersResult = await client.query(
       `SELECT o.order_id, o.order_date, o.total, s.state_name
        FROM orders o
        JOIN states s ON o.order_state = s.state_id
-       WHERE o.user_id = $1`,
+       WHERE o.user_id = $1
+       ORDER BY o.order_date DESC`,
       [userId]
     );
 
-    return result.rows;
+    const orders = ordersResult.rows;
+
+    for (const order of orders) {
+      const productsResult = await client.query(
+        `SELECT 
+           p.product_id,
+           p.product_name,
+           p.photo,
+           p.photo_description,
+           op.quantity,
+           op.single_price
+         FROM orders_products op
+         JOIN products p ON op.product_id = p.product_id
+         WHERE op.order_id = $1`,
+        [order.order_id]
+      );
+
+      order.products = productsResult.rows;
+    }
+
+    return orders;
   } catch (error) {
-    console.error('Errore nel recupero degli ordini:', error.message);
+    console.error('Errore nel recupero degli ordini con prodotti:', error.message);
     throw error;
   } finally {
     client.release();
   }
 };
+
 
 module.exports = {
   createOrderFromCart,
