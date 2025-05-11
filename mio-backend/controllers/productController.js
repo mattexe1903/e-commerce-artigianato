@@ -33,8 +33,7 @@ const getProductById = async (req, res) => {
 };
 
 const createProduct = async (req, res) => {
-  const { product_name, photo_description, price, quantity,category_id } = req.body;
-
+  const { product_name, photo_description, price, quantity, category_id, user_id } = req.body;
   try {
     // Crea il prodotto senza immagine per ottenere il product_id
     const newProduct = await productService.createProduct({
@@ -43,7 +42,8 @@ const createProduct = async (req, res) => {
       photo_description,
       price,
       quantity,
-      category_id
+      category_id,
+      user_id
     });
 
     // Se è stato caricato un file
@@ -51,12 +51,15 @@ const createProduct = async (req, res) => {
       const extension = path.extname(req.file.originalname);
       const newFileName = `${newProduct.product_id}${extension}`;
       const oldPath = req.file.path;
-      const newPath = path.join('images', newFileName);
+      const imageDir = path.join(__dirname, '..', '..', 'WebContent', 'images');
+      const newPath = path.join(imageDir, newFileName);
 
-      // Rinominare/muovere il file
+      if (!fs.existsSync(imageDir)) {
+        fs.mkdirSync(imageDir, { recursive: true });
+      }
+
       fs.renameSync(oldPath, newPath);
 
-      // Aggiornare il record del prodotto con il nuovo nome dell'immagine
       await productService.updateProductPhoto(newProduct.product_id, newFileName);
       newProduct.photo = newFileName;
     }
@@ -76,7 +79,9 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   const { id } = req.params;
+  console.log('messaggio', req.body);
   const { product_name, photo_description, price, quantity, category_id } = req.body;
+
 
   try {
     const updatedProduct = await productService.updateProduct(id, {
@@ -167,6 +172,6 @@ module.exports = {
   createProduct,
   updateProduct,
   updateProductPhoto,
-  deleteProduct, 
+  deleteProduct,
   getLatestProducts
 };

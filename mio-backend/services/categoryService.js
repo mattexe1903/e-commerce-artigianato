@@ -9,6 +9,16 @@ const getAllCategories = async () => {
   }
 };
 
+const getAllCategoriesInfo = async () => {
+  try {
+    const categories = await categoryModel.getAllCategoriesInfo();
+    return categories;
+  } catch (err) {
+    throw new Error('Error fetching categories info: ' + err.message);
+  }
+};
+
 module.exports = {
-    getAllCategories
+    getAllCategories,
+    getAllCategoriesInfo
 };

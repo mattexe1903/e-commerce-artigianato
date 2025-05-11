@@ -15,13 +15,12 @@ header {
   flex-wrap: wrap;
 }
 
-.logo a {
+.logo span {
   font-size: 28px;
   font-weight: bold;
   color: #f5b400;
   flex: 0 0 200px;
   text-align: center;
-  text-decoration: none;
 }
 
 .profile a {
@@ -44,6 +43,9 @@ header {
 .product-image {
   flex: 1 1 400px;
   max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .product-image input {
@@ -110,4 +112,22 @@ button {
 
 button:hover {
   background-color: #d49f00;
+}
+
+.delete-button {
+  align-self: flex-start;
+  background-color: #d9534f;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 15px;
+}
+
+.delete-button:hover {
+  background-color: #c9302c;
 }

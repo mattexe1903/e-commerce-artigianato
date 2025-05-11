@@ -195,7 +195,7 @@ async function caricaNuoviArrivi() {
       div.innerHTML = `
         <img src="${prodotto.photo ? `http://localhost:3000${prodotto.photo}` : 'http://localhost:3000/images/placeholder.jpg'}"
         alt="${prodotto.product_id || 'Senza Nome'}"
-        style="width:100px;height:auto;">
+        style="width:100px;height:75px;">
         <div class="product-name">${prodotto.product_name || 'Nome mancante'}</div>
         <div class="product-price">€ ${Number(prodotto.price).toFixed(2)}</div>
       `;
@@ -242,7 +242,7 @@ async function caricaTuttiProdotti() {
       div.innerHTML = `
         <img src="${prodotto.photo ? `http://localhost:3000${prodotto.photo}` : 'http://localhost:3000/images/placeholder.jpg'}"
         alt="${prodotto.product_id || 'Senza Nome'}"
-        style="width:100px;height:auto;">
+        style="width:100px;height:75px;">
         <div class="product-name">${prodotto.product_name || 'Nome mancante'}</div>
         <div class="product-price">€ ${Number(prodotto.price).toFixed(2)}</div>
       `;

@@ -5,6 +5,12 @@ const getAllCategories = async () => {
   return result.rows;
 }
 
+const getAllCategoriesInfo = async () => {
+  const result = await pool.query('SELECT * FROM categories ORDER BY category_name ASC');
+  return result.rows;
+}
+
 module.exports = {
-    getAllCategories
+    getAllCategories, 
+    getAllCategoriesInfo
 };

@@ -4,12 +4,12 @@ const path = require('path');
 // Configurazione di Multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // Salva le immagini nella cartella 'images/'
-    cb(null, 'images/');
+    const imagesDir = path.join(__dirname, '..', '..', 'WebContent', 'images');
+    cb(null, imagesDir);
   },
   filename: function (req, file, cb) {
-    // Rinomina il file in base all'ID del prodotto per renderlo univoco
-    const productId = req.body.productId || 'unknown'; // Assuming you pass productId in the body for the file
+    console.log("req.body", req.body);
+    const productId = req.body.productId || 'placeholder'; // Assuming you pass productId in the body for the file
     const extname = path.extname(file.originalname); // Ottieni l'estensione del file (e.g., .jpg, .png)
     cb(null, `${productId}${extname}`);
   }
