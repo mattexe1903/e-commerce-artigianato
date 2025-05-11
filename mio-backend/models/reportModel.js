@@ -9,6 +9,18 @@ const createReport = async (userId, title, message, status) => {
   await pool.query(query, [userId, title, message, status]);
 };
 
+const getArtisanRequests = async () => {
+  const query = `
+    SELECT report_id, user_id, title, report_message, sent_date, report_state
+    FROM reports
+    WHERE title = 'Richiesta registrazione artigiano'
+    ORDER BY sent_date DESC
+  `;
+  const result = await db.query(query);
+  return result.rows;
+};
+
 module.exports = {
-  createReport
+  createReport,
+  getArtisanRequests
 };

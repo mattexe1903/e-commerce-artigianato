@@ -4,4 +4,6 @@ const reportController = require('../controllers/reportController');
 
 router.post('/sendArtisanRequest', reportController.sendArtisanRequest);
 
+router.get('/getArtisanRequest', reportController.getArtisanRequest);
+
 module.exports = router;
