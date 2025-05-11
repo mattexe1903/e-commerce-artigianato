@@ -2,6 +2,47 @@ document.getElementById("exit-btn").addEventListener("click", () => {
   window.location.href = "login.html";
 });
 
+window.onload = () => {
+  loadReportList();
+};
+
+async function loadReportList() {
+  try {
+    const res = await fetch('http://localhost:3000/api/getArtisanRequest');
+    const segnalazioni = await res.json();
+
+    console.log("Richieste di registrazione artigiano:", segnalazioni);
+
+    const tableBody = document.getElementById("segnalazioni-list");
+    tableBody.innerHTML = "";
+
+    if (segnalazioni.length === 0) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="4">Nessuna richiesta di registrazione artigiano trovata.</td>
+        </tr>
+      `;
+    } else {
+      segnalazioni.forEach(report => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>${new Date(report.data_creazione).toLocaleDateString()}</td>
+          <td>${report.titolo}</td>
+          <td>${report.messaggio}</td>
+          <td>${report.stato}</td>
+        `;
+
+        tableBody.appendChild(tr);
+      });
+    }
+  } catch (err) {
+    console.error("Errore nel caricamento delle segnalazioni:", err);
+  }
+}
+
+
+/*
 // Carica richieste di registrazione
 fetch('/api/richieste')
   .then(response => response.json())
@@ -20,6 +61,8 @@ fetch('/api/richieste')
     });
   })
   .catch(error => console.error("Errore caricamento richieste:", error));
+
+
 
 function accettaRichiesta(idRichiesta) {
   fetch(`/api/richieste/${idRichiesta}/accetta`, { method: 'POST' })
@@ -121,3 +164,4 @@ fetch('/api/statistiche/vendite')
     });
   })
   .catch(error => console.error("Errore caricamento statistiche vendite:", error));
+*/

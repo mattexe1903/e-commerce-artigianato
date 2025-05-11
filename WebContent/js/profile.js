@@ -31,7 +31,6 @@ window.onload = async () => {
       <p><strong>Indirizzo:</strong> ${indirizzo}</p>
     `;
 
-    //TODO: Caricamento ordini
     const resOrdini = await fetch('http://localhost:3000/api/getOrdersByUserId', {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -74,8 +73,6 @@ window.onload = async () => {
         ordiniTable.appendChild(tr);
       });
     }
-
-
 
     const res = await fetch('http://localhost:3000/api/favourites', {
       headers: {

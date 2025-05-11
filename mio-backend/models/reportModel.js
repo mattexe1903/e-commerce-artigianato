@@ -16,7 +16,7 @@ const getArtisanRequests = async () => {
     WHERE title = 'Richiesta registrazione artigiano'
     ORDER BY sent_date DESC
   `;
-  const result = await db.query(query);
+  const result = await pool.query(query);
   return result.rows;
 };
 
