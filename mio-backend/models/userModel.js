@@ -44,7 +44,7 @@ const getUserAddresses = async (userId) => {
 //TODO: test this function
 const addUserAddress = async (userId, street_address, city, cap, province) => {
   const result = await pool.query(
-    'INSERT INTO address (user_id, street_address, city, cap, province) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+    `INSERT INTO address (user_id, street_address, city, cap, province, country) VALUES ($1, $2, $3, $4, $5, 'italia') RETURNING *`,
     [userId, street_address, city, cap, province]
   );
   return result.rows[0];
@@ -54,9 +54,9 @@ module.exports = {
   getUserByEmail,
   createUser,
   getUserById,
-  getArtigianiById, 
+  getArtigianiById,
   createArtigiano,
   getArtisanStateById,
-  getUserAddresses, 
+  getUserAddresses,
   addUserAddress
 };

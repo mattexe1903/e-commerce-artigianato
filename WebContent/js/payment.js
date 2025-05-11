@@ -196,20 +196,24 @@ async function sendOrder() {
       //savePayment,
     };
 
-    const res = await fetch("/api/order", {
+    const res = await fetch("http://localhost:3000/api/createOrder", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
       body: JSON.stringify(orderData),
     });
 
     const result = await res.json();
     console.log("Risultato invio ordine:", result);
+
     if (!res.ok) {
       throw new Error(result.message || "Errore durante l'invio dell'ordine.");
     }
 
     if (result.success) {
-      await fetch(`/api/cart/clear`, {
+      await fetch("http://localhost:3000/api/cart/clear", {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -253,14 +257,14 @@ function showPopup(title, message, callback = null) {
   const popup = document.createElement("div");
   popup.className = "modal-overlay";
   popup.innerHTML = `
-    <div class="modal-content">
+    < div class= "modal-content" >
       <h3>${title}</h3>
       <p>${message}</p>
       <div class="modal-buttons">
         <button id="popup-close">Ok</button>
       </div>
-    </div>
-  `;
+    </div >
+      `;
   document.body.appendChild(popup);
 
   document.getElementById("popup-close").onclick = () => {

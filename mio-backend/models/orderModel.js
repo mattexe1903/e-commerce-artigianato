@@ -56,13 +56,16 @@ const addTempAddress = async (street_address, city, cap, province) => {
   try {
     await client.query('BEGIN');
 
-    const result = await pool.query(
+    console.log('Aggiunta indirizzo temporaneo:', street_address, city, cap, province);
+    
+    const result = await client.query(
       `INSERT INTO address (street_address, city, cap, province, country)
-           VALUES ($1, $2, $3, $4, 'Italia')
-           RETURNING addres_id`,
+       VALUES ($1, $2, $3, $4, 'Italia')
+       RETURNING addres_id`,
       [street_address, city, cap, province]
     );
-    finalAddressId = result.rows[0].addres_id;
+
+    const addressId = result.rows[0].address_id;
 
     await client.query('COMMIT');
     return { success: true, addressId };
@@ -75,7 +78,33 @@ const addTempAddress = async (street_address, city, cap, province) => {
   }
 };
 
+
+const findAddress = async (street_address, city, cap, province) => {
+  const client = await pool.connect();
+
+  try {
+    const result = await client.query(
+      `SELECT addres_id FROM address
+     WHERE street_address = $1 AND city = $2 AND cap = $3 AND province = $4 
+     LIMIT 1`,
+      [street_address, city, cap, province]
+    );
+
+    if (result.rows.length > 0) {
+      return result.rows[0];
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error('Errore nella ricerca dell\'indirizzo:', error.message);
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
 module.exports = {
   createOrderFromCart,
-  addTempAddress
+  addTempAddress, 
+  findAddress
 };

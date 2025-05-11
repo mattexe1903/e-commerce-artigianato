@@ -18,7 +18,17 @@ const addTempAddress = async (street_address, city, cap, province) => {
   }
 }
 
+const findAddress = async (street_address, city, cap, province) => {
+  try {
+    const result = await orderModel.findAddress(street_address, city, cap, province);
+    return result;
+  } catch (error) {
+    throw new Error('Errore nella ricerca dell\'indirizzo: ' + error.message);
+  }
+};
+
 module.exports = {
     createOrderFromCart, 
-    addTempAddress
+    addTempAddress, 
+    findAddress
 };
