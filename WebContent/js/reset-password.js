@@ -1,9 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
   const resetBtn = document.getElementById('resetBtn');
   const passwordInput = document.getElementById('newPassword');
+  const confirmPasswordInput = document.getElementById('confirmPassword');
   const messageBox = document.getElementById('resetMessage');
 
-  // Prova a recuperare il token da localStorage, altrimenti da URL
+  // Mostra/Nascondi password
+  document.getElementById("togglePassword").addEventListener("click", function (e) {
+    e.preventDefault();
+    const isHidden = passwordInput.type === "password";
+    passwordInput.type = isHidden ? "text" : "password";
+    confirmPasswordInput.type = isHidden ? "text" : "password";
+    this.textContent = isHidden ? "Nascondi password" : "Mostra password";
+  });
+
+  // Recupero token
   let token = localStorage.getItem('resetToken');
   if (!token) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -19,10 +29,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   resetBtn.addEventListener('click', async () => {
     const newPassword = passwordInput.value.trim();
+    const confirmPassword = confirmPasswordInput.value.trim();
 
     if (!newPassword || newPassword.length < 6) {
       messageBox.style.color = 'orange';
       messageBox.textContent = 'La password deve contenere almeno 6 caratteri.';
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      messageBox.style.color = 'orange';
+      messageBox.textContent = 'Le password non coincidono.';
       return;
     }
 
@@ -42,12 +59,13 @@ document.addEventListener('DOMContentLoaded', () => {
         messageBox.style.color = 'lightgreen';
         messageBox.textContent = data.message || 'Password aggiornata con successo.';
         passwordInput.disabled = true;
+        confirmPasswordInput.disabled = true;
         resetBtn.disabled = true;
         localStorage.removeItem('resetToken');
 
-        // TODO
+        // Reindirizzamento al login dopo 5 secondi
         setTimeout(() => {
-          window.location.href = 'login.html';
+          window.location.href = 'html/login.html';
         }, 5000);
       } else {
         messageBox.style.color = 'orange';
