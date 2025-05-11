@@ -34,24 +34,18 @@ window.onload = async () => {
       <p><strong>Indirizzo:</strong> ${indirizzo}</p>
     `;
 
-    /* Caricamento ordini
-    const resOrdini = await fetch('/api/utente/ordini');
-    if (!resOrdini.ok) throw new Error("Errore nel caricamento degli ordini.");
+    //TODO: Caricamento ordini
+    
+    const resOrdini = await fetch('http://localhost:3000/api/getOrdersByUserId', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
 
-    const ordini = await resOrdini.json();
-    const corpoTabella = document.querySelector("#tabella-ordini tbody");
+    const orderList = await resOrdini.json();
 
-    ordini.forEach(o => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${o.data}</td>
-        <td>${o.numero}</td>
-        <td>${o.prezzo}</td>
-        <td>${o.articoli}</td>
-        <td>${o.stato}</td>
-      `;
-      corpoTabella.appendChild(row);
-    });*/
+    console.log("ordini restituiti:", orderList);
+
 
     // ✅ Caricamento preferiti (inline)
     const res = await fetch('http://localhost:3000/api/favourites', {

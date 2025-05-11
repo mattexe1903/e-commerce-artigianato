@@ -103,8 +103,30 @@ const findAddress = async (street_address, city, cap, province) => {
   }
 };
 
+const getOrdersByUserId = async (userId) => {
+  const client = await pool.connect();
+
+  try {
+    const result = await client.query(
+      `SELECT o.order_id, o.order_date, o.total, s.state_name
+       FROM orders o
+       JOIN states s ON o.order_state = s.state_id
+       WHERE o.user_id = $1`,
+      [userId]
+    );
+
+    return result.rows;
+  } catch (error) {
+    console.error('Errore nel recupero degli ordini:', error.message);
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
 module.exports = {
   createOrderFromCart,
   addTempAddress, 
-  findAddress
+  findAddress,
+  getOrdersByUserId
 };

@@ -14,7 +14,6 @@ const createOrder = async (req, res) => {
   } = req.body;
 
   try {
-    //ERROR HANDLING
     /*if (!street_address || !city || !cap || !province) {
       return res.status(400).json({ message: 'Dati indirizzo mancanti' });
     }*/
@@ -49,6 +48,23 @@ const createOrder = async (req, res) => {
   }
 };
 
+const getOrdersByUserId = async (req, res) => {
+  const userId = req.user.user_id;
+
+  try {
+    const orders = await orderService.getOrdersByUserId(userId);
+    if (orders) {
+      res.status(200).json(orders);
+    } else {
+      res.status(404).json({ message: 'Nessun ordine trovato' });
+    }
+  } catch (error) {
+    console.error('Errore nel recupero degli ordini:', error.message);
+    res.status(500).json({ message: 'Errore interno del server' });
+  }
+}
+
 module.exports = {
-  createOrder
+  createOrder,
+  getOrdersByUserId
 };

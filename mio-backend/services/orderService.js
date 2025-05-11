@@ -27,8 +27,18 @@ const findAddress = async (street_address, city, cap, province) => {
   }
 };
 
+const getOrdersByUserId = async (userId) => {
+  try {
+    const orders = await orderModel.getOrdersByUserId(userId);
+    return orders;
+  } catch (error) {
+    throw new Error('Errore nel recupero degli ordini: ' + error.message);
+  }
+};
+
 module.exports = {
     createOrderFromCart, 
     addTempAddress, 
-    findAddress
+    findAddress, 
+    getOrdersByUserId
 };
