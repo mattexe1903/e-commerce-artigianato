@@ -20,7 +20,7 @@ const login = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Login riuscito',
-      token, 
+      token,
       user_role: user.user_role
     });
   } catch (err) {
@@ -66,25 +66,14 @@ const registerArtigiano = async (req, res) => {
     const user = await authService.register(nome, cognome, email, password, 3);
 
     if (tipo_artigiano && iban) {
-      console.log('userId: ', user.user_id);
-      const newArtisan = await authService.saveArtigianoDetails(user.user_id, tipo_artigiano, iban);
-      console.log(newArtisan);
+      await authService.saveArtigianoDetails(user.user_id, tipo_artigiano, iban);
     }
 
-    const artisan_state = await authService.artisanIsActive(user.user_id);
-
-    if (artisan_state != 2) {
-      return res.status(400).json({
-        success: false,
-        message: 'Richiesta in attesa di approvazione'
-      });
-    } else {
-      res.status(201).json({
-        success: true,
-        message: 'Registrazione riuscita',
-        user
-      });
-    }
+    res.status(201).json({
+      success: true,
+      message: 'Registrazione riuscita',
+      user
+    });
   } catch (err) {
     console.error('Errore durante la registrazione dell\'artigiano:', err);
     res.status(500).json({
@@ -93,8 +82,6 @@ const registerArtigiano = async (req, res) => {
     });
   }
 };
-
-
 
 // JWT Token
 const generateToken = (id) => {

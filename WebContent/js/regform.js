@@ -18,8 +18,7 @@ window.onload = () => {
     e.preventDefault();
     const errorMessage = document.getElementById('error-message');
 
-
-    //TO DO: CONTROLLO PASSWORD E CONFERMA PASSWORD
+    // TO DO: CONTROLLO PASSWORD E CONFERMA PASSWORD
 
     const datiBase = {
       nome: form.nome.value.trim(),
@@ -29,14 +28,11 @@ window.onload = () => {
       conferma: form.conferma.value.trim()
     };
 
-
     if (tipo === 'artigiano') {
       const datiExtra = {
         tipo_artigiano: form.tipo_artigiano.value.trim(),
         iban: form.iban.value.trim()
       };
-
-      console.log("Dati artigiano:", { datiBase, datiExtra });
 
       fetch('http://localhost:3000/api/registerArtigiano', {
         method: 'POST',
@@ -51,23 +47,41 @@ window.onload = () => {
           if (!response.ok) {
             throw new Error(data.message || "Registrazione fallita. Controlla i dati.");
           }
+
+          //TODO: Inviare la segnalazione all'admin
+          const segnalazioneAdmin = {
+            nome: datiBase.nome,
+            cognome: datiBase.cognome,
+            tipo_artigiano: datiExtra.tipo_artigiano,
+            iban: datiExtra.iban
+          };
+          console.log("Segnalazione all'admin:", segnalazioneAdmin);
+
+          fetch('http://localhost:3000/api/sendArtisanRequest', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(segnalazioneAdmin)
+          })
+            .then(response => {
+              if (response.ok) {
+                console.log("Segnalazione inviata all'admin con successo.");
+              } else {
+                console.log("Errore nell'invio della segnalazione.");
+              }
+            })
+            .catch(error => {
+              console.error("Errore durante l'invio della segnalazione:", error);
+            });
           return data;
         })
         .catch(error => {
           alert(error.message || "Errore di connessione.");
           window.location.href = "login.html";
         });
-
-
-      //  INVIA A ADMIN
-      /*const segnalazioneAdmin = {
-        nome: datiBase.nome,
-        cognome: datiBase.cognome,
-        mansione: datiExtra.tipo_artigiano,
-        iban: datiExtra.iban
-      };
-      console.log("Invia segnalazione all’admin:", segnalazioneAdmin);
-*/
+      alert("Email inoltrara con successo. Attendere l'approvazione dell'amministratore.");
+      window.location.href = "home.html";
     } else {
 
       console.log("Dati cliente:", datiBase);
