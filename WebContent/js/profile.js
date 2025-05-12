@@ -160,24 +160,49 @@ window.onload = async () => {
     } else {
       // CLIENTE
 
-      // ORDINI (se servono, decommenta)
-      /*
-      const resOrdini = await fetch('/api/utente/ordini');
-      if (!resOrdini.ok) throw new Error("Errore nel caricamento degli ordini.");
-      const ordini = await resOrdini.json();
-      const corpoTabella = document.querySelector("#tabella-ordini tbody");
-      ordini.forEach(o => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${o.data}</td>
-          <td>${o.numero}</td>
-          <td>${o.prezzo}</td>
-          <td>${o.articoli}</td>
-          <td>${o.stato}</td>
-        `;
-        corpoTabella.appendChild(row);
+      // ORDINI
+      const resOrdini = await fetch('http://localhost:3000/api/getOrdersByUserId', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
-      */
+
+      const orderList = await resOrdini.json();
+
+      console.log("ordini restituiti:", orderList);
+
+      const ordiniTable = document.getElementById("ordini-list");
+      ordiniTable.innerHTML = "";
+
+      if (orderList.length === 0) {
+        ordiniTable.innerHTML = `
+    <tr>
+      <td colspan="5">Non hai ancora effettuato ordini.</td>
+    </tr>
+  `;
+      } else {
+        orderList.forEach(order => {
+          const tr = document.createElement("tr");
+
+          const articoli = order.products.map(p => `
+      <div style="margin-bottom: 0.5rem;">
+        <strong>${p.product_name}</strong><br/>
+        Quantità: ${p.quantity}<br/>
+        €${Number(p.single_price).toFixed(2)}
+      </div>
+    `).join("");
+
+          tr.innerHTML = `
+      <td>${new Date(order.order_date).toLocaleDateString()}</td>
+      <td>#${order.order_id}</td>
+      <td>€${Number(order.total).toFixed(2)}</td>
+      <td>${articoli}</td>
+      <td>${order.state_name}</td>
+    `;
+
+          ordiniTable.appendChild(tr);
+        });
+      }
 
       // PREFERITI
       const res = await fetch('http://localhost:3000/api/favourites', {

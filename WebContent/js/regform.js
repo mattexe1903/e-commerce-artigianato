@@ -81,7 +81,7 @@ window.onload = () => {
           window.location.href = "login.html";
         });
       alert("Email inoltrara con successo. Attendere l'approvazione dell'amministratore.");
-      window.location.href = "home.html";
+      window.location.href = "../home.html";
     } else {
 
       console.log("Dati cliente:", datiBase);
