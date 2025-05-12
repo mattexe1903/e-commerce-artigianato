@@ -1,4 +1,5 @@
 const reportModel = require('../models/reportModel');
+const userModel = require('../models/userModel');
 
 const sendArtisanRequest = async (nome, cognome, tipo_artigiano, iban) => {
   const titolo = 'Richiesta registrazione artigiano';
@@ -22,7 +23,23 @@ const getArtisanRequest = async () => {
 
 }
 
+const updateArtisanRequest = async (id, stato) => {
+  await reportModel.updateReportState(id, stato);
+
+  if (stato === 'accettato' || stato === 'rifiutato') {
+    const artisanId = await reportModel.getArtisanIdByReportId(id);
+    console.log('Artisan ID:', artisanId);
+    console.log('Stato:', stato);
+
+    if (artisanId) {;
+      await userModel.updateArtisanState(artisanId, stato);
+    }
+  }
+};
+
+
 module.exports = {
   sendArtisanRequest,
-  getArtisanRequest
+  getArtisanRequest,
+  updateArtisanRequest
 };

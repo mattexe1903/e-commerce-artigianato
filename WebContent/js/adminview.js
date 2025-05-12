@@ -13,13 +13,13 @@ async function loadReportList() {
 
     console.log("Richieste di registrazione artigiano:", segnalazioni);
 
-    const tableBody = document.getElementById("segnalazioni-list");
+    const tableBody = document.getElementById("richieste-list");
     tableBody.innerHTML = "";
 
     if (segnalazioni.length === 0) {
       tableBody.innerHTML = `
         <tr>
-          <td colspan="4">Nessuna richiesta di registrazione artigiano trovata.</td>
+          <td colspan="5">Nessuna richiesta di registrazione artigiano trovata.</td>
         </tr>
       `;
     } else {
@@ -31,6 +31,10 @@ async function loadReportList() {
           <td>${report.titolo}</td>
           <td>${report.messaggio}</td>
           <td>${report.stato}</td>
+          <td>
+            <button onclick="handleRequest('${report.id}', 'accettato')">Accetta</button>
+            <button onclick="handleRequest('${report.id}', 'rifiutato')">Rifiuta</button>
+          </td>
         `;
 
         tableBody.appendChild(tr);
@@ -41,37 +45,32 @@ async function loadReportList() {
   }
 }
 
-// Carica richieste di registrazione
-fetch('http://localhost:3000/api/getArtisanRequest')
-  .then(response => response.json())
-  .then(richieste => {
-    const richiesteList = document.getElementById("richieste-list");
-    richieste.forEach(r => {
-      const div = document.createElement("div");
-      div.className = "richiesta";
-      div.innerHTML = `
-        <p><strong>Nome:</strong> ${r.nome} ${r.cognome}</p>
-        <p><strong>Mansione:</strong> ${r.mansione}</p>
-        <p><strong>IBAN:</strong> ${r.iban}</p>
-        <button onclick="accettaRichiesta('${r.id}')">✔ Accetta</button>
-      `;
-      richiesteList.appendChild(div);
+async function handleRequest(id, action) {
+  const url = `http://localhost:3000/api/updateArtisanRequest`;
+  try {
+    const res = await fetch(url, {
+      method: "POST", // oppure "PATCH" se preferisci
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id: id,
+        action: action // 'accept' o 'reject'
+      })
     });
-  })
-  .catch(error => console.error("Errore caricamento richieste:", error));
 
+    if (!res.ok) {
+      throw new Error("Errore nella risposta del server");
+    }
 
+    const data = await res.json();
+    console.log("Risposta backend:", data);
 
-function accettaRichiesta(idRichiesta) {
-  fetch(`/api/richieste/${idRichiesta}/accetta`, { method: 'POST' })
-    .then(response => {
-      if (response.ok) {
-        alert("Richiesta accettata con successo.");
-        location.reload();
-      } else {
-        alert("Errore nell'accettare la richiesta.");
-      }
-    });
+    // Ricarica la lista dopo l'aggiornamento
+    loadReportList();
+  } catch (err) {
+    console.error(`Errore durante la ${action} della richiesta con ID ${id}:`, err);
+  }
 }
 
 // Carica lista artigiani
