@@ -1,4 +1,5 @@
 const reportService = require('../services/reportService');
+const userService = require('../services/userService');
 
 const sendArtisanRequest = async (req, res) => {
     try {
@@ -45,8 +46,43 @@ const updateArtisanRequest = async (req, res) => {
     }
 }
 
+const sendSignal = async (req, res) => {
+  try {
+    const { email, titolo, messaggio, stato} = req.body;
+
+    if (!email || !titolo || !messaggio || !stato) {
+      return res.status(400).json({ message: 'Tutti i campi sono obbligatori.' });
+    }
+
+    const user = await userService.getUserByEmail(email);
+    if (!user) {
+      return res.status(404).json({ message: 'Utente non trovato.' });
+    }
+
+    const userId = user.user_id;
+
+    await reportService.sendSignal(userId, titolo, messaggio, stato);
+
+    return res.status(200).json({ message: 'Segnalazione inviata con successo.' });
+  } catch (error) {
+    console.error('Errore durante l\'invio della segnalazione:', error);
+    return res.status(500).json({ message: 'Errore interno del server.' });
+  }
+};
+
+const getSignal = async (req, res) => {
+  try {
+    const signals = await reportService.getSignal();
+    return res.status(200).json(signals);
+  } catch (error) {
+    console.error('Errore durante il recupero delle segnalazioni:', error);
+    return res.status(500).json({ message: 'Errore interno del server.' });
+  }
+};
+
 module.exports = {
     sendArtisanRequest, 
     getArtisanRequest,
-    updateArtisanRequest
-};
+    updateArtisanRequest,
+    sendSignal, 
+    getSign
