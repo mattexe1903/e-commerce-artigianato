@@ -93,13 +93,14 @@ async function loadReportList() {
       segnalazioni.forEach(report => {
         const tr = document.createElement("tr");
 
-        tr.innerHTML = `
-          <td>${new Date(report.data_creazione).toLocaleDateString()}</td>
-          <td>${report.titolo}</td>
-          <td>${report.email}</td>
-          <td>${report.messaggio}</td>
-          <td>${report.stato}</td>
-        `;
+      tr.innerHTML = `
+        <td style="padding: 10px;">${new Date(report.data_creazione).toLocaleDateString()}</td>
+        <td style="padding: 10px; font-weight: bold;">${report.titolo}</td>
+        <td style="padding: 10px; ">${report.email}</td>
+        <td style="padding: 10px; max-width: 300px; word-wrap: break-word;">${report.messaggio}</td>
+        <td style="padding: 10px;>${report.stato}</td>
+      `;
+
 
         tableBody.appendChild(tr);
       });

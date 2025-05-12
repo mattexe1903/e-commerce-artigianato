@@ -209,7 +209,9 @@ async function sendOrder() {
     console.log("Risultato invio ordine:", result);
 
     showPopup("Ordine completato", "Riceverai una mail con i dettagli.", () => {
-      window.location.href = "homereg.html";
+       setTimeout(() => {
+          window.location.href = "homereg.html";
+        }, 5000);
     });
   } catch (err) {
     console.error("Errore invio ordine:", err);

@@ -2,8 +2,9 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Segnalazioni</title>
+  <title>Invia una Segnalazione</title>
   <link rel="stylesheet" href="../css/segnalazioni.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
   <header>
@@ -13,31 +14,35 @@
     </div>
   </header>
 
-  <section>
-    <h2>Invia una segnalazione</h2>
+  <main class="container">
+    <h2>Segnala un Problema</h2>
     <form id="segnalazioneForm">
-      <label for="email">Email:</label><br>
-      <input type="email" id="email" name="email" required><br><br>
-
-      <label for="problema">Tipo di problema:</label><br>
-      <select id="problema" required>
-        <option value="">-- Seleziona un problema --</option>
-        <option value="password">Problema con la password</option>
-        <option value="acquisto">Problema durante l'acquisto</option>
-        <option value="spedizione">Problema con la spedizione</option>
-        <option value="descrizione">Descrizione prodotto errata</option>
-        <option value="pagamento">Errore di pagamento</option>
-        <option value="altro">Altro</option>
-      </select><br><br>
-
-      <div id="noteContainer" style="display: none;">
-        <label for="note">Note aggiuntive:</label><br>
-        <textarea id="note" rows="4" cols="50"></textarea><br><br>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
       </div>
 
-      <button type="submit" id="inviaBtn" style="display: none;">Invia segnalazione</button>
+      <div class="form-group">
+        <label for="problema">Tipo di problema</label>
+        <select id="problema" required>
+          <option value="">-- Seleziona un problema --</option>
+          <option value="password">Problema con la password</option>
+          <option value="acquisto">Problema durante l'acquisto</option>
+          <option value="spedizione">Problema con la spedizione</option>
+          <option value="descrizione">Descrizione prodotto errata</option>
+          <option value="pagamento">Errore di pagamento</option>
+          <option value="altro">Altro</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="noteContainer" style="display: none;">
+        <label for="note">Note aggiuntive</label>
+        <textarea id="note" rows="4"></textarea>
+      </div>
+
+      <button type="submit" id="inviaBtn" style="display: none;">Invia Segnalazione</button>
     </form>
-  </section>
+  </main>
 
   <script src="../js/segnalazioni.js"></script>
 </body>

@@ -75,47 +75,37 @@ function applicaFiltri() {
   const categoria = document.getElementById("filtro-categoria").value;
   const ordinePrezzo = document.getElementById("filtro-prezzo").value;
   const disponibilita = document.getElementById("filtro-disponibilita").value;
-
+ 
   const lista = document.getElementById("product-list");
-
-  const prodotti = prodottiList;
-
-  const categoriePresenti = new Set();
-  prodotti.forEach(p => {
-    const cat = p.category_name?.trim();
-    if (cat) categoriePresenti.add(cat);
-  });
-  console.log("Categorie presenti nei prodotti:", Array.from(categoriePresenti));
-
-  let filtrati = prodotti.filter(p => {
+  lista.innerHTML = "";
+ 
+  let filtrati = prodottiList.filter(p => {
     const cat = p.category_name?.trim().toLowerCase() || '';
     const selectedCat = categoria.trim().toLowerCase();
-
+ 
     if (categoria && cat !== selectedCat) return false;
-
+ 
     if (disponibilita === "disponibile" && p.quantity <= 0) return false;
     if (disponibilita === "non_disponibile" && p.quantity > 0) return false;
-
+ 
     return true;
   });
-
+ 
   filtrati.sort((a, b) => {
     const prezzoA = parseFloat(a.price);
     const prezzoB = parseFloat(b.price);
-
     if (ordinePrezzo === "asc") return prezzoA - prezzoB;
     if (ordinePrezzo === "desc") return prezzoB - prezzoA;
     return 0;
   });
-
-  lista.innerHTML = "";
+ 
   filtrati.forEach(p => {
     const div = document.createElement('div');
     div.className = 'product';
     div.dataset.prezzo = p.price ?? '';
     div.dataset.disponibile = p.quantity > 0 ? '1' : '0';
     div.dataset.categoria = p.category_name ?? '';
-
+ 
     div.onclick = () => vaiAllaPaginaProdotto(p.product_id);
     div.innerHTML = `
       <img src="${p.photo ? `http://localhost:3000${p.photo}` : 'http://localhost:3000/images/placeholder.jpg'}"

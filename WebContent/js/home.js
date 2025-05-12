@@ -96,29 +96,50 @@ function creaElementoProdotto(prodotto) {
 }
 
 function applicaFiltri() {
-    const categoria = document.getElementById("filtro-categoria").value.toLowerCase();
-    const ordinePrezzo = document.getElementById("filtro-prezzo").value;
-    const disponibilita = document.getElementById("filtro-disponibilita").value;
-
-    let filtrati = prodottiList.filter(p => {
-        const cat = p.category_name?.toLowerCase() || '';
-        if (categoria && cat !== categoria) return false;
-        if (disponibilita === "disponibile" && p.quantity <= 0) return false;
-        if (disponibilita === "non_disponibile" && p.quantity > 0) return false;
-        return true;
-    });
-
-    filtrati.sort((a, b) => {
-        const prezzoA = parseFloat(a.price);
-        const prezzoB = parseFloat(b.price);
-        if (ordinePrezzo === "asc") return prezzoA - prezzoB;
-        if (ordinePrezzo === "desc") return prezzoB - prezzoA;
-        return 0;
-    });
-
-    const lista = document.getElementById("product-list");
-    lista.innerHTML = "";
-    filtrati.forEach(p => lista.appendChild(creaElementoProdotto(p)));
+  const categoria = document.getElementById("filtro-categoria").value;
+  const ordinePrezzo = document.getElementById("filtro-prezzo").value;
+  const disponibilita = document.getElementById("filtro-disponibilita").value;
+ 
+  const lista = document.getElementById("product-list");
+  lista.innerHTML = "";
+ 
+  let filtrati = prodottiList.filter(p => {
+    const cat = p.category_name?.trim().toLowerCase() || '';
+    const selectedCat = categoria.trim().toLowerCase();
+ 
+    if (categoria && cat !== selectedCat) return false;
+ 
+    if (disponibilita === "disponibile" && p.quantity <= 0) return false;
+    if (disponibilita === "non_disponibile" && p.quantity > 0) return false;
+ 
+    return true;
+  });
+ 
+  filtrati.sort((a, b) => {
+    const prezzoA = parseFloat(a.price);
+    const prezzoB = parseFloat(b.price);
+    if (ordinePrezzo === "asc") return prezzoA - prezzoB;
+    if (ordinePrezzo === "desc") return prezzoB - prezzoA;
+    return 0;
+  });
+ 
+  filtrati.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'product';
+    div.dataset.prezzo = p.price ?? '';
+    div.dataset.disponibile = p.quantity > 0 ? '1' : '0';
+    div.dataset.categoria = p.category_name ?? '';
+ 
+    div.onclick = () => vaiAllaPaginaProdotto(p.product_id);
+    div.innerHTML = `
+      <img src="${p.photo ? `http://localhost:3000${p.photo}` : 'http://localhost:3000/images/placeholder.jpg'}"
+      alt="${p.product_id || 'Senza Nome'}"
+      style="width:100px;height:auto;">
+      <div class="product-name">${p.product_name || 'Nome mancante'}</div>
+      <div class="product-price">€ ${Number(p.price).toFixed(2)}</div>
+    `;
+    lista.appendChild(div);
+  });
 }
 
 async function caricaCategorie() {

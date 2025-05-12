@@ -7,8 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('segnalazioneForm');
 
   problemaSelect.addEventListener('change', () => {
-    if (problemaSelect.value) {
-      inviaBtn.style.display = 'inline-block';
+    const selected = problemaSelect.value;
+    if (selected) {
+      inviaBtn.style.display = 'block';
       noteContainer.style.display = 'block';
     } else {
       inviaBtn.style.display = 'none';
@@ -20,9 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
 
     const segnalazione = {
-      email: emailInput.value,
+      email: emailInput.value.trim(),
       titolo: problemaSelect.value,
-      messaggio: noteInput.value || '',
+      messaggio: noteInput.value.trim(),
       stato: 'nuova'
     };
 
@@ -33,17 +34,17 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       body: JSON.stringify(segnalazione)
     })
-      .then(response => {
-        if (response.ok) {
-          alert("Segnalazione effettuata con successo. La preghiamo di attendere la risposta.");
-          window.location.href = "../home.html";
-        } else {
-          alert("Errore nell'invio della segnalazione. Riprova.");
-        }
-      })
-      .catch(error => {
-        console.error("Errore durante l'invio della segnalazione:", error);
-        alert("Si è verificato un errore. Riprova più tardi.");
-      });
+    .then(response => {
+      if (response.ok) {
+        alert("Segnalazione inviata con successo!");
+        window.location.href = "../home.html";
+      } else {
+        alert("Errore durante l'invio. Riprova.");
+      }
+    })
+    .catch(error => {
+      console.error("Errore:", error);
+      alert("Errore imprevisto. Riprova più tardi.");
+    });
   });
 });
