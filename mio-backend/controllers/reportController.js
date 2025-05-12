@@ -70,10 +70,19 @@ const sendSignal = async (req, res) => {
   }
 };
 
+const getSignal = async (req, res) => {
+  try {
+    const signals = await reportService.getSignal();
+    return res.status(200).json(signals);
+  } catch (error) {
+    console.error('Errore durante il recupero delle segnalazioni:', error);
+    return res.status(500).json({ message: 'Errore interno del server.' });
+  }
+};
 
 module.exports = {
     sendArtisanRequest, 
     getArtisanRequest,
     updateArtisanRequest,
-    sendSignal
-};
+    sendSignal, 
+    getSign

@@ -70,10 +70,22 @@ const insertSignal = async (userId, title, message, status) => {
   await pool.query(query, [userId, title, message, stateId]);
 };
 
+const getSignals = async (userId) => {
+  const query = `
+    SELECT report_id, title, report_message, sent_date, report_state
+    FROM reports
+    WHERE user_id = $1 and title != 'Richiesta registrazione artigiano'
+    ORDER BY sent_date DESC
+  `;
+  const result = await pool.query(query, [userId]);
+  return result.rows;
+};
+
 module.exports = {
   createReport,
   getArtisanRequests,
   updateReportState,
   getArtisanIdByReportId, 
-  insertSignal
+  insertSignal,
+  getSignals
 };

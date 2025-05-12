@@ -3,10 +3,10 @@ document.getElementById("exit-btn").addEventListener("click", () => {
 });
 
 window.onload = () => {
-  loadReportList();
+  loadArtisanReportList();
 };
 
-async function loadReportList() {
+async function loadArtisanReportList() {
   try {
     const res = await fetch('http://localhost:3000/api/getArtisanRequest');
     const segnalazioni = await res.json();
@@ -49,13 +49,13 @@ async function handleRequest(id, action) {
   const url = `http://localhost:3000/api/updateArtisanRequest`;
   try {
     const res = await fetch(url, {
-      method: "POST", // oppure "PATCH" se preferisci
+      method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
         id: id,
-        action: action // 'accept' o 'reject'
+        action: action
       })
     });
 
@@ -64,12 +64,49 @@ async function handleRequest(id, action) {
     }
 
     const data = await res.json();
-    console.log("Risposta backend:", data);
 
-    // Ricarica la lista dopo l'aggiornamento
     location.reload();
   } catch (err) {
     console.error(`Errore durante la ${action} della richiesta con ID ${id}:`, err);
+  }
+}
+
+async function loadReportList() {
+  try {
+    const res = await fetch('http://localhost:3000/api/getArtisanRequest');
+    const segnalazioni = await res.json();
+
+    console.log("Richieste di registrazione artigiano:", segnalazioni);
+
+    const tableBody = document.getElementById("richieste-list");
+    tableBody.innerHTML = "";
+
+    if (segnalazioni.length === 0) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="5">Nessuna richiesta di registrazione artigiano trovata.</td>
+        </tr>
+      `;
+    } else {
+      segnalazioni.forEach(report => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>${new Date(report.data_creazione).toLocaleDateString()}</td>
+          <td>${report.titolo}</td>
+          <td>${report.messaggio}</td>
+          <td>${report.stato}</td>
+          <td>
+            <button onclick="handleRequest('${report.id}', 'accettato')">Accetta</button>
+            <button onclick="handleRequest('${report.id}', 'rifiutato')">Rifiuta</button>
+          </td>
+        `;
+
+        tableBody.appendChild(tr);
+      });
+    }
+  } catch (err) {
+    console.error("Errore nel caricamento delle segnalazioni:", err);
   }
 }
 
@@ -119,63 +156,3 @@ function rimuoviArtigiano(id) {
       alert("Errore imprevisto durante la rimozione.");
     });
 }
-
-/*
-// Carica segnalazioni utenti
-fetch('/api/segnalazioni')
-  .then(response => response.json())
-  .then(segnalazioni => {
-    const listaSegnalazioni = document.getElementById("segnalazioni-list");
-    segnalazioni.forEach(s => {
-      const p = document.createElement("p");
-      p.textContent = s.testo;
-      listaSegnalazioni.appendChild(p);
-    });
-  })
-  .catch(error => console.error("Errore caricamento segnalazioni:", error));
-
-// Carica dati per i grafici Chart.js
-fetch('/api/statistiche/visite')
-  .then(response => response.json())
-  .then(data => {
-    const ctx1 = document.getElementById('visiteChart').getContext('2d');
-    new Chart(ctx1, {
-      type: 'bar',
-      data: {
-        labels: data.labels, // ['Lun', 'Mar', ...]
-        datasets: [{
-          label: 'Visite al sito',
-          data: data.visite, // [50, 100, ...]
-          backgroundColor: '#f5b400'
-        }]
-      },
-      options: {
-        responsive: true
-      }
-    });
-  })
-  .catch(error => console.error("Errore caricamento statistiche visite:", error));
-
-fetch('/api/statistiche/vendite')
-  .then(response => response.json())
-  .then(data => {
-    const ctx2 = document.getElementById('venditeChart').getContext('2d');
-    new Chart(ctx2, {
-      type: 'line',
-      data: {
-        labels: data.labels, // ['Gen', 'Feb', ...]
-        datasets: [{
-          label: 'Vendite',
-          data: data.vendite, // [200, 150, ...]
-          borderColor: '#f5b400',
-          backgroundColor: 'rgba(245, 180, 0, 0.2)',
-          fill: true
-        }]
-      },
-      options: {
-        responsive: true
-      }
-    });
-  })
-  .catch(error => console.error("Errore caricamento statistiche vendite:", error));
-*/
