@@ -24,8 +24,8 @@ const register = async (nome, cognome, email, password, ruolo) => {
   console.log(existingUser);
   if (existingUser) throw new Error('Email già registrata');
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-  //const hashedPassword = password;
+  //const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = password;
   const newUser = await userModel.createUser(nome, cognome, email, hashedPassword, ruolo);
 
   return {

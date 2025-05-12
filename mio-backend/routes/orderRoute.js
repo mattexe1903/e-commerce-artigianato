@@ -5,4 +5,6 @@ const { protect } = require('../middleware/userMiddleware');
 
 router.post('/createOrder', protect, orderController.createOrder);
 
+router.get('/getOrdersByUserId', protect, orderController.getOrdersByUserId);
+
 module.exports = router;

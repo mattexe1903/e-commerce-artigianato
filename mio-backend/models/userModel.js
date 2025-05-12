@@ -54,6 +54,19 @@ const updatePassword = async (userId, newPassword) => {
   }
 };
 
+const getArtigianiById = async (id) => {
+  const result = await pool.query('SELECT * FROM artigiani WHERE id = $1', [id]);
+  return result.rows[0];
+}
+
+const createArtigiano = async (userId, craft, iban) => {
+  const result = await pool.query(
+    'INSERT INTO info_artisan (artisan_id, craft, iban, artisan_state) VALUES ($1, $2, $3, 1) RETURNING *',
+    [userId, craft, iban]
+  );
+  return result.rows[0];
+}
+
 const getArtisanStateById = async (id) => {
   const result = await pool.query('SELECT artisan_state FROM info_artisan WHERE artisan_id = $1', [id]);
   return result.rows[0];
@@ -68,7 +81,7 @@ const getUserAddresses = async (userId) => {
 //TODO: test this function
 const addUserAddress = async (userId, street_address, city, cap, province) => {
   const result = await pool.query(
-    'INSERT INTO address (user_id, street_address, city, cap, province) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+    `INSERT INTO address (user_id, street_address, city, cap, province, country) VALUES ($1, $2, $3, $4, $5, 'italia') RETURNING *`,
     [userId, street_address, city, cap, province]
   );
   return result.rows[0];
@@ -87,5 +100,8 @@ module.exports = {
   updatePassword, 
   getUserAddresses,
   addUserAddress,
+  getArtigianiById,
+  createArtigiano,
   getInventory
 };
+

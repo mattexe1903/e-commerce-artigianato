@@ -56,13 +56,16 @@ const addTempAddress = async (street_address, city, cap, province) => {
   try {
     await client.query('BEGIN');
 
-    const result = await pool.query(
+    console.log('Aggiunta indirizzo temporaneo:', street_address, city, cap, province);
+    
+    const result = await client.query(
       `INSERT INTO address (street_address, city, cap, province, country)
-           VALUES ($1, $2, $3, $4, 'Italia')
-           RETURNING addres_id`,
+       VALUES ($1, $2, $3, $4, 'Italia')
+       RETURNING addres_id`,
       [street_address, city, cap, province]
     );
-    finalAddressId = result.rows[0].addres_id;
+
+    const addressId = result.rows[0].address_id;
 
     await client.query('COMMIT');
     return { success: true, addressId };
@@ -75,7 +78,76 @@ const addTempAddress = async (street_address, city, cap, province) => {
   }
 };
 
+const findAddress = async (street_address, city, cap, province) => {
+  const client = await pool.connect();
+
+  try {
+    const result = await client.query(
+      `SELECT addres_id FROM address
+     WHERE street_address = $1 AND city = $2 AND cap = $3 AND province = $4 
+     LIMIT 1`,
+      [street_address, city, cap, province]
+    );
+
+    if (result.rows.length > 0) {
+      return result.rows[0];
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error('Errore nella ricerca dell\'indirizzo:', error.message);
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
+const getOrdersByUserId = async (userId) => {
+  const client = await pool.connect();
+
+  try {
+    const ordersResult = await client.query(
+      `SELECT o.order_id, o.order_date, o.total, s.state_name
+       FROM orders o
+       JOIN states s ON o.order_state = s.state_id
+       WHERE o.user_id = $1
+       ORDER BY o.order_date DESC`,
+      [userId]
+    );
+
+    const orders = ordersResult.rows;
+
+    for (const order of orders) {
+      const productsResult = await client.query(
+        `SELECT 
+           p.product_id,
+           p.product_name,
+           p.photo,
+           p.photo_description,
+           op.quantity,
+           op.single_price
+         FROM orders_products op
+         JOIN products p ON op.product_id = p.product_id
+         WHERE op.order_id = $1`,
+        [order.order_id]
+      );
+
+      order.products = productsResult.rows;
+    }
+
+    return orders;
+  } catch (error) {
+    console.error('Errore nel recupero degli ordini con prodotti:', error.message);
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
+
 module.exports = {
   createOrderFromCart,
-  addTempAddress
+  addTempAddress, 
+  findAddress,
+  getOrdersByUserId
 };

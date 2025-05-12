@@ -196,38 +196,26 @@ async function sendOrder() {
       //savePayment,
     };
 
-    const res = await fetch("/api/order", {
+    const res = await fetch("http://localhost:3000/api/createOrder", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
       body: JSON.stringify(orderData),
     });
 
     const result = await res.json();
     console.log("Risultato invio ordine:", result);
-    if (!res.ok) {
-      throw new Error(result.message || "Errore durante l'invio dell'ordine.");
-    }
 
-    if (result.success) {
-      await fetch(`/api/cart/clear`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-      });
-      showPopup("Ordine completato", "Riceverai una mail con i dettagli.", () => {
-        window.location.href = "/home";
-      });
-    } else {
-      showPopup("Errore", "Ordine fallito. Riprova.");
-    }
+    showPopup("Ordine completato", "Riceverai una mail con i dettagli.", () => {
+      window.location.href = "homereg.html";
+    });
   } catch (err) {
     console.error("Errore invio ordine:", err);
     showPopup("Errore", "Errore durante l'invio dell'ordine.");
   }
 }
-
 
 //TODO
 function getPaymentDetails(method) {
@@ -248,7 +236,6 @@ function getPaymentDetails(method) {
   return { type: method };
 }
 
-//TODO
 function showPopup(title, message, callback = null) {
   const popup = document.createElement("div");
   popup.className = "modal-overlay";

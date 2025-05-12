@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const reportController = require('../controllers/reportController');
-const { protect } = require('../middleware/userMiddleware');
+
+router.post('/sendArtisanRequest', reportController.sendArtisanRequest);
+
+router.get('/getArtisanRequest', reportController.getArtisanRequest);
 
 module.exports = router;
