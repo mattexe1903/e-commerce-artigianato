@@ -13,7 +13,7 @@ const getArtisanRequests = async () => {
   const query = `
     SELECT report_id, user_id, title, report_message, sent_date, report_state
     FROM reports
-    WHERE title = 'Richiesta registrazione artigiano'
+    WHERE title = 'Richiesta registrazione artigiano' AND report_state = 1
     ORDER BY sent_date DESC
   `;
   const result = await pool.query(query);

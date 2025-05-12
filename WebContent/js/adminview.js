@@ -67,7 +67,7 @@ async function handleRequest(id, action) {
     console.log("Risposta backend:", data);
 
     // Ricarica la lista dopo l'aggiornamento
-    loadReportList();
+    location.reload();
   } catch (err) {
     console.error(`Errore durante la ${action} della richiesta con ID ${id}:`, err);
   }

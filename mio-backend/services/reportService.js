@@ -4,13 +4,12 @@ const userModel = require('../models/userModel');
 const sendArtisanRequest = async (user_id, nome, cognome, tipo_artigiano, iban) => {
   const titolo = 'Richiesta registrazione artigiano';
   const messaggio = `Richiesta approvazione per l'artigiano ${nome} ${cognome}. Tipo: ${tipo_artigiano}, IBAN: ${iban}`;
-  const stato = 6;
+  const stato = 1;
 
   await reportModel.createReport(user_id, titolo, messaggio, stato);
 };
 
 const getArtisanRequest = async () => {
-  //const stato = 6;
   const reports = await reportModel.getArtisanRequests();
 
   return reports.map(report => ({
