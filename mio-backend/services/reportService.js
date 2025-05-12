@@ -1,12 +1,12 @@
 const reportModel = require('../models/reportModel');
 const userModel = require('../models/userModel');
 
-const sendArtisanRequest = async (nome, cognome, tipo_artigiano, iban) => {
+const sendArtisanRequest = async (user_id, nome, cognome, tipo_artigiano, iban) => {
   const titolo = 'Richiesta registrazione artigiano';
   const messaggio = `Richiesta approvazione per l'artigiano ${nome} ${cognome}. Tipo: ${tipo_artigiano}, IBAN: ${iban}`;
   const stato = 6;
 
-  await reportModel.createReport(null, titolo, messaggio, stato);
+  await reportModel.createReport(user_id, titolo, messaggio, stato);
 };
 
 const getArtisanRequest = async () => {

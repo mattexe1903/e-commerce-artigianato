@@ -1,4 +1,5 @@
 const authService = require('../services/authService');
+const reportService = require('../services/reportService');
 
 const jwt = require('jsonwebtoken');
 
@@ -69,6 +70,9 @@ const registerArtigiano = async (req, res) => {
     if (tipo_artigiano && iban) {
       await authService.saveArtigianoDetails(user.user_id, tipo_artigiano, iban);
     }
+    
+    //TODO: Invia la richiesta di registrazione
+    await reportService.sendArtisanRequest(user.user_id, nome, cognome, tipo_artigiano, iban);
 
     res.status(201).json({
       success: true,
