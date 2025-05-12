@@ -49,6 +49,7 @@ window.onload = () => {
           }
 
           //TODO: Inviare la segnalazione all'admin
+          /*
           const segnalazioneAdmin = {
             nome: datiBase.nome,
             cognome: datiBase.cognome,
@@ -74,6 +75,7 @@ window.onload = () => {
             .catch(error => {
               console.error("Errore durante l'invio della segnalazione:", error);
             });
+            */
           return data;
         })
         .catch(error => {

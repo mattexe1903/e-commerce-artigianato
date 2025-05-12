@@ -8,4 +8,6 @@ router.get('/getArtisanRequest', reportController.getArtisanRequest);
 
 router.post('/updateArtisanRequest', reportController.updateArtisanRequest);
 
+router.post('/sendSignal', reportController.sendSignal);
+
 module.exports = router;

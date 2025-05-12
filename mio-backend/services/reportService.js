@@ -36,9 +36,13 @@ const updateArtisanRequest = async (id, stato) => {
   }
 };
 
+const sendSignal = async (userId, titolo, messaggio, stato) => {
+  await reportModel.insertSignal(userId, titolo, messaggio, stato);
+};
 
 module.exports = {
   sendArtisanRequest,
   getArtisanRequest,
-  updateArtisanRequest
+  updateArtisanRequest,
+  sendSignal
 };
