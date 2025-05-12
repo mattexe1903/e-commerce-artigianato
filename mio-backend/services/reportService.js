@@ -40,14 +40,15 @@ const sendSignal = async (userId, titolo, messaggio, stato) => {
   await reportModel.insertSignal(userId, titolo, messaggio, stato);
 };
 
-const getSignal = async (userId) => {
-  const signals = await reportModel.getSignals(userId);
+const getSignal = async () => {
+  const signals = await reportModel.getSignals();
   return signals.map(signal => ({
     id: signal.report_id,
     titolo: signal.title,
     messaggio: signal.report_message,
     stato: signal.report_state,
-    data_creazione: signal.sent_date
+    data_creazione: signal.sent_date,
+    email: signal.email
   }));
 };
 

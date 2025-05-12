@@ -63,21 +63,16 @@ const insertSignal = async (userId, title, message, status) => {
   const stateId = stateResult.rows[0].state_id;
 
   const query = `
-    INSERT INTO reports (user_id, title, report_message, report_state, data_creazione)
-    VALUES ($1, $2, $3, $4, $5)
+    INSERT INTO reports (user_id, title, report_message, report_state)
+    VALUES ($1, $2, $3, $4)
   `;
 
   await pool.query(query, [userId, title, message, stateId]);
 };
 
-const getSignals = async (userId) => {
-  const query = `
-    SELECT report_id, title, report_message, sent_date, report_state
-    FROM reports
-    WHERE user_id = $1 and title != 'Richiesta registrazione artigiano'
-    ORDER BY sent_date DESC
-  `;
-  const result = await pool.query(query, [userId]);
+const getSignals = async () => {
+  const query = `SELECT r.report_id, r.title, r.report_message, r.sent_date, r.report_state, r.user_id, u.email FROM reports r JOIN users u ON r.user_id = u.user_id WHERE r.title != 'Richiesta registrazione artigiano' ORDER BY r.sent_date DESC;`;
+  const result = await pool.query(query);
   return result.rows;
 };
 

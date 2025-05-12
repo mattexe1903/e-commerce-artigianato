@@ -85,4 +85,5 @@ module.exports = {
     getArtisanRequest,
     updateArtisanRequest,
     sendSignal, 
-    getSign
+    getSignal
+}

@@ -4,6 +4,7 @@ document.getElementById("exit-btn").addEventListener("click", () => {
 
 window.onload = () => {
   loadArtisanReportList();
+  loadReportList();
 };
 
 async function loadArtisanReportList() {
@@ -73,18 +74,19 @@ async function handleRequest(id, action) {
 
 async function loadReportList() {
   try {
-    const res = await fetch('http://localhost:3000/api/getArtisanRequest');
+    const res = await fetch('http://localhost:3000/api/getSignal');
     const segnalazioni = await res.json();
 
-    console.log("Richieste di registrazione artigiano:", segnalazioni);
 
-    const tableBody = document.getElementById("richieste-list");
+    const tableBody = document.getElementById("segnalazioni-list");
     tableBody.innerHTML = "";
+
+    console.log("Segnalazioni:", segnalazioni);
 
     if (segnalazioni.length === 0) {
       tableBody.innerHTML = `
         <tr>
-          <td colspan="5">Nessuna richiesta di registrazione artigiano trovata.</td>
+          <td colspan="5">Nessuna segnalazione trovata.</td>
         </tr>
       `;
     } else {
@@ -94,12 +96,9 @@ async function loadReportList() {
         tr.innerHTML = `
           <td>${new Date(report.data_creazione).toLocaleDateString()}</td>
           <td>${report.titolo}</td>
+          <td>${report.email}</td>
           <td>${report.messaggio}</td>
           <td>${report.stato}</td>
-          <td>
-            <button onclick="handleRequest('${report.id}', 'accettato')">Accetta</button>
-            <button onclick="handleRequest('${report.id}', 'rifiutato')">Rifiuta</button>
-          </td>
         `;
 
         tableBody.appendChild(tr);
