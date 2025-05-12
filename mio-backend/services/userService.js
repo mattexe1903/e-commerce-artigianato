@@ -72,6 +72,26 @@ const getInventory = async (userId) => {
     }
 };
 
+const getArtisanRegistered = async () => {
+    try {
+        const artisanRegistered = await userModel.getArtisanRegistered();
+        return artisanRegistered;
+    } catch (error) {
+        console.error('Error fetching artisan registered:', error);
+        throw error;
+    }
+};
+
+const deleteArtisan = async (artisanId) => {
+    try {
+        const result = await userModel.deleteArtisan(artisanId);
+        return result;
+    } catch (error) {
+        console.error('Error deleting artisan:', error);
+        throw error;
+    }
+};
+
 module.exports = {
     getUserInfo,
     getArtigianiInfo,
@@ -79,5 +99,7 @@ module.exports = {
     updatePassword,
     getUserByEmail,
     addUserAddress,
-    getInventory
+    getInventory,
+    getArtisanRegistered,
+    deleteArtisan
 };

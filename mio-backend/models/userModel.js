@@ -92,6 +92,21 @@ const getInventory = async (userId) => {
   return result.rows;
 }
 
+const getArtisanRegistered = async () => {
+  const result = await pool.query(`SELECT a.*, u.user_name, u.surname FROM info_artisan a JOIN users u ON a.artisan_id = u.user_id WHERE a.artisan_state = 2`);
+
+  return result.rows;
+}
+
+const deleteArtisan = async (artisanId) => {
+  const result = await pool.query('DELETE FROM users WHERE user_id = $1 RETURNING *', [artisanId]);
+  if (result.rowCount === 0) {
+    throw new Error('Artisan not found');
+  }
+  return result.rows[0];
+}
+
+
 module.exports = {
   getUserByEmail,
   createUser,
@@ -102,6 +117,8 @@ module.exports = {
   addUserAddress,
   getArtigianiById,
   createArtigiano,
-  getInventory
+  getInventory,
+  getArtisanRegistered,
+  deleteArtisan
 };
 

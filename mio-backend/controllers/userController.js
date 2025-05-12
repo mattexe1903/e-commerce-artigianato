@@ -153,6 +153,31 @@ const resetPassword = async (req, res) => {
     }
   };
 
+  const getArtisanRegistered = async (req, res) => {
+    try {
+      const artisanRegistered = await userService.getArtisanRegistered();
+      return res.status(200).json(artisanRegistered);
+    } catch (error) {
+      console.error('Error fetching artisan registered:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+
+  const deleteArtisan = async (req, res) => {
+    try {
+      const artisanId = req.params.id;
+      const result = await userService.deleteArtisan(artisanId);
+      if (result) {
+        return res.status(200).json({ message: 'Artisan deleted successfully' });
+      } else {
+        return res.status(404).json({ message: 'Artisan not found' });
+      }
+    } catch (error) {
+      console.error('Error deleting artisan:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+
   module.exports = {
     getUserInfo,
     getArtigianiInfo,
@@ -160,5 +185,7 @@ const resetPassword = async (req, res) => {
     sendResetEmail,
     resetPassword,
     addUserAddress,
-    getInventory
+    getInventory,
+    getArtisanRegistered,
+    deleteArtisan
   };

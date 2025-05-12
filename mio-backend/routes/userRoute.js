@@ -18,4 +18,8 @@ router.get('/addAddress', protect, userController.addUserAddress);
 
 router.get('/getInventory', protect, userController.getInventory);
 
+router.get('/getArtisanRegistered', userController.getArtisanRegistered);
+
+router.delete('/artisan/:id', userController.deleteArtisan);
+
 module.exports = router;

@@ -41,10 +41,8 @@ async function loadReportList() {
   }
 }
 
-
-/*
 // Carica richieste di registrazione
-fetch('/api/richieste')
+fetch('http://localhost:3000/api/getArtisanRequest')
   .then(response => response.json())
   .then(richieste => {
     const richiesteList = document.getElementById("richieste-list");
@@ -77,7 +75,7 @@ function accettaRichiesta(idRichiesta) {
 }
 
 // Carica lista artigiani
-fetch('/api/artigiani')
+fetch('http://localhost:3000/api/getArtisanRegistered')
   .then(response => response.json())
   .then(artigiani => {
     const listaArtigiani = document.getElementById("artigiani-list");
@@ -85,18 +83,30 @@ fetch('/api/artigiani')
       const div = document.createElement("div");
       div.className = "artigiano";
       div.innerHTML = `
-        <p><strong>ID:</strong> ${a.id}</p>
-        <p><strong>Nome:</strong> ${a.nome}</p>
-        <p><strong>Mansione:</strong> ${a.mansione}</p>
-        <button onclick="rimuoviArtigiano(${a.id})">🗑 Rimuovi</button>
+        <div class="row">
+          <p><strong>ID:</strong> ${a.artisan_id}</p>
+          <button class="delete-btn" onclick="rimuoviArtigiano(${a.artisan_id})">🗑 Rimuovi</button>
+        </div>
+        <div class="row">
+          <p><strong>Nome:</strong> ${a.user_name}</p>
+          <p><strong>Cognome:</strong> ${a.surname}</p>
+        </div>
+        <div class="row">
+          <p><strong>IBAN:</strong> ${a.iban}</p>
+          <p><strong>Mansione:</strong> ${a.craft}</p>
+        </div>
       `;
       listaArtigiani.appendChild(div);
     });
   })
   .catch(error => console.error("Errore caricamento artigiani:", error));
 
+
 function rimuoviArtigiano(id) {
-  fetch(`/api/artigiani/${id}`, { method: 'DELETE' })
+  const conferma = window.confirm("Sei sicuro di voler eliminare questo artigiano?");
+  if (!conferma) return;
+
+  fetch(`http://localhost:3000/api/artisan/${id}`, { method: 'DELETE' })
     .then(response => {
       if (response.ok) {
         alert("Artigiano rimosso con successo.");
@@ -104,9 +114,14 @@ function rimuoviArtigiano(id) {
       } else {
         alert("Errore nella rimozione dell'artigiano.");
       }
+    })
+    .catch(error => {
+      console.error("Errore nella richiesta di eliminazione:", error);
+      alert("Errore imprevisto durante la rimozione.");
     });
 }
 
+/*
 // Carica segnalazioni utenti
 fetch('/api/segnalazioni')
   .then(response => response.json())
