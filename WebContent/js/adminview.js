@@ -13,13 +13,13 @@ async function loadReportList() {
 
     console.log("Richieste di registrazione artigiano:", segnalazioni);
 
-    const tableBody = document.getElementById("segnalazioni-list");
+    const tableBody = document.getElementById("richieste-list");
     tableBody.innerHTML = "";
 
     if (segnalazioni.length === 0) {
       tableBody.innerHTML = `
         <tr>
-          <td colspan="4">Nessuna richiesta di registrazione artigiano trovata.</td>
+          <td colspan="5">Nessuna richiesta di registrazione artigiano trovata.</td>
         </tr>
       `;
     } else {
@@ -31,6 +31,10 @@ async function loadReportList() {
           <td>${report.titolo}</td>
           <td>${report.messaggio}</td>
           <td>${report.stato}</td>
+          <td>
+            <button onclick="handleRequest('${report.id}', 'accettato')">Accetta</button>
+            <button onclick="handleRequest('${report.id}', 'rifiutato')">Rifiuta</button>
+          </td>
         `;
 
         tableBody.appendChild(tr);
@@ -40,6 +44,35 @@ async function loadReportList() {
     console.error("Errore nel caricamento delle segnalazioni:", err);
   }
 }
+
+async function handleRequest(id, action) {
+  const url = `http://localhost:3000/api/updateArtisanRequest`;
+  try {
+    const res = await fetch(url, {
+      method: "POST", // oppure "PATCH" se preferisci
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id: id,
+        action: action // 'accept' o 'reject'
+      })
+    });
+
+    if (!res.ok) {
+      throw new Error("Errore nella risposta del server");
+    }
+
+    const data = await res.json();
+    console.log("Risposta backend:", data);
+
+    // Ricarica la lista dopo l'aggiornamento
+    loadReportList();
+  } catch (err) {
+    console.error(`Errore durante la ${action} della richiesta con ID ${id}:`, err);
+  }
+}
+
 
 
 /*

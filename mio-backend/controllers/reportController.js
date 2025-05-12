@@ -28,7 +28,25 @@ const getArtisanRequest = async (req, res) => {
     }
 }
 
+const updateArtisanRequest = async (req, res) => {
+    try {
+        const { id, action } = req.body;
+        
+        if (!id || !action) {
+            return res.status(400).json({ message: 'Tutti i campi sono obbligatori.' });
+        }
+
+        await reportService.updateArtisanRequest(id, action);
+
+        return res.status(200).json({ message: 'Richiesta aggiornata con successo.' });
+    } catch (error) {
+        console.error('Errore durante l\'aggiornamento della richiesta:', error);
+        return res.status(500).json({ message: 'Errore interno del server.' });
+    }
+}
+
 module.exports = {
     sendArtisanRequest, 
-    getArtisanRequest
+    getArtisanRequest,
+    updateArtisanRequest
 };

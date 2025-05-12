@@ -20,7 +20,39 @@ const getArtisanRequests = async () => {
   return result.rows;
 };
 
+const updateReportState = async (reportId, status) => {
+  const stateResult = await pool.query(
+    'SELECT state_id FROM states WHERE state_name = $1',
+    [status]
+  );
+
+  if (stateResult.rows.length === 0) {
+    throw new Error(`Stato '${status}' non trovato nella tabella states.`);
+  }
+
+  const stateId = stateResult.rows[0].state_id;
+
+  const query = `
+    UPDATE reports
+    SET report_state = $1
+    WHERE report_id = $2
+  `;
+  await pool.query(query, [stateId, reportId]);
+}
+
+const getArtisanIdByReportId = async (reportId) => {
+  const query = `
+    SELECT user_id
+    FROM reports
+    WHERE report_id = $1
+  `;
+  const result = await pool.query(query, [reportId]);
+  return result.rows[0] ? result.rows[0].user_id : null;  
+}
+
 module.exports = {
   createReport,
-  getArtisanRequests
+  getArtisanRequests,
+  updateReportState,
+  getArtisanIdByReportId
 };

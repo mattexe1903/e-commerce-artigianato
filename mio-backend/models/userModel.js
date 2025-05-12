@@ -92,6 +92,29 @@ const getInventory = async (userId) => {
   return result.rows;
 }
 
+const updateArtisanState = async (userId, artisanState) => {
+  console.log('Aggiornamento stato artigiano per l\'utente con ID:', userId);
+  console.log('Nuovo stato artigiano:', artisanState);
+  
+  const stateResult = await pool.query(
+    'SELECT state_id FROM states WHERE state_name = $1',
+    [artisanState]
+  );
+
+  if (stateResult.rows.length === 0) {
+    throw new Error(`Stato '${artisanState}' non trovato nella tabella states.`);
+  }
+
+  const stateId = stateResult.rows[0].state_id;
+
+  const result = await pool.query(
+    'UPDATE info_artisan SET artisan_state = $1 WHERE artisan_id = $2 RETURNING *',
+    [stateId, userId]
+  );
+
+  return result.rows[0];
+};
+
 module.exports = {
   getUserByEmail,
   createUser,
@@ -102,6 +125,7 @@ module.exports = {
   addUserAddress,
   getArtigianiById,
   createArtigiano,
-  getInventory
+  getInventory,
+  updateArtisanState
 };
 
