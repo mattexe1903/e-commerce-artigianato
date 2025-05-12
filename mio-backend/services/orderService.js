@@ -36,9 +36,19 @@ const getOrdersByUserId = async (userId) => {
   }
 };
 
+const getOrdersByArtisanId = async (artisanId) => {
+  try {
+    const orders = await orderModel.getOrdersByArtisanId(artisanId);
+    return orders;
+  } catch (error) {
+    throw new Error('Errore nel recupero degli ordini: ' + error.message);
+  }
+};
+
 module.exports = {
     createOrderFromCart, 
     addTempAddress, 
     findAddress, 
-    getOrdersByUserId
+    getOrdersByUserId,
+    getOrdersByArtisanId
 };

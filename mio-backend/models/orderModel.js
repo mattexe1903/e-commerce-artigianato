@@ -144,10 +144,61 @@ const getOrdersByUserId = async (userId) => {
   }
 };
 
+const getOrdersByArtisanId = async (artisanId) => {
+  const client = await pool.connect();
+
+  try {
+    // Primo: recupera gli ordini che contengono almeno un prodotto dell'artigiano
+    const ordersResult = await client.query(
+      `SELECT DISTINCT o.order_id, o.order_date, o.total, s.state_name
+       FROM orders o
+       JOIN states s ON o.order_state = s.state_id
+       JOIN orders_products op ON o.order_id = op.order_id
+       JOIN inventory i ON op.product_id = i.product_id
+       WHERE i.user_id = $1
+       ORDER BY o.order_date DESC`,
+      [artisanId]
+    );
+
+    const orders = ordersResult.rows;
+
+    // Secondo: per ogni ordine, recupera SOLO i prodotti legati all'artigiano
+    for (const order of orders) {
+      const productsResult = await client.query(
+        `SELECT 
+           p.product_id,
+           p.product_name,
+           p.photo,
+           p.photo_description,
+           op.quantity,
+           op.single_price
+         FROM orders_products op
+         JOIN products p ON op.product_id = p.product_id
+         JOIN inventory i ON p.product_id = i.product_id
+         WHERE op.order_id = $1 AND i.user_id = $2`,
+        [order.order_id, artisanId]
+      );
+
+      order.products = productsResult.rows;
+    }
+
+    return orders;
+  } catch (error) {
+    console.error('Errore nel recupero degli ordini per artigiano:', error.message);
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
+
+
+
 
 module.exports = {
   createOrderFromCart,
   addTempAddress, 
   findAddress,
-  getOrdersByUserId
+  getOrdersByUserId,
+  getOrdersByArtisanId
 };

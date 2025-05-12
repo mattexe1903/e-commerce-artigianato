@@ -64,7 +64,24 @@ const getOrdersByUserId = async (req, res) => {
   }
 }
 
+const getOrdersByArtisanId = async (req, res) => {
+  const artisanId = req.user.user_id;
+
+  try {
+    const orders = await orderService.getOrdersByArtisanId(artisanId);
+    if (orders) {
+      res.status(200).json(orders);
+    } else {
+      res.status(404).json({ message: 'Nessun ordine trovato' });
+    }
+  } catch (error) {
+    console.error('Errore nel recupero degli ordini:', error.message);
+    res.status(500).json({ message: 'Errore interno del server' });
+  }
+}
+
 module.exports = {
   createOrder,
-  getOrdersByUserId
+  getOrdersByUserId,
+  getOrdersByArtisanId
 };

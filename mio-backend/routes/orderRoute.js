@@ -7,4 +7,7 @@ router.post('/createOrder', protect, orderController.createOrder);
 
 router.get('/getOrdersByUserId', protect, orderController.getOrdersByUserId);
 
+router.get('/getOrdersByArtisanId', protect, orderController.getOrdersByArtisanId);
+
+
 module.exports = router;

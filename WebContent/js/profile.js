@@ -101,22 +101,47 @@ window.onload = async () => {
         window.location.href = "productsadd.html";
       });
 
-      // Carica prenotazioni
-      const prenotazioni = await (await fetch('/api/prenotazioni')).json();
-      const prenotazioniList = document.getElementById("prenotazioni-list");
-      prenotazioniList.innerHTML = "";
-      prenotazioni.forEach(p => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${p.data}</td>
-          <td>${p.ordine}</td>
-          <td>${p.articoloId}</td>
-          <td>${p.articoli}</td>
-          <td>${p.stato}</td>
-        `;
-        prenotazioniList.appendChild(tr);
+      // CARICA PRENOTAZIONI
+      const resPrenotazioni = await fetch('http://localhost:3000/api/getOrdersByArtisanId', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
+      const prenotazioni = await resPrenotazioni.json();
+      const prenotazioniList = document.getElementById("prenotazioni-list");
+      prenotazioniList.innerHTML = "";
+
+      if (prenotazioni.length === 0) {
+        prenotazioniList.innerHTML = `
+    <tr>
+      <td colspan="5">Non ci sono prenotazioni relative ai tuoi prodotti.</td>
+    </tr>
+  `;
+      } else {
+        prenotazioni.forEach(order => {
+          const articoliHtml = order.products.map(p => `
+      <div style="margin-bottom: 0.5rem;">
+        <strong>${p.product_name}</strong> (ID: ${p.product_id})<br/>
+        Quantità: ${p.quantity}<br/>
+        Prezzo unitario: €${Number(p.single_price).toFixed(2)}
+      </div>
+    `).join("");
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+      <td>${new Date(order.order_date).toLocaleDateString()}</td>
+      <td>#${order.order_id}</td>
+      <td>${order.products.map(p => p.product_id).join(", ")}</td>
+      <td>${articoliHtml}</td>
+      <td>${order.state_name}</td>
+    `;
+
+          prenotazioniList.appendChild(tr);
+        });
+      }
+
+/*
       // Dashboard
       const dashboard = await (await fetch('/api/dashboard')).json();
       new Chart(document.getElementById('guadagniChart').getContext('2d'), {
@@ -156,7 +181,7 @@ window.onload = async () => {
         li.innerText = n.messaggio;
         notificheList.appendChild(li);
       });
-
+*/
     } else {
       // CLIENTE
 
