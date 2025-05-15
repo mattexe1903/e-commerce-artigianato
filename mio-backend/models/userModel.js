@@ -55,7 +55,7 @@ const updatePassword = async (userId, newPassword) => {
 };
 
 const getArtigianiById = async (id) => {
-  const result = await pool.query('SELECT * FROM artigiani WHERE id = $1', [id]);
+  const result = await pool.query('SELECT * FROM info_artisan WHERE artisan_id = $1', [id]);
   return result.rows[0];
 }
 
