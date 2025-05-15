@@ -106,6 +106,7 @@ function onGooglePayClicked() {
     .then(paymentData => {
       console.log("✅ Pagamento simulato:", paymentData);
       alert("Pagamento effettuato con successo (test)!");
+      sendOrder();
     })
     .catch(err => {
       console.warn("❌ Pagamento annullato o errore:", err.statusCode || err);
