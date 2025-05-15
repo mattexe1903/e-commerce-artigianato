@@ -20,24 +20,16 @@ async function loadUserData() {
     });
 
     const data = await response.json();
-
     const user = data.user;
     const address = data.addresses && data.addresses[0];
 
     document.getElementById("address-name").textContent = user.user_name;
     document.getElementById("address-surname").textContent = user.surname;
 
-    if (address) {
-      document.getElementById("address-street").value = address.street_address || "";
-      document.getElementById("address-city").value = address.city || "";
-      document.getElementById("address-zip").value = address.cap || "";
-      document.getElementById("address-province").value = address.province || "";
-    } else {
-      document.getElementById("address-street").value = "";
-      document.getElementById("address-city").value = "";
-      document.getElementById("address-zip").value = "";
-      document.getElementById("address-province").value = "";
-    }
+    document.getElementById("address-street").value = address?.street_address || "";
+    document.getElementById("address-city").value = address?.city || "";
+    document.getElementById("address-zip").value = address?.cap || "";
+    document.getElementById("address-province").value = address?.province || "";
   } catch (err) {
     console.error("Errore caricamento dati utente:", err);
   }
@@ -49,16 +41,13 @@ async function loadCartData() {
     if (!token) throw new Error("Utente non autenticato.");
 
     const res = await fetch(`http://localhost:3000/api/cart`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
+      headers: { 'Authorization': `Bearer ${token}` }
     });
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Errore nel recupero carrello.");
 
     const prodottiCarrello = data.cart || [];
-
     const summaryItems = document.getElementById("summary-items");
     const totalItemsSpan = document.getElementById("total-items");
     const itemsPriceSpan = document.getElementById("items-price");
@@ -83,7 +72,6 @@ async function loadCartData() {
     });
 
     const spedizione = 5.99;
-
     totalItemsSpan.textContent = totalItems;
     itemsPriceSpan.textContent = itemsTotal.toFixed(2);
     totalPriceSpan.textContent = (itemsTotal + spedizione).toFixed(2);
@@ -92,7 +80,6 @@ async function loadCartData() {
   }
 }
 
-//TODO
 function setupPaymentSelection() {
   document.querySelectorAll(".pay-option").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -108,13 +95,13 @@ function setupPaymentSelection() {
       if (method === "card") {
         form.innerHTML = `
           <label>Numero carta
-            <input type="text" id="payment-card" placeholder="•••• •••• •••• ••••" required />
+            <input type="text" id="payment-card" required />
           </label>
           <label>Scadenza
-            <input type="text" id="payment-expiry" placeholder="MM/AA" required />
+            <input type="text" id="payment-expiry" required />
           </label>
           <label>CVV
-            <input type="text" id="payment-cvv" placeholder="123" required />
+            <input type="text" id="payment-cvv" required />
           </label>
           <label>Intestatario
             <input type="text" id="payment-name" required />
@@ -126,14 +113,27 @@ function setupPaymentSelection() {
             <input type="email" id="payment-paypal" required />
           </label>
         `;
+      } else if (method === "google") {
+        form.innerHTML = `
+          <div id="google-pay-button"></div>
+        `;
+        loadGooglePayButton();
       } else {
-        form.innerHTML = `<p style="grid-column: span 2;">Verrai reindirizzato a <strong>${method === "google" ? "Google Pay" : "Apple Pay"}</strong> per completare il pagamento.</p>`;
+        form.innerHTML = `<p style="grid-column: span 2;">Verrai reindirizzato a <strong>Apple Pay</strong> per completare il pagamento.</p>`;
       }
     });
   });
 }
 
-//IN PROGRESS
+function loadGooglePayButton() {
+  const paymentsClient = new google.payments.api.PaymentsClient({ environment: 'TEST' });
+  const button = paymentsClient.createButton({
+    onClick: onGooglePayClicked,
+    allowedPaymentMethods: ['CARD', 'TOKENIZED_CARD']
+  });
+  document.getElementById("google-pay-button").appendChild(button);
+}
+
 async function setupSaveCheckboxes() {
   const addressCheckbox = document.getElementById("save-address");
 
@@ -163,37 +163,35 @@ async function setupSaveCheckboxes() {
   return saveAddress;
 }
 
-//IN PROGRESS
 async function sendOrder() {
   const token = getToken();
-  const saveAddressChecked = document.getElementById("save-address").checked;
-  //const savePayment = document.getElementById("save-payment").checked;
-  //const paymentMethod = document.getElementById("payment-form").dataset.method;
-
-  /*if (!paymentMethod) {
-    return showPopup("Errore", "Seleziona un metodo di pagamento.");
-  }*/
-
   const addressData = {
     street: document.getElementById("address-street").value,
     city: document.getElementById("address-city").value,
     cap: document.getElementById("address-zip").value,
     province: document.getElementById("address-province").value,
   };
+  const method = document.getElementById("payment-form").dataset.method;
+  const saveAddressChecked = document.getElementById("save-address").checked;
+
+  if (!method) {
+    return showPopup("Errore", "Seleziona un metodo di pagamento.");
+  }
 
   try {
     if (saveAddressChecked && typeof saveAddressFn === "function") {
       await saveAddressFn(addressData);
     }
 
+    const paymentDetails = getPaymentDetails(method);
+
     const orderData = {
       token,
       date: new Date().toISOString(),
-      //paymentMethod,
+      paymentMethod: method,
+      paymentDetails,
       address: addressData,
-      //paymentDetails: getPaymentDetails(paymentMethod),
       saveAddress: saveAddressChecked,
-      //savePayment,
     };
 
     const res = await fetch("http://localhost:3000/api/createOrder", {
@@ -209,9 +207,9 @@ async function sendOrder() {
     console.log("Risultato invio ordine:", result);
 
     showPopup("Ordine completato", "Riceverai una mail con i dettagli.", () => {
-       setTimeout(() => {
-          window.location.href = "homereg.html";
-        }, 5000);
+      setTimeout(() => {
+        window.location.href = "homereg.html";
+      }, 5000);
     });
   } catch (err) {
     console.error("Errore invio ordine:", err);
@@ -219,7 +217,6 @@ async function sendOrder() {
   }
 }
 
-//TODO
 function getPaymentDetails(method) {
   if (method === "card") {
     return {
@@ -233,6 +230,11 @@ function getPaymentDetails(method) {
     return {
       type: "paypal",
       email: document.getElementById("payment-paypal").value,
+    };
+  } else if (method === "google") {
+    return {
+      type: "google",
+      token: "simulated_google_token"
     };
   }
   return { type: method };

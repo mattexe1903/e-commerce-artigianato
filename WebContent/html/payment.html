@@ -6,6 +6,8 @@
   <title>Pagamento</title>
   <link rel="stylesheet" href="../css/payment.css" />
   <script defer src="../js/payment.js"></script>
+  <script async src="https://pay.google.com/gp/p/js/pay.js"></script>
+  <script src="../js/gpay.js"></script>
 </head>
 
 <body>
@@ -72,7 +74,7 @@
         <div class="payment-methods">
           <button type="button" class="pay-option" data-method="card">Carta di Credito</button>
           <button type="button" class="pay-option" data-method="paypal">PayPal</button>
-          <button type="button" class="pay-option" data-method="google">Google Pay</button>
+          <div id="google-pay-button"></div>
           <button type="button" class="pay-option" data-method="apple">Apple Pay</button>
         </div>
         <form id="payment-form" class="grid-form"></form>
@@ -81,6 +83,7 @@
           <span>Salva metodo nel profilo</span>
         </div>
       </section>
+
     </div>
   </main>
 
