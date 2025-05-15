@@ -24,6 +24,7 @@ window.onload = async () => {
 
     const { user, addresses = [] } = await resUser.json();
     const role = user.user_role;
+    console.log(user);
 
     document.getElementById("titolo-bentornato").innerText = `Benvenuto, ${user.user_name}`;
     document.getElementById("sidebar-title").innerText = role === 3 ? "Lokal" : "Profilo";

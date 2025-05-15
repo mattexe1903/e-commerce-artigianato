@@ -16,9 +16,30 @@ window.onload = () => {
   const form = document.getElementById('form-cliente');
   form.addEventListener('submit', function (e) {
     e.preventDefault();
+    const passwordInput = document.getElementById("password");
+    const confirmInput = document.getElementById("conferma");
+    const errorDiv = document.getElementById("password-error");
     const errorMessage = document.getElementById('error-message');
 
-    // TO DO: CONTROLLO PASSWORD E CONFERMA PASSWORD
+    const password = passwordInput.value.trim();
+    const confirmPassword = confirmInput.value.trim();
+
+    errorDiv.innerText = "";
+    errorDiv.style.color = "red";
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[^\s]{8,}$/;
+
+    if (!passwordRegex.test(password)) {
+      errorDiv.innerText =
+        "La password deve avere almeno 8 caratteri, una lettera maiuscola, un numero e nessuno spazio.";
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      errorDiv.innerText = "Le password non corrispondono.";
+      return;
+    }
+    errorDiv.style.color = "green";
+    errorDiv.innerText = "Password valida!";
 
     const datiBase = {
       nome: form.nome.value.trim(),
@@ -47,35 +68,6 @@ window.onload = () => {
           if (!response.ok) {
             throw new Error(data.message || "Registrazione fallita. Controlla i dati.");
           }
-
-          //TODO: Inviare la segnalazione all'admin
-          /*
-          const segnalazioneAdmin = {
-            nome: datiBase.nome,
-            cognome: datiBase.cognome,
-            tipo_artigiano: datiExtra.tipo_artigiano,
-            iban: datiExtra.iban
-          };
-          console.log("Segnalazione all'admin:", segnalazioneAdmin);
-
-          fetch('http://localhost:3000/api/sendArtisanRequest', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(segnalazioneAdmin)
-          })
-            .then(response => {
-              if (response.ok) {
-                console.log("Segnalazione inviata all'admin con successo.");
-              } else {
-                console.log("Errore nell'invio della segnalazione.");
-              }
-            })
-            .catch(error => {
-              console.error("Errore durante l'invio della segnalazione:", error);
-            });
-            */
           return data;
         })
         .catch(error => {
