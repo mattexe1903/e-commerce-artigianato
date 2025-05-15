@@ -259,3 +259,13 @@ function showPopup(title, message, callback = null) {
     if (callback) callback();
   };
 }
+
+function getTotalAmount() {
+  const el = document.getElementById("total-price");
+  if (!el) return '14.99';
+
+  const raw = el.textContent.trim().replace('€', '').replace(',', '.');
+  const parsed = parseFloat(raw);
+
+  return isNaN(parsed) ? '14.99' : parsed.toFixed(2);
+}

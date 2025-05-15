@@ -93,7 +93,7 @@ function onGooglePayClicked() {
     allowedPaymentMethods: [cardPaymentMethod],
     transactionInfo: {
       totalPriceStatus: 'FINAL',
-      totalPrice: '14.99', // Cambia qui per testare altri importi
+      totalPrice: getTotalAmount(),
       currencyCode: 'EUR',
       countryCode: 'IT'
     },
