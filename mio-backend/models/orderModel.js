@@ -16,7 +16,7 @@ const createOrderFromCart = async (userId, addressId) => {
 
     const orderResult = await client.query(
       `INSERT INTO orders (user_id, order_state, total, addres_id)
-       VALUES ($1, (SELECT state_id FROM states WHERE state_name = 'in attesa'), $2, $3)
+       VALUES ($1, (SELECT state_id FROM states WHERE state_name = 'completato'), $2, $3)
        RETURNING order_id`,
       [userId, total, addressId]
     );
@@ -191,6 +191,63 @@ const getOrdersByArtisanId = async (artisanId) => {
   }
 };
 
+const getSales = async () => {
+  const client = await pool.connect();
+
+  try {
+    const salesResult = await client.query(
+      `SELECT EXTRACT(MONTH FROM o.order_date) AS month, SUM(o.total) AS total
+       FROM orders o
+       WHERE o.order_state = (SELECT state_id FROM states WHERE state_name = 'completato')
+       GROUP BY month
+       ORDER BY month`
+    );
+
+    const salesData = salesResult.rows.map(row => ({
+      month: row.month,
+      total: parseFloat(row.total)
+    }));
+
+    return salesData;
+  } catch (error) {
+    console.error('Errore nel recupero delle vendite:', error.message);
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
+const getDailySalesByArtisan = async (artisanId) => {
+  const client = await pool.connect();
+
+  try {
+    const result = await client.query(
+      `SELECT 
+         EXTRACT(DAY FROM o.order_date) AS day,
+         SUM(op.quantity * op.single_price) AS total
+       FROM orders o
+       JOIN orders_products op ON o.order_id = op.order_id
+       JOIN inventory i ON op.product_id = i.product_id
+       WHERE o.order_state = (SELECT state_id FROM states WHERE state_name = 'completato')
+         AND i.user_id = $1
+         AND DATE_TRUNC('month', o.order_date) = DATE_TRUNC('month', CURRENT_DATE)
+       GROUP BY day
+       ORDER BY day`,
+      [artisanId]
+    );
+
+    return result.rows.map(row => ({
+      day: parseInt(row.day),
+      total: parseFloat(row.total)
+    }));
+  } catch (err) {
+    console.error('Errore nella query delle vendite giornaliere:', err.message);
+    throw err;
+  } finally {
+    client.release();
+  }
+};
+
 
 
 
@@ -200,5 +257,7 @@ module.exports = {
   addTempAddress, 
   findAddress,
   getOrdersByUserId,
-  getOrdersByArtisanId
+  getOrdersByArtisanId,
+  getSales,
+  getDailySalesByArtisan
 };

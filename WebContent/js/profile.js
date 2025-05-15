@@ -25,11 +25,9 @@ window.onload = async () => {
     const { user, addresses = [] } = await resUser.json();
     const role = user.user_role;
 
-    // Header e titolo
     document.getElementById("titolo-bentornato").innerText = `Benvenuto, ${user.user_name}`;
     document.getElementById("sidebar-title").innerText = role === 3 ? "Lokal" : "Profilo";
 
-    // Dati utente
     const indirizzo = addresses.length
       ? addresses.map(a => `${a.street_address}, ${a.city}, ${a.cap}, ${a.province}, ${a.country}`).join(" | ")
       : "Indirizzo mancante";
@@ -44,13 +42,10 @@ window.onload = async () => {
 
     if (role === 3) {
       // ARTIGIANO
-
-      // Nascondi sezioni cliente
       ["ordini-section", "preferiti-section"].forEach(id => {
         document.getElementById(id)?.classList.add("hidden");
       });
 
-      // Rimuovi voci cliente dalla sidebar
       const vociDaRimuovere = ["I miei ordini", "I miei preferiti"];
       [...navList.children].forEach(li => {
         if (vociDaRimuovere.some(text => li.innerText.includes(text))) {
@@ -58,26 +53,23 @@ window.onload = async () => {
         }
       });
 
-      // Mostra sezioni artigiano
       ["inventario", "prenotazioni", "dashboard"].forEach(id => {
         document.getElementById(id)?.classList.remove("hidden");
       });
 
-      // Aggiungi voci artigiano alla sidebar
       ["Inventario", "Prenotazioni", "Dashboard"].forEach(section => {
         const li = document.createElement("li");
         li.innerHTML = `<a href="#${section.toLowerCase()}">${section}</a>`;
         navList.insertBefore(li, navList.lastElementChild);
       });
 
-
+      // INVENTARIO
       const resInventario = await fetch('http://localhost:3000/api/getInventory', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!resInventario.ok) throw new Error("Errore nel caricamento dell'inventario");
 
       const inventario = await resInventario.json();
-      console.log("Inventario:", inventario);
       const inventarioList = document.getElementById("inventario-list");
       inventarioList.innerHTML = "";
 
@@ -88,10 +80,10 @@ window.onload = async () => {
           const div = document.createElement("div");
           div.classList.add("prodotto");
           div.innerHTML = `
-          <p><strong>${i.product_name}</strong></p>
-          <p>Prezzo: €${i.price}</p>
-          <p>Quantità: ${i.quantity}</p>
-        `;
+            <p><strong>${i.product_name}</strong></p>
+            <p>Prezzo: €${i.price}</p>
+            <p>Quantità: ${i.quantity}</p>
+          `;
           div.onclick = () => window.location.href = `productsupdate.html?id=${i.product_id}`;
           inventarioList.appendChild(div);
         });
@@ -101,11 +93,9 @@ window.onload = async () => {
         window.location.href = "productsadd.html";
       });
 
-      // CARICA PRENOTAZIONI
+      // PRENOTAZIONI
       const resPrenotazioni = await fetch('http://localhost:3000/api/getOrdersByArtisanId', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        headers: { 'Authorization': `Bearer ${token}` }
       });
 
       const prenotazioni = await resPrenotazioni.json();
@@ -114,121 +104,113 @@ window.onload = async () => {
 
       if (prenotazioni.length === 0) {
         prenotazioniList.innerHTML = `
-    <tr>
-      <td colspan="5">Non ci sono prenotazioni relative ai tuoi prodotti.</td>
-    </tr>
-  `;
+          <tr>
+            <td colspan="5">Non ci sono prenotazioni relative ai tuoi prodotti.</td>
+          </tr>
+        `;
       } else {
         prenotazioni.forEach(order => {
           const articoliHtml = order.products.map(p => `
-      <div style="margin-bottom: 0.5rem;">
-        <strong>${p.product_name}</strong> (ID: ${p.product_id})<br/>
-        Quantità: ${p.quantity}<br/>
-        Prezzo unitario: €${Number(p.single_price).toFixed(2)}
-      </div>
-    `).join("");
+            <div style="margin-bottom: 0.5rem;">
+              <strong>${p.product_name}</strong> (ID: ${p.product_id})<br/>
+              Quantità: ${p.quantity}<br/>
+              Prezzo unitario: €${Number(p.single_price).toFixed(2)}
+            </div>
+          `).join("");
 
           const tr = document.createElement("tr");
           tr.innerHTML = `
-      <td>${new Date(order.order_date).toLocaleDateString()}</td>
-      <td>#${order.order_id}</td>
-      <td>${order.products.map(p => p.product_id).join(", ")}</td>
-      <td>${articoliHtml}</td>
-      <td>${order.state_name}</td>
-    `;
-
+            <td>${new Date(order.order_date).toLocaleDateString()}</td>
+            <td>#${order.order_id}</td>
+            <td>${order.products.map(p => p.product_id).join(", ")}</td>
+            <td>${articoliHtml}</td>
+            <td>${order.state_name}</td>
+          `;
           prenotazioniList.appendChild(tr);
         });
       }
 
-/*
-      // Dashboard
-      const dashboard = await (await fetch('/api/dashboard')).json();
-      new Chart(document.getElementById('guadagniChart').getContext('2d'), {
-        type: 'line',
-        data: {
-          labels: dashboard.mesi,
-          datasets: [{
-            label: 'Guadagni',
-            data: dashboard.guadagni,
-            borderColor: '#f5b400',
-            backgroundColor: 'rgba(245,180,0,0.2)',
-            fill: true
-          }]
-        },
-        options: { responsive: true }
-      });
+      // DASHBOARD - GRAFICO VENDITE
+      async function creaGraficoVenditeGiornaliere(token) {
+        try {
+          const response = await fetch('http://localhost:3000/api/salesByArtisanId', {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          if (!response.ok) throw new Error('Errore nel recupero dei dati');
 
-      new Chart(document.getElementById('venditeChart').getContext('2d'), {
-        type: 'bar',
-        data: {
-          labels: dashboard.settimana,
-          datasets: [{
-            label: 'Vendite',
-            data: dashboard.vendite,
-            backgroundColor: '#f5b400'
-          }]
-        },
-        options: { responsive: true }
-      });
+          const dati = await response.json();
+          const ctx = document.getElementById('venditeChart').getContext('2d');
 
-      // Notifiche
-      const notifiche = await (await fetch('/api/notifiche')).json();
-      const notificheList = document.getElementById("notifiche-list");
-      notificheList.innerHTML = "";
-      notifiche.forEach(n => {
-        const li = document.createElement("li");
-        li.innerText = n.messaggio;
-        notificheList.appendChild(li);
-      });
-*/
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: dati.labels,
+              datasets: [{
+                label: 'Vendite giornaliere',
+                data: dati.dati,
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+
+          document.getElementById("dashboard")?.classList.remove("hidden");
+        } catch (errore) {
+          console.error('Errore nel caricamento del grafico:', errore);
+        }
+      }
+
+      // CHIAMATA GRAFICO
+      await creaGraficoVenditeGiornaliere(token);
+
     } else {
       // CLIENTE
-
-      // ORDINI
       const resOrdini = await fetch('http://localhost:3000/api/getOrdersByUserId', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        headers: { 'Authorization': `Bearer ${token}` }
       });
 
       const orderList = await resOrdini.json();
-
-      console.log("ordini restituiti:", orderList);
-
       const ordiniTable = document.getElementById("ordini-list");
       ordiniTable.innerHTML = "";
 
       if (orderList.length === 0) {
         ordiniTable.innerHTML = `
-    <tr>
-      <td colspan="5">Non hai ancora effettuato ordini.</td>
-    </tr>
-  `;
+          <tr>
+            <td colspan="5">Non hai ancora effettuato ordini.</td>
+          </tr>
+        `;
       } else {
         orderList.forEach(order => {
-          const tr = document.createElement("tr");
-
           const articoli = order.products.map(p => `
-      <div style="margin-bottom: 0.5rem;">
-        <strong>${p.product_name}</strong><br/>
-        Quantità: ${p.quantity}<br/>
-        €${Number(p.single_price).toFixed(2)}
-      </div>
-    `).join("");
+            <div style="margin-bottom: 0.5rem;">
+              <strong>${p.product_name}</strong><br/>
+              Quantità: ${p.quantity}<br/>
+              €${Number(p.single_price).toFixed(2)}
+            </div>
+          `).join("");
 
+          const tr = document.createElement("tr");
           tr.innerHTML = `
-      <td>${new Date(order.order_date).toLocaleDateString()}</td>
-      <td>#${order.order_id}</td>
-      <td>€${Number(order.total).toFixed(2)}</td>
-      <td>${articoli}</td>
-      <td>${order.state_name}</td>
-    `;
-
+            <td>${new Date(order.order_date).toLocaleDateString()}</td>
+            <td>#${order.order_id}</td>
+            <td>€${Number(order.total).toFixed(2)}</td>
+            <td>${articoli}</td>
+            <td>${order.state_name}</td>
+          `;
           ordiniTable.appendChild(tr);
         });
       }
-
       // PREFERITI
       const res = await fetch('http://localhost:3000/api/favourites', {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -266,3 +248,5 @@ window.onload = async () => {
     alert("C'è stato un errore nel caricamento del profilo.");
   }
 };
+
+

@@ -45,10 +45,25 @@ const getOrdersByArtisanId = async (artisanId) => {
   }
 };
 
+const getSales = async () => {
+  try {
+    const sales = await orderModel.getSales();
+    return sales;
+  } catch (error) {
+    throw new Error('Errore nel recupero delle vendite: ' + error.message);
+  }
+};
+
+const getDailySalesByArtisan = async (artisanId) => {
+  return await orderModel.getDailySalesByArtisan(artisanId);
+};
+
 module.exports = {
     createOrderFromCart, 
     addTempAddress, 
     findAddress, 
     getOrdersByUserId,
-    getOrdersByArtisanId
+    getOrdersByArtisanId,
+    getSales,
+    getDailySalesByArtisan
 };
