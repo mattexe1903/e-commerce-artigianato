@@ -1,0 +1,157 @@
+openapi: 3.0.3
+info:
+  title: API Carrello
+  version: 1.0.0
+  description: API per la gestione del carrello utente (autenticato)
+
+paths:
+  /cart:
+    get:
+      summary: Recupera il carrello dell'utente autenticato
+      tags:
+        - Carrello
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Carrello recuperato con successo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  cart:
+                    type: object
+        '404':
+          description: Carrello non trovato
+        '500':
+          description: Errore nel recupero del carrello
+
+  /cart/add:
+    post:
+      summary: Aggiunge un prodotto al carrello
+      tags:
+        - Carrello
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - productId
+                - quantity
+              properties:
+                productId:
+                  type: string
+                quantity:
+                  type: integer
+      responses:
+        '200':
+          description: Prodotto aggiunto con successo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  cart:
+                    type: object
+        '500':
+          description: Errore nell'aggiunta al carrello
+
+  /cart/remove:
+    delete:
+      summary: Rimuove un prodotto dal carrello
+      tags:
+        - Carrello
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - product_id
+              properties:
+                product_id:
+                  type: string
+                quantity:
+                  type: integer
+                  default: 1
+      responses:
+        '200':
+          description: Prodotto rimosso dal carrello
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  cart:
+                    type: object
+        '404':
+          description: Carrello non trovato
+        '500':
+          description: Errore nella rimozione del prodotto
+
+  /cart/clear:
+    delete:
+      summary: Svuota completamente il carrello dell’utente
+      tags:
+        - Carrello
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+              properties:
+                userId:
+                  type: string
+      responses:
+        '200':
+          description: Carrello svuotato con successo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  cart:
+                    type: object
+        '404':
+          description: Carrello non trovato
+        '500':
+          description: Errore nello svuotamento del carrello
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - BearerAuth: []

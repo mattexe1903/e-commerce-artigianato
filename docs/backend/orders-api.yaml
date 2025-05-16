@@ -1,0 +1,110 @@
+openapi: 3.0.3
+info:
+  title: API Ordini
+  version: 1.0.0
+  description: API per la gestione degli ordini da parte di utenti e artigiani.
+
+paths:
+  /createOrder:
+    post:
+      summary: Crea un ordine a partire dal carrello dell’utente
+      tags:
+        - Ordini
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - address
+              properties:
+                address:
+                  type: object
+                  required:
+                    - street
+                    - city
+                    - cap
+                    - province
+                  properties:
+                    street:
+                      type: string
+                    city:
+                      type: string
+                    cap:
+                      type: string
+                    province:
+                      type: string
+                saveAddress:
+                  type: boolean
+                  description: Se true, l'indirizzo viene salvato tra quelli dell’utente
+      responses:
+        '201':
+          description: Ordine creato con successo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  orderId:
+                    type: string
+        '400':
+          description: Errore nella creazione dell’ordine (es. carrello vuoto)
+        '500':
+          description: Errore interno del server
+
+  /getOrdersByUserId:
+    get:
+      summary: Recupera tutti gli ordini dell’utente autenticato
+      tags:
+        - Ordini
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista di ordini dell’utente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '404':
+          description: Nessun ordine trovato
+        '500':
+          description: Errore interno del server
+
+  /getOrdersByArtisanId:
+    get:
+      summary: Recupera tutti gli ordini per l’artigiano autenticato
+      tags:
+        - Ordini
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista di ordini ricevuti dall’artigiano
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '404':
+          description: Nessun ordine trovato
+        '500':
+          description: Errore interno del server
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - BearerAuth: []

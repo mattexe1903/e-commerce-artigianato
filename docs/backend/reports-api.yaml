@@ -1,0 +1,240 @@
+openapi: 3.0.0
+info:
+  title: API per la gestione delle richieste degli artigiani e delle segnalazioni
+  description: API per inviare e gestire le richieste degli artigiani e le segnalazioni.
+  version: 1.0.0
+paths:
+  /sendArtisanRequest:
+    post:
+      summary: Invia una richiesta di artigiano
+      description: Consente di inviare una richiesta per un artigiano specificando nome, cognome, tipo e iban.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  description: Il nome dell'artigiano.
+                cognome:
+                  type: string
+                  description: Il cognome dell'artigiano.
+                tipo_artigiano:
+                  type: string
+                  description: Il tipo di artigiano (e.g., idraulico, elettricista).
+                iban:
+                  type: string
+                  description: L'IBAN dell'artigiano per il pagamento.
+      responses:
+        '200':
+          description: Richiesta inviata con successo.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Richiesta inviata con successo.'
+        '400':
+          description: Uno o più campi obbligatori sono mancanti.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Tutti i campi sono obbligatori.'
+        '500':
+          description: Errore interno del server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Errore interno del server.'
+
+  /getArtisanRequest:
+    get:
+      summary: Recupera tutte le richieste di artigiani
+      description: Restituisce tutte le richieste inviate per artigiani.
+      responses:
+        '200':
+          description: Lista delle richieste degli artigiani.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    nome:
+                      type: string
+                    cognome:
+                      type: string
+                    tipo_artigiano:
+                      type: string
+                    iban:
+                      type: string
+        '500':
+          description: Errore interno del server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Errore interno del server.'
+
+  /updateArtisanRequest:
+    post:
+      summary: Aggiorna lo stato di una richiesta di artigiano
+      description: Permette di aggiornare lo stato di una richiesta di artigiano specificando l'ID della richiesta e l'azione da intraprendere.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: L'ID della richiesta da aggiornare.
+                action:
+                  type: string
+                  description: L'azione da intraprendere (e.g., approvato, rifiutato).
+      responses:
+        '200':
+          description: Richiesta aggiornata con successo.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Richiesta aggiornata con successo.'
+        '400':
+          description: Uno o più campi obbligatori sono mancanti.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Tutti i campi sono obbligatori.'
+        '500':
+          description: Errore interno del server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Errore interno del server.'
+
+  /sendSignal:
+    post:
+      summary: Invia una segnalazione
+      description: Permette di inviare una segnalazione associata a un utente, includendo titolo, messaggio e stato.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: L'email dell'utente che invia la segnalazione.
+                titolo:
+                  type: string
+                  description: Il titolo della segnalazione.
+                messaggio:
+                  type: string
+                  description: Il contenuto della segnalazione.
+                stato:
+                  type: string
+                  description: Lo stato della segnalazione (e.g., aperto, risolto).
+      responses:
+        '200':
+          description: Segnalazione inviata con successo.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Segnalazione inviata con successo.'
+        '400':
+          description: Uno o più campi obbligatori sono mancanti.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Tutti i campi sono obbligatori.'
+        '404':
+          description: Utente non trovato.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Utente non trovato.'
+        '500':
+          description: Errore interno del server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Errore interno del server.'
+
+  /getSignal:
+    get:
+      summary: Recupera tutte le segnalazioni
+      description: Restituisce tutte le segnalazioni inviate dagli utenti.
+      responses:
+        '200':
+          description: Lista delle segnalazioni.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    titolo:
+                      type: string
+                    messaggio:
+                      type: string
+                    stato:
+                      type: string
+        '500':
+          description: Errore interno del server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Errore interno del server.'

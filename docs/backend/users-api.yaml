@@ -1,0 +1,238 @@
+openapi: 3.0.0
+info:
+  title: API per la gestione degli utenti e artigiani
+  description: API per la gestione delle informazioni utente, reset delle password, indirizzi e registrazione artigiani.
+  version: 1.0.0
+paths:
+  /user:
+    get:
+      summary: Restituisce le informazioni dell'utente
+      description: Restituisce i dettagli dell'utente autenticato.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Dettagli utente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: string
+                  user_name:
+                    type: string
+        '404':
+          description: Utente non trovato.
+        '500':
+          description: Errore interno del server.
+
+  /userInfo:
+    get:
+      summary: Restituisce le informazioni dell'utente, inclusi gli indirizzi
+      description: Restituisce le informazioni dell'utente con gli indirizzi associati.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Dettagli utente e indirizzi.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  addresses:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        street_address:
+                          type: string
+                        city:
+                          type: string
+                        cap:
+                          type: string
+                        province:
+                          type: string
+                  user:
+                    type: object
+                    properties:
+                      user_id:
+                        type: string
+                      user_name:
+                        type: string
+        '500':
+          description: Errore interno del server.
+
+  /user/{id}/infoartigiani:
+    get:
+      summary: Restituisce le informazioni relative agli artigiani dell'utente
+      description: Recupera le informazioni degli artigiani per un dato utente.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: L'ID dell'utente
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Informazioni sugli artigiani.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    nome:
+                      type: string
+                    tipo_artigiano:
+                      type: string
+        '404':
+          description: Utente non trovato o non è un artigiano.
+        '500':
+          description: Errore interno del server.
+
+  /send-reset-email:
+    post:
+      summary: Invia una email per il reset della password
+      description: Invia un'email con un link per il reset della password.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: L'email dell'utente
+      responses:
+        '200':
+          description: Email inviata con successo.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Email di reset inviata con successo."
+        '400':
+          description: Email mancante o errata.
+        '404':
+          description: Nessun utente trovato con questa email.
+        '500':
+          description: Errore durante l'invio dell'email.
+
+  /reset-password:
+    post:
+      summary: Resetta la password dell'utente
+      description: Resetta la password dell'utente tramite il token ricevuto nell'email.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: Il token di reset ricevuto via email.
+                newPassword:
+                  type: string
+                  description: La nuova password da impostare.
+      responses:
+        '200':
+          description: Password aggiornata con successo.
+        '400':
+          description: Token o nuova password mancanti.
+        '500':
+          description: Errore durante il reset della password.
+
+  /addAddress:
+    get:
+      summary: Aggiungi un indirizzo per l'utente
+      description: Consente di aggiungere un nuovo indirizzo per l'utente.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Indirizzo aggiunto con successo.
+        '400':
+          description: Dati dell'indirizzo mancanti o errati.
+        '500':
+          description: Errore interno del server.
+
+  /getInventory:
+    get:
+      summary: Recupera l'inventario dell'utente
+      description: Restituisce l'inventario associato all'utente.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Inventario recuperato con successo.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    item_name:
+                      type: string
+                    quantity:
+                      type: integer
+        '500':
+          description: Errore interno del server.
+
+  /getArtisanRegistered:
+    get:
+      summary: Recupera tutti gli artigiani registrati
+      description: Recupera una lista di tutti gli artigiani registrati nel sistema.
+      responses:
+        '200':
+          description: Lista degli artigiani registrati.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    nome:
+                      type: string
+                    cognome:
+                      type: string
+        '500':
+          description: Errore interno del server.
+
+  /artisan/{id}:
+    delete:
+      summary: Elimina un artigiano
+      description: Elimina un artigiano tramite il suo ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: L'ID dell'artigiano da eliminare.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Artigiano eliminato con successo.
+        '404':
+          description: Artigiano non trovato.
+        '500':
+          description: Errore durante l'eliminazione dell'artigiano.
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

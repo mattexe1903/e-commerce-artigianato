@@ -1,0 +1,54 @@
+openapi: 3.0.3
+info:
+  title: API Categorie
+  version: 1.0.0
+  description: API per il recupero delle categorie disponibili.
+
+paths:
+  /categories:
+    get:
+      summary: Recupera tutte le categorie
+      tags:
+        - Categorie
+      responses:
+        '200':
+          description: Elenco delle categorie recuperato con successo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  categories:
+                    type: array
+                    items:
+                      type: object
+        '500':
+          description: Errore nel recupero delle categorie
+
+  /categories-info:
+    get:
+      summary: Recupera informazioni dettagliate su tutte le categorie
+      tags:
+        - Categorie
+      responses:
+        '200':
+          description: Informazioni dettagliate sulle categorie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  categories:
+                    type: array
+                    items:
+                      type: object
+        '500':
+          description: Errore nel recupero delle informazioni sulle categorie

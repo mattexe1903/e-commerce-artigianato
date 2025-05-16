@@ -1,0 +1,166 @@
+openapi: 3.0.3
+info:
+  title: API Autenticazione
+  version: 1.0.0
+  description: API per la gestione dell'autenticazione e registrazione di utenti e artigiani.
+
+paths:
+  /login:
+    post:
+      summary: Login utente
+      tags:
+        - Autenticazione
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Login riuscito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  token:
+                    type: string
+                  user_role:
+                    type: integer
+        '400':
+          description: Artigiano non approvato o rifiutato
+        '401':
+          description: Credenziali non valide
+
+  /register:
+    post:
+      summary: Registrazione cliente
+      tags:
+        - Autenticazione
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nome
+                - cognome
+                - email
+                - password
+                - conferma
+              properties:
+                nome:
+                  type: string
+                cognome:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                conferma:
+                  type: string
+                  format: password
+      responses:
+        '201':
+          description: Registrazione riuscita
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  token:
+                    type: string
+        '400':
+          description: Password non coincidenti o altri errori
+
+  /registerArtigiano:
+    post:
+      summary: Registrazione artigiano
+      tags:
+        - Autenticazione
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - datiBase
+                - datiExtra
+              properties:
+                datiBase:
+                  type: object
+                  required:
+                    - nome
+                    - cognome
+                    - email
+                    - password
+                  properties:
+                    nome:
+                      type: string
+                    cognome:
+                      type: string
+                    email:
+                      type: string
+                      format: email
+                    password:
+                      type: string
+                      format: password
+                datiExtra:
+                  type: object
+                  required:
+                    - tipo_artigiano
+                    - iban
+                  properties:
+                    tipo_artigiano:
+                      type: string
+                    iban:
+                      type: string
+      responses:
+        '201':
+          description: Registrazione artigiano riuscita
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  user:
+                    type: object
+        '500':
+          description: Errore server durante registrazione o invio richiesta
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - BearerAuth: []

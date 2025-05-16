@@ -1,0 +1,398 @@
+openapi: 3.0.0
+info:
+  title: API di Gestione Prodotti e Preferiti
+  description: API per la gestione dei prodotti e dei preferiti degli utenti in un'applicazione di e-commerce.
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:3000/api'
+    description: API di sviluppo locale
+
+paths:
+  /products:
+    get:
+      summary: Ottieni tutti i prodotti
+      operationId: getAllProducts
+      responses:
+        '200':
+          description: Lista di tutti i prodotti
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        product_id:
+                          type: integer
+                        product_name:
+                          type: string
+                        price:
+                          type: number
+                          format: float
+                        quantity:
+                          type: integer
+                        category_id:
+                          type: integer
+    post:
+      summary: Crea un nuovo prodotto
+      operationId: createProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_name:
+                  type: string
+                photo_description:
+                  type: string
+                price:
+                  type: number
+                  format: float
+                quantity:
+                  type: integer
+                category_id:
+                  type: integer
+                user_id:
+                  type: integer
+      responses:
+        '201':
+          description: Prodotto creato con successo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  product:
+                    type: object
+                    properties:
+                      product_id:
+                        type: integer
+                      product_name:
+                        type: string
+                      photo_description:
+                        type: string
+                      price:
+                        type: number
+                        format: float
+                      quantity:
+                        type: integer
+                      category_id:
+                        type: integer
+        '500':
+          description: Errore nella creazione del prodotto
+
+  /products/{id}:
+    get:
+      summary: Ottieni un prodotto specifico
+      operationId: getProductById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID del prodotto
+      responses:
+        '200':
+          description: Dettagli del prodotto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  product:
+                    type: object
+                    properties:
+                      product_id:
+                        type: integer
+                      product_name:
+                        type: string
+                      price:
+                        type: number
+                        format: float
+                      quantity:
+                        type: integer
+                      category_id:
+                        type: integer
+        '404':
+          description: Prodotto non trovato
+          
+    put:
+      summary: Aggiorna un prodotto esistente
+      operationId: updateProduct
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID del prodotto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_name:
+                  type: string
+                photo_description:
+                  type: string
+                price:
+                  type: number
+                  format: float
+                quantity:
+                  type: integer
+                category_id:
+                  type: integer
+      responses:
+        '200':
+          description: Prodotto aggiornato con successo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  product:
+                    type: object
+                    properties:
+                      product_id:
+                        type: integer
+                      product_name:
+                        type: string
+                      price:
+                        type: number
+                        format: float
+                      quantity:
+                        type: integer
+                      category_id:
+                        type: integer
+        '404':
+          description: Prodotto non trovato
+        '500':
+          description: Errore nell'aggiornamento del prodotto
+
+    delete:
+      summary: Elimina un prodotto
+      operationId: deleteProduct
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID del prodotto
+      responses:
+        '200':
+          description: Prodotto eliminato con successo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '404':
+          description: Prodotto non trovato
+        '500':
+          description: Errore nell'eliminazione del prodotto
+
+  /products/{id}/photo:
+    patch:
+      summary: Aggiorna solo la foto di un prodotto
+      operationId: updateProductPhoto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID del prodotto
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                photo:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Foto aggiornata con successo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  photo:
+                    type: string
+        '400':
+          description: Nessun file fornito
+        '404':
+          description: Prodotto non trovato
+        '500':
+          description: Errore nell'aggiornamento della foto
+
+  /addToFavourites:
+    post:
+      summary: Aggiungi un prodotto ai preferiti
+      operationId: addProductToFavourites
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productId:
+                  type: integer
+      responses:
+        '200':
+          description: Prodotto aggiunto ai preferiti
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+        '500':
+          description: Errore nell'aggiunta ai preferiti
+
+  /removeFromFavourites:
+    delete:
+      summary: Rimuovi un prodotto dai preferiti
+      operationId: removeProductFromFavourites
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productId:
+                  type: integer
+      responses:
+        '200':
+          description: Prodotto rimosso dai preferiti
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '500':
+          description: Errore nella rimozione dai preferiti
+
+  /favourites:
+    get:
+      summary: Ottieni tutti i prodotti preferiti dell'utente
+      operationId: getAllFavourites
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista dei preferiti
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        product_id:
+                          type: integer
+                        product_name:
+                          type: string
+                        price:
+                          type: number
+                          format: float
+        '500':
+          description: Errore nel recupero dei preferiti
+
+  /latest:
+    get:
+      summary: Ottieni i prodotti più recenti
+      operationId: getLatestProducts
+      responses:
+        '200':
+          description: Prodotti più recenti recuperati con successo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        product_id:
+                          type: integer
+                        product_name:
+                          type: string
+                        price:
+                          type: number
+                          format: float
+                        quantity:
+                          type: integer
+                        category_id:
+                          type: integer
+        '500':
+          description: Errore nel recupero dei prodotti più recenti
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
