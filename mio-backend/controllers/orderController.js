@@ -14,16 +14,9 @@ const createOrder = async (req, res) => {
   } = req.body;
 
   try {
-    /*if (!street_address || !city || !cap || !province) {
-      return res.status(400).json({ message: 'Dati indirizzo mancanti' });
-    }*/
-
     let finalAddressId;
 
     const existingAddress = await orderService.findAddress(street_address, city, cap, province);
-
-    console.log('Indirizzo esistente:', existingAddress);
-    console.log('Salva indirizzo:', saveAddress);
 
     if (existingAddress) {
       finalAddressId = existingAddress.addres_id;
@@ -35,7 +28,6 @@ const createOrder = async (req, res) => {
       finalAddressId = tmpAddress.rows[0].addres_id;
     }
 
-    console.log('ID indirizzo finale:', finalAddressId);
     const result = await orderService.createOrderFromCart(userId, finalAddressId);
     if (result.success) {
       res.status(201).json({ message: 'Ordine creato con successo', orderId: result.orderId });
@@ -89,18 +81,15 @@ const getSales = async (req, res) => {
       'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'
     ];
 
-    // Inizializza i dati con zero vendite per ogni mese
     const venditePerMese = Array.from({ length: 12 }, (_, i) => ({
       month: i + 1,
       total: 0
     }));
 
-    // Riempie i mesi presenti nel DB
     sales.forEach(item => {
       venditePerMese[item.month - 1].total = item.total;
     });
 
-    // Estrai le label e i dati finali
     const labels = venditePerMese.map(item => mesi[item.month]);
     const dati = venditePerMese.map(item => item.total);
 
@@ -113,11 +102,9 @@ const getSales = async (req, res) => {
 
 const getDailySalesByArtisan = async (req, res) => {
   const artisanId = req.user.user_id;
-  
 
   try {
     const rawData = await orderService.getDailySalesByArtisan(artisanId);
-
     const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
     const dayMap = Array.from({ length: daysInMonth }, (_, i) => ({ day: i + 1, total: 0 }));
 

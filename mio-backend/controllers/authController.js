@@ -7,7 +7,6 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await authService.login(email, password);
-    console.log(user);
 
     const artisan_state_raw = await authService.artisanIsActive(user.user_id);
     const stato = artisan_state_raw?.artisan_state;
@@ -71,7 +70,6 @@ const registerArtigiano = async (req, res) => {
       await authService.saveArtigianoDetails(user.user_id, tipo_artigiano, iban);
     }
     
-    //TODO: Invia la richiesta di registrazione
     await reportService.sendArtisanRequest(user.user_id, nome, cognome, tipo_artigiano, iban);
 
     res.status(201).json({

@@ -90,8 +90,6 @@ const clearCart = async (req, res) => {
   }
 };
 
-
-
 module.exports = {
     getCartInfo,
     addToCart,

@@ -1,5 +1,3 @@
-const path = require('path');
-const fs = require('fs');
 const productService = require('../services/favouriteService');
 
 const addProductToFavourites = async (req, res) => {
@@ -57,11 +55,8 @@ const getAllFavourites = async (req, res) => {
     }
 };
 
-
-
-
 module.exports = {
     addProductToFavourites,
-    removeProductFromFavourites, 
+    removeProductFromFavourites,
     getAllFavourites
 };

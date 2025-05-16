@@ -50,7 +50,6 @@ const sendResetEmail = async (req, res) => {
       return res.status(400).json({ message: "L'email è richiesta." });
     }
 
-    // Trova l'utente con l'email fornita
     const user = await userService.getUserByEmail(email);
     console.log('User found:', user);
 
@@ -70,14 +69,13 @@ const sendResetEmail = async (req, res) => {
 
     // Configura il trasportatore Nodemailer
     const transporter = nodemailer.createTransport({
-      service: 'Gmail', // o altro (Outlook, Mailtrap, SMTP personalizzato)
+      service: 'Gmail',
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
       }
     });
 
-    // Contenuto dell'email
     const mailOptions = {
       from: `"Supporto" <${process.env.EMAIL_USER}>`,
       to: email,
@@ -91,7 +89,6 @@ const sendResetEmail = async (req, res) => {
     `
     };
 
-    // Invio dell'email
     await transporter.sendMail(mailOptions);
 
     return res.status(200).json({ message: 'Email di reset inviata con successo.' });
@@ -102,7 +99,6 @@ const sendResetEmail = async (req, res) => {
   }
 };
 
-// Aggiungi la rotta per resettare la password
 const resetPassword = async (req, res) => {
   try {
     const { token, newPassword } = req.body;
@@ -111,81 +107,81 @@ const resetPassword = async (req, res) => {
       return res.status(400).json({ message: 'Token e nuova password sono richiesti.' });
     }
 
-    // Decodifica il token JWT per ottenere l'ID dell'utente
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret_reset_key');
     console.log('Decoded token:', decoded);
     const userId = decoded.userId;
 
-    // Chiama il servizio per aggiornare la password
-    const updatedUser = await userService.updatePassword(userId, newPassword);
+    await userService.updatePassword(userId, newPassword);
 
     return res.status(200).json({ message: 'Password aggiornata con successo.' });
 
   } catch (error) {
     console.error('Errore durante il reset della password:', error);
     return res.status(500).json({ message: 'Errore durante il reset della password.' });
-  }};
-  const addUserAddress = async (req, res) => {
-    try {
-      const userId = req.user.user_id;
-      const { street_address, city, cap, province } = req.body;
+  }
+};
 
-      if (!street_address || !city || !cap || !province) {
-        return res.status(400).json({ message: 'All fields are required' });
-      }
+const addUserAddress = async (req, res) => {
+  try {
+    const userId = req.user.user_id;
+    const { street_address, city, cap, province } = req.body;
 
-      const address = await userService.addUserAddress(userId, street_address, city, cap, province);
-      return res.status(201).json(address);
-    } catch (error) {
-      console.error('Error adding address:', error);
-      return res.status(500).json({ message: 'Internal server error' });
+    if (!street_address || !city || !cap || !province) {
+      return res.status(400).json({ message: 'All fields are required' });
     }
-  };
 
-  const getInventory = async (req, res) => {
-    try {
-      const userId = req.user.user_id;
-      const inventory = await userService.getInventory(userId);
-      return res.status(200).json(inventory);
-    } catch (error) {
-      console.error('Error fetching inventory:', error);
-      return res.status(500).json({ message: 'Internal server error' });
+    const address = await userService.addUserAddress(userId, street_address, city, cap, province);
+    return res.status(201).json(address);
+  } catch (error) {
+    console.error('Error adding address:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+const getInventory = async (req, res) => {
+  try {
+    const userId = req.user.user_id;
+    const inventory = await userService.getInventory(userId);
+    return res.status(200).json(inventory);
+  } catch (error) {
+    console.error('Error fetching inventory:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+const getArtisanRegistered = async (req, res) => {
+  try {
+    const artisanRegistered = await userService.getArtisanRegistered();
+    return res.status(200).json(artisanRegistered);
+  } catch (error) {
+    console.error('Error fetching artisan registered:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+const deleteArtisan = async (req, res) => {
+  try {
+    const artisanId = req.params.id;
+    const result = await userService.deleteArtisan(artisanId);
+    if (result) {
+      return res.status(200).json({ message: 'Artisan deleted successfully' });
+    } else {
+      return res.status(404).json({ message: 'Artisan not found' });
     }
-  };
+  } catch (error) {
+    console.error('Error deleting artisan:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
-  const getArtisanRegistered = async (req, res) => {
-    try {
-      const artisanRegistered = await userService.getArtisanRegistered();
-      return res.status(200).json(artisanRegistered);
-    } catch (error) {
-      console.error('Error fetching artisan registered:', error);
-      return res.status(500).json({ message: 'Internal server error' });
-    }
-  };
-
-  const deleteArtisan = async (req, res) => {
-    try {
-      const artisanId = req.params.id;
-      const result = await userService.deleteArtisan(artisanId);
-      if (result) {
-        return res.status(200).json({ message: 'Artisan deleted successfully' });
-      } else {
-        return res.status(404).json({ message: 'Artisan not found' });
-      }
-    } catch (error) {
-      console.error('Error deleting artisan:', error);
-      return res.status(500).json({ message: 'Internal server error' });
-    }
-  };
-
-  module.exports = {
-    getUserInfo,
-    getArtigianiInfo,
-    getUserInformation,
-    sendResetEmail,
-    resetPassword,
-    addUserAddress,
-    getInventory,
-    getArtisanRegistered,
-    deleteArtisan
-  };
+module.exports = {
+  getUserInfo,
+  getArtigianiInfo,
+  getUserInformation,
+  sendResetEmail,
+  resetPassword,
+  addUserAddress,
+  getInventory,
+  getArtisanRegistered,
+  deleteArtisan
+};
