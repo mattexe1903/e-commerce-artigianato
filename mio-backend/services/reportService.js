@@ -30,7 +30,8 @@ const updateArtisanRequest = async (id, stato) => {
     console.log('Artisan ID:', artisanId);
     console.log('Stato:', stato);
 
-    if (artisanId) {;
+    if (artisanId) {
+      ;
       await userModel.updateArtisanState(artisanId, stato);
     }
   }
@@ -56,6 +57,6 @@ module.exports = {
   sendArtisanRequest,
   getArtisanRequest,
   updateArtisanRequest,
-  sendSignal, 
+  sendSignal,
   getSignal
 };
