@@ -39,7 +39,7 @@ const updateProduct = async (id, productData) => {
      SET product_name = $1, photo_description = $2, price = $3, quantity = $4, category_id = $5 
      WHERE product_id = $6 
      RETURNING *`,
-    [product_name, photo_description, price, quantity,category_id, id]
+    [product_name, photo_description, price, quantity, category_id, id]
   );
 
   return result.rows[0];
@@ -82,6 +82,6 @@ module.exports = {
   createProduct,
   updateProduct,
   updateProductImage,
-  deleteProduct, 
+  deleteProduct,
   getLatestProducts
 };

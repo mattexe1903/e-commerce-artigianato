@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     console.log("req.body", req.body);
-    const productId = req.body.productId || 'placeholder'; // Assuming you pass productId in the body for the file
+    const productId = req.body.productId || 'placeholder';
     const extname = path.extname(file.originalname); // Ottieni l'estensione del file (e.g., .jpg, .png)
     cb(null, `${productId}${extname}`);
   }
