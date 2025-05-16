@@ -1,19 +1,15 @@
 const authService = require('../services/authService');
+const reportService = require('../services/reportService');
 
 const jwt = require('jsonwebtoken');
 
 const login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const { user_id } = await authService.login(email, password);
+    const user = await authService.login(email, password);
 
-    console.log('Dati ricevuti:', user_id);
-
-    const artisan_state_raw = await authService.artisanIsActive(user_id);
-    console.log('artisan_state:', artisan_state_raw);
-
+    const artisan_state_raw = await authService.artisanIsActive(user.user_id);
     const stato = artisan_state_raw?.artisan_state;
-
     if (stato !== undefined && stato !== 2) {
       return res.status(400).json({
         success: false,
@@ -21,11 +17,12 @@ const login = async (req, res) => {
       });
     }
 
-    const token = generateToken(user_id);
+    const token = generateToken(user.user_id);
     res.status(200).json({
       success: true,
       message: 'Login riuscito',
-      token
+      token,
+      user_role: user.user_role
     });
   } catch (err) {
     res.status(401).json({
@@ -35,10 +32,8 @@ const login = async (req, res) => {
   }
 };
 
-//TODO: GENERAZIONE TOKEN
 const register = async (req, res) => {
   const { nome, cognome, email, password, conferma } = req.body;
-
   if (password !== conferma) {
     return res.status(400).json({
       success: false,
@@ -48,10 +43,11 @@ const register = async (req, res) => {
 
   try {
     const user = await authService.register(nome, cognome, email, password, 2);
+    const token = generateToken(user.user_id);
     res.status(201).json({
       success: true,
       message: 'Registrazione riuscita',
-      user
+      token
     });
   } catch (err) {
     res.status(400).json({
@@ -61,41 +57,26 @@ const register = async (req, res) => {
   }
 };
 
-//TODO: GENERAZIONE TOKEN
+
 const registerArtigiano = async (req, res) => {
-  console.log("Dati ricevuti nel controller:", req.body);
   const { datiBase, datiExtra } = req.body;
-
-  console.log("datiBase:", datiBase);
-  console.log("datiExtra:", datiExtra);
-
   const { nome, cognome, email, password } = datiBase;
   const { tipo_artigiano, iban } = datiExtra;
 
   try {
     const user = await authService.register(nome, cognome, email, password, 3);
-    console.log('utente registrato', user);
+
     if (tipo_artigiano && iban) {
-      console.log('userId: ', user.user_id);
-      const newArtisan = await authService.saveArtigianoDetails(user.user_id, tipo_artigiano, iban);
-      console.log(newArtisan);
+      await authService.saveArtigianoDetails(user.user_id, tipo_artigiano, iban);
     }
+    
+    await reportService.sendArtisanRequest(user.user_id, nome, cognome, tipo_artigiano, iban);
 
-    const artisan_state = await authService.artisanIsActive(user.user_id);
-    console.log('artisan_state:', artisan_state);
-
-    if (artisan_state != 2) {
-      return res.status(400).json({
-        success: false,
-        message: 'Richiesta in attesa di approvazione o rifiutata'
-      });
-    } else {
-      res.status(201).json({
-        success: true,
-        message: 'Registrazione riuscita',
-        user
-      });
-    }
+    res.status(201).json({
+      success: true,
+      message: 'Registrazione riuscita',
+      user
+    });
   } catch (err) {
     console.error('Errore durante la registrazione dell\'artigiano:', err);
     res.status(500).json({
@@ -104,8 +85,6 @@ const registerArtigiano = async (req, res) => {
     });
   }
 };
-
-
 
 // JWT Token
 const generateToken = (id) => {

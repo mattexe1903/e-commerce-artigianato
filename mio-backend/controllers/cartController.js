@@ -1,9 +1,9 @@
 const cartService = require('../services/cartService');
 
 const getCartInfo = async (req, res) => {
-  const { id } = req.params;
+  const userId = req.user.user_id;
   try {
-    const cart = await cartService.getCartInfo(id);
+    const cart = await cartService.getCartInfo(userId);
     if (!cart) {
       return res.status(404).json({
         success: false,
@@ -24,7 +24,8 @@ const getCartInfo = async (req, res) => {
 }
 
 const addToCart = async (req, res) => {
-  const { userId, productId, quantity } = req.body;
+  const userId = req.user.user_id;
+  const { productId, quantity } = req.body;
   try {
     const updatedCart = await cartService.addToCart(userId, productId, quantity);
     res.status(200).json({
@@ -41,9 +42,12 @@ const addToCart = async (req, res) => {
 };
 
 const removeFromCart = async (req, res) => {
-  const { id } = req.params;
+  const user_id = req.user.user_id;
+  const quantity = req.body.quantity || 1;
+  const product_id = req.body.product_id;
+
   try {
-    const updatedCart = await cartService.removeFromCart(id);
+    const updatedCart = await cartService.removeFromCart(user_id, product_id, quantity);
     if (!updatedCart) {
       return res.status(404).json({
         success: false,
@@ -64,7 +68,7 @@ const removeFromCart = async (req, res) => {
 };
 
 const clearCart = async (req, res) => {
-  const { userId } = req.body;
+  const userId = req.user.user_id; // <-- qui!
   try {
     const clearedCart = await cartService.clearCart(userId);
     if (!clearedCart) {
@@ -84,8 +88,7 @@ const clearCart = async (req, res) => {
       message: err.message || 'Errore nello svuotamento del carrello'
     });
   }
-}
-
+};
 
 module.exports = {
     getCartInfo,
