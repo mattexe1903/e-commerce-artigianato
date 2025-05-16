@@ -121,7 +121,7 @@ const updateProductPhoto = async (req, res) => {
 
     const extension = path.extname(req.file.originalname);
     const fileName = `${id}${extension}`;
-    const newPath = path.join(__dirname, '..', 'WebContent', 'images', fileName);
+    const newPath = path.join(__dirname, '..','..', 'WebContent', 'images', fileName);
 
     fs.renameSync(req.file.path, newPath);
 

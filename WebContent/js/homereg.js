@@ -193,14 +193,6 @@ async function caricaNuoviArrivi() {
       track.appendChild(div);
     });
 
-    nodes.forEach(n => {
-      const clone = n.cloneNode(true);
-      const id = clone.querySelector("img")?.alt;
-      if (id) {
-        clone.onclick = () => vaiAllaPaginaProdotto(id);
-      }
-      track.appendChild(clone);
-    });
   } catch (error) {
     console.error('Errore nel caricare i nuovi arrivi:', error);
   }

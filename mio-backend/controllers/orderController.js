@@ -80,8 +80,66 @@ const getOrdersByArtisanId = async (req, res) => {
   }
 }
 
+const getSales = async (req, res) => {
+  try {
+    const sales = await orderService.getSales();
+
+    const mesi = [
+      '', 'Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio',
+      'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'
+    ];
+
+    // Inizializza i dati con zero vendite per ogni mese
+    const venditePerMese = Array.from({ length: 12 }, (_, i) => ({
+      month: i + 1,
+      total: 0
+    }));
+
+    // Riempie i mesi presenti nel DB
+    sales.forEach(item => {
+      venditePerMese[item.month - 1].total = item.total;
+    });
+
+    // Estrai le label e i dati finali
+    const labels = venditePerMese.map(item => mesi[item.month]);
+    const dati = venditePerMese.map(item => item.total);
+
+    res.status(200).json({ labels, dati });
+  } catch (error) {
+    console.error('Errore nel recupero delle vendite:', error.message);
+    res.status(500).json({ message: 'Errore interno del server' });
+  }
+};
+
+const getDailySalesByArtisan = async (req, res) => {
+  const artisanId = req.user.user_id;
+  
+
+  try {
+    const rawData = await orderService.getDailySalesByArtisan(artisanId);
+
+    const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+    const dayMap = Array.from({ length: daysInMonth }, (_, i) => ({ day: i + 1, total: 0 }));
+
+    rawData.forEach(entry => {
+      dayMap[entry.day - 1].total = entry.total;
+    });
+
+    const labels = dayMap.map(entry => `Giorno ${entry.day}`);
+    const dati = dayMap.map(entry => entry.total);
+
+    res.json({ labels, dati });
+
+  } catch (error) {
+    console.error('Errore nel recupero delle vendite giornaliere:', error.message);
+    res.status(500).json({ message: 'Errore interno del server' });
+  }
+};
+
 module.exports = {
   createOrder,
   getOrdersByUserId,
-  getOrdersByArtisanId
+  getOrdersByArtisanId,
+  getSales,
+  getDailySalesByArtisan
 };

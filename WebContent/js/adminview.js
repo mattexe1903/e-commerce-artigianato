@@ -5,6 +5,7 @@ document.getElementById("exit-btn").addEventListener("click", () => {
 window.onload = () => {
   loadArtisanReportList();
   loadReportList();
+  creaGraficoVendite();
 };
 
 async function loadArtisanReportList() {
@@ -155,4 +156,41 @@ function rimuoviArtigiano(id) {
       console.error("Errore nella richiesta di eliminazione:", error);
       alert("Errore imprevisto durante la rimozione.");
     });
+}
+
+async function creaGraficoVendite() {
+  try {
+    const response = await fetch('http://localhost:3000/api/sales');
+    if (!response.ok) throw new Error('Errore nel recupero dei dati');
+
+    const dati = await response.json();
+
+    const ctx = document.getElementById('venditeChart').getContext('2d');
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: dati.labels,
+        datasets: [{
+          label: 'Vendite mensili',
+          data: dati.dati,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 2,
+          fill: true,
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+  } catch (errore) {
+    console.error('Errore nel caricamento del grafico:', errore);
+  }
 }

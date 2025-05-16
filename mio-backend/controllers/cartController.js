@@ -68,7 +68,7 @@ const removeFromCart = async (req, res) => {
 };
 
 const clearCart = async (req, res) => {
-  const { userId } = req.body;
+  const userId = req.user.user_id; // <-- qui!
   try {
     const clearedCart = await cartService.clearCart(userId);
     if (!clearedCart) {
@@ -88,7 +88,8 @@ const clearCart = async (req, res) => {
       message: err.message || 'Errore nello svuotamento del carrello'
     });
   }
-}
+};
+
 
 
 module.exports = {

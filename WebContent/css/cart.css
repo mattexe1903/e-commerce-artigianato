@@ -20,7 +20,6 @@ header {
   font-weight: bold;
   color: #f5b400;
   flex: 0 0 200px;
-  /* Larghezza fissa ma responsiva */
   text-align: center;
 }
 
@@ -41,7 +40,8 @@ section {
 
 .cart-table {
   flex: 1;
-  min-width: 600px;
+  min-width: 0;
+  overflow-x: auto;
 }
 
 .cart-header,
@@ -79,6 +79,7 @@ section {
   padding: 20px;
   min-width: 250px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
 }
 
 .cart-summary h3 {
@@ -121,27 +122,7 @@ section {
   cursor: pointer;
 }
 
-@media (max-width: 768px) {
-  header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .cart-layout {
-    flex-direction: column;
-  }
-
-  .cart-table {
-    min-width: 100%;
-  }
-
-  .cart-summary {
-    width: 100%;
-  }
-}
-
-/* Tutto il resto rimane invariato */
-
+/* MODAL */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -199,4 +180,56 @@ section {
   color: red;
   margin-bottom: 10px;
   font-size: 14px;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .cart-layout {
+    flex-direction: column;
+  }
+
+  .cart-table {
+    width: 100%;
+  }
+
+  .cart-summary {
+    width: 100%;
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .cart-header,
+  .cart-item {
+    display: block;
+    text-align: left;
+    padding: 15px;
+  }
+
+  .cart-header span,
+  .cart-item span {
+    display: block;
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 400px) {
+  .modal-content {
+    width: 90%;
+  }
+
+  .modal-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .modal-buttons button {
+    width: 100%;
+  }
 }

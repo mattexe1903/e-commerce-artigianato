@@ -3,14 +3,15 @@ const userService = require('../services/userService');
 
 const sendArtisanRequest = async (req, res) => {
     try {
+      console.log('Richiesta ricevuta:', req.user);
         const { nome, cognome, tipo_artigiano, iban } = req.body;
-        console.log('Ricevuta richiesta segnalazione:', req.body);
+        const user_id = req.user.user_id;
         
         if (!nome || !cognome || !tipo_artigiano || !iban) {
             return res.status(400).json({ message: 'Tutti i campi sono obbligatori.' });
         }
 
-        await reportService.sendArtisanRequest(nome, cognome, tipo_artigiano, iban);
+        await reportService.sendArtisanRequest(user_id, nome, cognome, tipo_artigiano, iban);
 
         return res.status(200).json({ message: 'Richiesta inviata con successo.' });
     } catch (error) {

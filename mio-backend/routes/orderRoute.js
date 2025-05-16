@@ -9,5 +9,10 @@ router.get('/getOrdersByUserId', protect, orderController.getOrdersByUserId);
 
 router.get('/getOrdersByArtisanId', protect, orderController.getOrdersByArtisanId);
 
+router.get('/sales', orderController.getSales);
+
+router.get('/salesByArtisanId', protect, orderController.getDailySalesByArtisan);
+
+
 
 module.exports = router;
