@@ -1,34 +1,43 @@
+const fs = require('fs');
+const path = require('path');
 const productModel = require('../models/productModel');
 
 const getAllProducts = async () => {
-  const products = await productModel.getAllProducts();
-  return products;
-}
+  return await productModel.getAllProducts();
+};
 
 const getProductById = async (id) => {
-  const product = await productModel.getProductById(id);
-  return product;
-}
+  return await productModel.getProductById(id);
+};
 
 const createProduct = async (productData) => {
-  const product = await productModel.createProduct(productData);
-  return product;
-}
+  const newProduct = await productModel.createProduct(productData);
+  return newProduct;
+};
 
 const updateProduct = async (id, productData) => {
-  const product = await productModel.updateProduct(id, productData);
-  return product;
-}
+  return await productModel.updateProduct(id, productData);
+};
+
+const updateProductPhoto = async (id, fileName) => {
+  const imagePath = `/images/${fileName}`;
+  return await productModel.updateProductImage(id, imagePath);
+};
 
 const deleteProduct = async (id) => {
-  const product = await productModel.deleteProduct(id);
-  return product;
-}
+  return await productModel.deleteProduct(id);
+};
+
+const getLatestProducts = async () => {
+  return await productModel.getLatestProducts();
+};
 
 module.exports = {
-    getAllProducts,
-    getProductById, 
-    createProduct,
-    updateProduct,
-    deleteProduct
+  getAllProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  updateProductPhoto,
+  deleteProduct,
+  getLatestProducts
 };
