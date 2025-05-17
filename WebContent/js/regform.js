@@ -98,7 +98,7 @@ window.onload = () => {
 
           localStorage.setItem("user", JSON.stringify(user));
 
-          window.location.href = "homereg.html";
+          window.location.href = "login.html";
         })
         .catch(error => {
           errorMessage.style.display = "block";

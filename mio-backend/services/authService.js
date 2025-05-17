@@ -3,9 +3,13 @@ const userModel = require('../models/userModel');
 
 const login = async (email, password) => {
   const user = await userModel.getUserByEmail(email);
+  const cleanedPassword = password.trim();
   if (!user) throw new Error('Credenziali non valide');
 
-  const validPassword = await bcrypt.compare(password, user.user_password);
+  console.log(user.user_password);
+  console.log(cleanedPassword);
+
+  const validPassword = await bcrypt.compare(cleanedPassword, user.user_password);
   if (!validPassword) throw new Error('Credenziali non valide');
 
   return {
