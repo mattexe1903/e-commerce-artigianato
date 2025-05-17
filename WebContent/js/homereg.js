@@ -1,37 +1,64 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   aggiornaCarrello();
   caricaNuoviArrivi();
-  caricaTuttiProdotti();
+  await caricaTuttiProdotti();
+  caricaCategorie();
 });
 
-function getUserId() {
-  return new URLSearchParams(window.location.search).get("id") || "123";
-}
-
 function vaiAllaPaginaProdotto(idProdotto) {
-  const userId = getUserId();
-  window.location.href = `productsview.html?id=${idProdotto}&user=${userId}`;
+  const token = JSON.parse(localStorage.getItem("token"));
+  window.location.href = `productsview.html?id=${idProdotto}&user=${token}`;
 }
 
 function vaiAlProfilo() {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const token = JSON.parse(localStorage.getItem("token"));
+  console.log("Token:", token);
 
-  if (user && user.id) {
-    window.location.href = "profile.html";
-  } else {
-    alert("Devi essere autenticato per accedere al profilo.");
-    window.location.href = "login.html"; // oppure home.html
-  }
+  fetch('http://localhost:3000/api/user', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+    .then(async response => {
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Registrazione fallita. Controlla i dati.");
+      }
+
+      return data;
+    })
+    .then(data => {
+      switch (data.user_role) {
+        case 1:
+        case 2:
+          window.location.href = "profile.html";
+          break;
+        case 3:
+          window.location.href = "profile.html";
+          break;
+        default:
+          errorMessage.style.display = "block";
+          errorMessage.textContent = "Ruolo non riconosciuto.";
+          return;
+      }
+    })
+    .catch(error => {
+      errorMessage.style.display = "block";
+      errorMessage.textContent = error.message || "Errore di connessione.";
+    });
 }
 
 function logout() {
+  localStorage.removeItem("token");  // Rimuove il token salvato
   alert("Logout effettuato");
-  window.location.href = "../home.html";
+  window.location.href = "../home.html";  // Reindirizza alla home pubblica
 }
 
 function vaiAlCarrello() {
-  const userId = getUserId();
-  window.location.href = `cart.html?user=${userId}`;
+  const token = JSON.parse(localStorage.getItem("token"));
+  window.location.href = `cart.html?user=${token}`;
 }
 
 function toggleAccountMenu() {
@@ -48,92 +75,191 @@ function applicaFiltri() {
   const categoria = document.getElementById("filtro-categoria").value;
   const ordinePrezzo = document.getElementById("filtro-prezzo").value;
   const disponibilita = document.getElementById("filtro-disponibilita").value;
-
+ 
   const lista = document.getElementById("product-list");
-  const prodotti = Array.from(lista.getElementsByClassName("product"));
-
-  let filtrati = prodotti.filter(p => {
-    if (categoria && p.dataset.categoria !== categoria) return false;
+  lista.innerHTML = "";
+ 
+  let filtrati = prodottiList.filter(p => {
+    const cat = p.category_name?.trim().toLowerCase() || '';
+    const selectedCat = categoria.trim().toLowerCase();
+ 
+    if (categoria && cat !== selectedCat) return false;
+ 
+    if (disponibilita === "disponibile" && p.quantity <= 0) return false;
+    if (disponibilita === "non_disponibile" && p.quantity > 0) return false;
+ 
     return true;
   });
-
+ 
   filtrati.sort((a, b) => {
-    if (ordinePrezzo === "asc") return parseFloat(a.dataset.prezzo) - parseFloat(b.dataset.prezzo);
-    if (ordinePrezzo === "desc") return parseFloat(b.dataset.prezzo) - parseFloat(a.dataset.prezzo);
-    if (disponibilita === "disponibile") return parseInt(b.dataset.disponibile) - parseInt(a.dataset.disponibile);
-    if (disponibilita === "non_disponibile") return parseInt(a.dataset.disponibile) - parseInt(b.dataset.disponibile);
+    const prezzoA = parseFloat(a.price);
+    const prezzoB = parseFloat(b.price);
+    if (ordinePrezzo === "asc") return prezzoA - prezzoB;
+    if (ordinePrezzo === "desc") return prezzoB - prezzoA;
     return 0;
   });
-
-  lista.innerHTML = "";
-  filtrati.forEach(p => lista.appendChild(p));
+ 
+  filtrati.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'product';
+    div.dataset.prezzo = p.price ?? '';
+    div.dataset.disponibile = p.quantity > 0 ? '1' : '0';
+    div.dataset.categoria = p.category_name ?? '';
+ 
+    div.onclick = () => vaiAllaPaginaProdotto(p.product_id);
+    div.innerHTML = `
+      <img src="${p.photo ? `http://localhost:3000${p.photo}` : 'http://localhost:3000/images/placeholder.jpg'}"
+      alt="${p.product_id || 'Senza Nome'}"
+      style="width:100px;height:auto;">
+      <div class="product-name">${p.product_name || 'Nome mancante'}</div>
+      <div class="product-price">€ ${Number(p.price).toFixed(2)}</div>
+    `;
+    lista.appendChild(div);
+  });
 }
 
 async function aggiornaCarrello() {
   try {
-    const userId = getUserId();
-    const res = await fetch(`/api/cart/${userId}`);
-    const prodottiNelCarrello = await res.json();
+    const token = JSON.parse(localStorage.getItem("token"));
+    if (!token) throw new Error("Token non disponibile. Effettua il login.");
 
-    const totale = prodottiNelCarrello.reduce((acc, p) => acc + p.price, 0);
+    const response = await fetch(`http://localhost:3000/api/cart`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const resJson = await response.json();
+
+    if (!response.ok) {
+      throw new Error(resJson.message || "Errore nel recupero del carrello.");
+    }
+
+    const prodottiNelCarrello = resJson.cart;
+
+    if (!Array.isArray(prodottiNelCarrello)) {
+      throw new Error("Formato dati non valido per il carrello.");
+    }
+
+    console.log("Prodotti nel carrello:", prodottiNelCarrello);
+
+    const totale = prodottiNelCarrello.reduce((acc, item) => {
+      const prezzo = item.product?.price || item.price || 0;
+      const quantita = item.quantity || 1;
+      return acc + (prezzo * quantita);
+    }, 0);
+
+
     document.getElementById("cart-count").innerText = `(${prodottiNelCarrello.length})`;
     document.getElementById("cart-total").innerText = `€${totale.toFixed(2)}`;
-  } catch (err) {
-    console.error("Errore aggiornamento carrello:", err);
+
+  } catch (error) {
+    console.error("Errore aggiornamento carrello:", error.message || error);
   }
 }
 
 async function caricaNuoviArrivi() {
+  const track = document.getElementById("carousel-track");
+
+  if (!track) {
+    console.error("Elemento carousel-track non trovato nel DOM.");
+    return;
+  }
+
   try {
-    const res = await fetch('/api/products/new');
-    const nuoviProdotti = await res.json();
+    const response = await fetch('http://localhost:3000/api/latest');
 
-    const track = document.getElementById("carousel-track");
-    track.innerHTML = "";
+    if (!response.ok) throw new Error(`Errore HTTP: ${response.status}`);
 
-    nuoviProdotti.forEach(p => {
-      const div = document.createElement("div");
-      div.className = "product";
-      div.onclick = () => vaiAllaPaginaProdotto(p.id);
+    const dati = await response.json();
+
+    const prodotti = Array.isArray(dati.products) ? dati.products : [];
+
+    prodotti.forEach(prodotto => {
+      const div = document.createElement('div');
+      div.className = 'product';
+      div.onclick = () => vaiAllaPaginaProdotto(prodotto.product_id);
+
       div.innerHTML = `
-        <img src="${p.image}" alt="${p.name}">
-        <div>${p.name}</div>
-        <div>€${p.price.toFixed(2)}</div>
+        <img src="${prodotto.photo ? `http://localhost:3000${prodotto.photo}` : 'http://localhost:3000/images/placeholder.jpg'}"
+        alt="${prodotto.product_id || 'Senza Nome'}"
+        style="width:100px;height:75px;">
+        <div class="product-name">${prodotto.product_name || 'Nome mancante'}</div>
+        <div class="product-price">€ ${Number(prodotto.price).toFixed(2)}</div>
       `;
+
       track.appendChild(div);
     });
 
-    // Duplica per effetto carousel
-    track.innerHTML += track.innerHTML;
-  } catch (err) {
-    console.error("Errore nel caricamento dei nuovi arrivi:", err);
+  } catch (error) {
+    console.error('Errore nel caricare i nuovi arrivi:', error);
   }
 }
 
+let prodottiList = [];
+
 async function caricaTuttiProdotti() {
+  const lista = document.getElementById("product-list");
+  lista.innerHTML = "";
+
   try {
-    const res = await fetch('/api/products');
-    const prodotti = await res.json();
+    const response = await fetch('http://localhost:3000/api/products');
+    if (!response.ok) throw new Error(`Errore HTTP: ${response.status}`);
 
-    const lista = document.getElementById("product-list");
-    lista.innerHTML = "";
+    const dati = await response.json();
+    const arrayProdotti = Array.isArray(dati.products) ? dati.products : [];
 
-    prodotti.forEach(p => {
-      const div = document.createElement("div");
-      div.className = "product";
-      div.dataset.id = p.id;
-      div.dataset.prezzo = p.price;
-      div.dataset.disponibile = p.available ? "1" : "0";
-      div.dataset.categoria = p.category;
-      div.onclick = () => vaiAllaPaginaProdotto(p.id);
+    prodottiList = arrayProdotti;
+
+    arrayProdotti.forEach(prodotto => {
+      const div = document.createElement('div');
+      div.className = 'product';
+      div.dataset.prezzo = prodotto.price ?? '';
+      div.dataset.disponibile = prodotto.quantity > 0 ? '1' : '0';
+      div.dataset.categoria = prodotto.category_name ?? '';
+
+      div.onclick = () => vaiAllaPaginaProdotto(prodotto.product_id);
       div.innerHTML = `
-        <img src="${p.image}" alt="${p.name}">
-        <div>${p.name}</div>
-        <div>€${p.price.toFixed(2)}</div>
+        <img src="${prodotto.photo ? `http://localhost:3000${prodotto.photo}` : 'http://localhost:3000/images/placeholder.jpg'}"
+        alt="${prodotto.product_id || 'Senza Nome'}"
+        style="width:100px;height:75px;">
+        <div class="product-name">${prodotto.product_name || 'Nome mancante'}</div>
+        <div class="product-price">€ ${Number(prodotto.price).toFixed(2)}</div>
       `;
+
       lista.appendChild(div);
     });
-  } catch (err) {
-    console.error("Errore nel caricamento dei prodotti:", err);
+  } catch (error) {
+    console.error('Errore nel caricare i prodotti:', error);
+    lista.innerHTML = "<p>Errore nel caricare i prodotti.</p>";
+  }
+}
+
+async function caricaCategorie() {
+  const selectCategoria = document.getElementById("filtro-categoria");
+  selectCategoria.innerHTML = "";
+
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "Tutte le categorie";
+  selectCategoria.appendChild(defaultOption);
+
+  try {
+    const response = await fetch('http://localhost:3000/api/categories');
+    if (!response.ok) throw new Error("Errore nel recupero delle categorie");
+
+    const result = await response.json();
+    const categorie = result.categories;
+
+    categorie.forEach(c => {
+      const option = document.createElement("option");
+      option.value = c.category_name;
+      option.textContent = c.category_name;
+      selectCategoria.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Errore nel caricamento delle categorie:", error);
   }
 }

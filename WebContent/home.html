@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 
@@ -5,176 +6,7 @@
   <meta charset="UTF-8">
   <title>Lokal - Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #3b3434;
-      color: #fff;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 30px;
-      background-color: #000;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-      min-height: 37px;
-    }
-
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-      color: #f5b400;
-      flex: 0 0 200px;
-      text-align: center;
-    }
-
-    .header-buttons {
-      display: flex;
-      gap: 8px;
-    }
-
-    .header-buttons button {
-      padding: 6px 10px;
-      background-color: #f5b400;
-      color: #000;
-      font-weight: bold;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      font-size: 14px;
-    }
-
-    .header-buttons button:hover {
-      background-color: #d49f00;
-    }
-
-    /* --- CONTENUTO --- */
-    section {
-      padding: 20px;
-    }
-
-    h2 {
-      color: #f5b400;
-      margin-top: 40px;
-      margin-bottom: 20px;
-    }
-
-    .carousel-container {
-      overflow: hidden;
-      width: 100%;
-      position: relative;
-      margin-bottom: 30px;
-    }
-
-    .carousel-track {
-      display: flex;
-      gap: 20px;
-      animation: scroll-left 40s linear infinite;
-      width: max-content;
-    }
-
-    @keyframes scroll-left {
-      0% {
-        transform: translateX(0);
-      }
-
-      100% {
-        transform: translateX(-50%);
-      }
-    }
-
-    .product-carousel,
-    .product-list {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    .product {
-      background-color: #000;
-      border-radius: 12px;
-      padding: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      transition: transform 0.2s;
-      cursor: pointer;
-      text-align: center;
-      flex: 0 0 160px;
-      margin-right: 20px;
-    }
-
-    .product:hover {
-      transform: scale(1.03);
-    }
-
-    .product img {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-
-    /* Filtri */
-    .filter-container {
-      margin-top: 20px;
-    }
-
-    .filter-container button {
-      padding: 10px 15px;
-      background-color: #f5b400;
-      color: #000;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-bottom: 10px;
-    }
-
-    .filter-container select {
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      margin: 10px 10px 0 0;
-      background-color: #000;
-      color: #f5b400;
-    }
-
-    /* --- Responsive --- */
-    @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 15px 20px;
-      }
-
-      .logo {
-        font-size: 20px;
-        text-align: left;
-        margin-bottom: 10px;
-      }
-
-      .header-buttons {
-        justify-content: flex-end;
-        flex-wrap: wrap;
-        padding: 0;
-      }
-
-      .carousel-track {
-        animation-duration: 60s;
-      }
-
-      .product {
-        flex: 0 0 140px;
-      }
-
-      .product-list {
-        justify-content: center;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="css/home.css">
 </head>
 
 <body>
@@ -190,9 +22,7 @@
   <section>
     <h2>Nuovi arrivi</h2>
     <div class="carousel-container">
-      <div class="carousel-track" id="carousel-track">
-        <!-- Prodotti caricati dinamicamente -->
-      </div>
+      <div class="carousel-track" id="carousel-track"></div>
     </div>
   </section>
 
@@ -204,124 +34,25 @@
       <div id="menu-filtri" style="display: none;">
         <select id="filtro-categoria">
           <option value="">Tutte le categorie</option>
-          <option value="legno">Legno</option>
-          <option value="vetro">Vetro</option>
-          <option value="metallo">Metallo</option>
         </select>
-
         <select id="filtro-prezzo">
           <option value="">Ordina per prezzo</option>
           <option value="asc">Prezzo crescente</option>
           <option value="desc">Prezzo decrescente</option>
         </select>
-
         <select id="filtro-disponibilita">
           <option value="">Ordina per disponibilità</option>
           <option value="disponibile">Disponibili prima</option>
           <option value="non_disponibile">Non disponibili prima</option>
         </select>
-
         <button onclick="applicaFiltri()">Applica</button>
       </div>
     </div>
 
-    <div class="product-list" id="product-list">
-      <!-- Prodotti caricati dinamicamente -->
-    </div>
+    <div class="product-list" id="product-list"></div>
   </section>
 
-  <script>
-    function vaiAllaPaginaProdotto(idProdotto) {
-      window.location.href = `html/productsview.html?id=${idProdotto}`;
-    }
-
-    function toggleFiltri() {
-      const menu = document.getElementById("menu-filtri");
-      menu.style.display = menu.style.display === "none" ? "block" : "none";
-    }
-
-    async function caricaNuoviArrivi() {
-      const track = document.getElementById("carousel-track");
-
-      try {
-        const response = await fetch('/api/nuovi-arrivi');
-        const prodotti = await response.json();
-
-        prodotti.forEach(prodotto => {
-          const div = document.createElement('div');
-          div.className = 'product';
-          div.onclick = () => vaiAllaPaginaProdotto(prodotto.id);
-          div.innerHTML = `
-          <img src="${prodotto.immagine}" alt="${prodotto.nome}">
-          <div>${prodotto.nome}</div>
-          <div>€${prodotto.prezzo.toFixed(2)}</div>
-        `;
-          track.appendChild(div);
-        });
-
-        track.innerHTML += track.innerHTML; // Doppio per carousel infinito
-      } catch (error) {
-        console.error('Errore nel caricare i nuovi arrivi:', error);
-      }
-    }
-
-    async function caricaProdotti() {
-      const lista = document.getElementById("product-list");
-
-      try {
-        const response = await fetch('/api/prodotti');
-        const prodotti = await response.json();
-
-        prodotti.forEach(prodotto => {
-          const div = document.createElement('div');
-          div.className = 'product';
-          div.dataset.prezzo = prodotto.prezzo;
-          div.dataset.disponibile = prodotto.disponibile ? '1' : '0';
-          div.dataset.categoria = prodotto.categoria;
-          div.onclick = () => vaiAllaPaginaProdotto(prodotto.id);
-          div.innerHTML = `
-          <img src="${prodotto.immagine}" alt="${prodotto.nome}">
-          <div>${prodotto.nome}</div>
-          <div>€${prodotto.prezzo.toFixed(2)}</div>
-        `;
-          lista.appendChild(div);
-        });
-      } catch (error) {
-        console.error('Errore nel caricare i prodotti:', error);
-      }
-    }
-
-    function applicaFiltri() {
-      const categoria = document.getElementById("filtro-categoria").value;
-      const ordinePrezzo = document.getElementById("filtro-prezzo").value;
-      const disponibilita = document.getElementById("filtro-disponibilita").value;
-
-      const lista = document.getElementById("product-list");
-      const prodotti = Array.from(lista.getElementsByClassName("product"));
-
-      let filtrati = prodotti.filter(p => {
-        if (categoria && p.dataset.categoria !== categoria) return false;
-        return true;
-      });
-
-      filtrati.sort((a, b) => {
-        if (ordinePrezzo === "asc") return parseFloat(a.dataset.prezzo) - parseFloat(b.dataset.prezzo);
-        if (ordinePrezzo === "desc") return parseFloat(b.dataset.prezzo) - parseFloat(a.dataset.prezzo);
-        if (disponibilita === "disponibile") return parseInt(b.dataset.disponibile) - parseInt(a.dataset.disponibile);
-        if (disponibilita === "non_disponibile") return parseInt(a.dataset.disponibile) - parseInt(b.dataset.disponibile);
-        return 0;
-      });
-
-      lista.innerHTML = "";
-      filtrati.forEach(p => lista.appendChild(p));
-    }
-
-    window.addEventListener("load", () => {
-      caricaNuoviArrivi();
-      caricaProdotti();
-    });
-  </script>
-
+  <script src="js/home.js"></script>
 </body>
 
 </html>

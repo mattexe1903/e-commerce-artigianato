@@ -1,4 +1,3 @@
-
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -10,8 +9,8 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: nowrap;
-  padding: 20px 30px;
+  flex-wrap: wrap;
+  padding: 15px 30px;
   background-color: #000;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 }
@@ -23,50 +22,56 @@ header {
   flex-shrink: 0;
 }
 
-/* Header buttons and dropdown */
 .header-buttons {
   display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   align-items: center;
-  gap: 15px;
-  position: relative;
+  margin-top: 10px;
   margin-left: auto;
 }
 
 .header-buttons button {
-  padding: 8px 12px;
+  padding: 6px 10px;
   background-color: #f5b400;
   color: #000;
   font-weight: bold;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 14px;
   transition: background-color 0.3s;
+  font-size: 14px;
 }
 
 .header-buttons button:hover {
   background-color: #d49f00;
 }
 
-/* Account Icon (Clickable) */
-.account-icon {
-  cursor: pointer;
-  color: #f5b400;
-  font-size: 18px;
+.icon-buttons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
   position: relative;
 }
 
-/* Dropdown menu */
+.account-icon, .cart-icon {
+  cursor: pointer;
+  font-size: 18px;
+  color: #f5b400;
+  position: relative;
+}
+
 .account-dropdown {
   display: none;
   position: absolute;
-  top: 40px;
   right: 0;
+  top: 30px;
   background-color: #000;
   border: 1px solid #f5b400;
   border-radius: 8px;
-  z-index: 1000;
-  min-width: 150px;
+  overflow: hidden;
+  z-index: 10;
 }
 
 .account-dropdown button {
@@ -76,8 +81,6 @@ header {
   background: none;
   border: none;
   color: #f5b400;
-  font-size: 14px;
-  text-align: left;
   cursor: pointer;
 }
 
@@ -85,12 +88,6 @@ header {
   background-color: #222;
 }
 
-/* Show dropdown when active */
-.account-dropdown.show {
-  display: block;
-}
-
-/* ====== CONTENUTO ====== */
 section {
   padding: 20px;
 }
@@ -179,11 +176,10 @@ h2 {
   color: #f5b400;
 }
 
-/* Responsive */
+/* ✅ Responsive migliorato */
 @media (max-width: 600px) {
   header {
     flex-wrap: wrap;
-    justify-content: right;
   }
 
   .logo {
@@ -195,12 +191,14 @@ h2 {
   .header-buttons {
     flex-basis: 100%;
     justify-content: flex-end;
-    flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
   }
 
-  .account-dropdown {
-    right: 10px;
-    top: 50px;
+  .carousel-track {
+    animation-duration: 60s;
+  }
+
+  .product {
+    flex: 0 0 140px;
   }
 }

@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
   <meta charset="UTF-8" />
   <title>Pagamento</title>
   <link rel="stylesheet" href="../css/payment.css" />
   <script defer src="../js/payment.js"></script>
+  <script async src="https://pay.google.com/gp/p/js/pay.js"></script>
+  <script src="../js/gpay.js"></script>
 </head>
+
 <body>
   <!-- HEADER -->
   <header>
@@ -19,19 +23,19 @@
   <main class="cart-layout">
     <!-- RIEPILOGO ORDINE A SINISTRA -->
     <aside class="cart-summary">
-        <h3>🧾 Riepilogo Ordine</h3>
-        <div id="summary-items"></div>
-        <hr />
-        <p>Totale articoli: <span id="total-items">0</span></p>
-        <p>Prezzo articoli: €<span id="items-price">0.00</span></p>
-        <p>Spedizione: €<span id="shipping-cost">5.99</span></p>
-        <hr />
-        <p><strong>Totale: €<span id="total-price">0.00</span></strong></p>
-        
-        <!-- Pulsante Acquisto spostato qui -->
-        <button class="purchase-button" onclick="sendOrder()">Acquista Ora</button>
-      </aside>
-      
+      <h3>🧾 Riepilogo Ordine</h3>
+      <div id="summary-items"></div>
+      <hr />
+      <p>Totale articoli: <span id="total-items">0</span></p>
+      <p>Prezzo articoli: €<span id="items-price">0.00</span></p>
+      <p>Spedizione: €<span id="shipping-cost">5.99</span></p>
+      <hr />
+      <p><strong>Totale: €<span id="total-price">0.00</span></strong></p>
+
+      <!-- Pulsante Acquisto spostato qui -->
+      <button class="purchase-button" onclick="sendOrder()">Acquista Ora</button>
+    </aside>
+
 
     <!-- FORM PAGAMENTO E INDIRIZZO -->
     <div class="form-sections">
@@ -40,10 +44,10 @@
         <h2>📦 Indirizzo di Consegna</h2>
         <form id="address-form" class="grid-form">
           <label>Nome
-            <input type="text" id="address-name" required />
+            <span id="address-name"></span>
           </label>
           <label>Cognome
-            <input type="text" id="address-surname" required />
+            <span id="address-surname"></span>
           </label>
           <label>Via e numero civico
             <input type="text" id="address-street" required />
@@ -70,7 +74,7 @@
         <div class="payment-methods">
           <button type="button" class="pay-option" data-method="card">Carta di Credito</button>
           <button type="button" class="pay-option" data-method="paypal">PayPal</button>
-          <button type="button" class="pay-option" data-method="google">Google Pay</button>
+          <div id="google-pay-button"></div>
           <button type="button" class="pay-option" data-method="apple">Apple Pay</button>
         </div>
         <form id="payment-form" class="grid-form"></form>
@@ -79,6 +83,7 @@
           <span>Salva metodo nel profilo</span>
         </div>
       </section>
+
     </div>
   </main>
 
@@ -93,4 +98,5 @@
     </div>
   </div>
 </body>
+
 </html>

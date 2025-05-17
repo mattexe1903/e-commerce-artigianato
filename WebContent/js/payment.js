@@ -1,44 +1,54 @@
+
+let saveAddressFn;
+
 document.addEventListener("DOMContentLoaded", async () => {
-  const userId = getUserId(); // Recupera l'ID utente da sessione/cookie/URL
-
-  await loadUserData(userId);
-  await loadCartData(userId);
-
+  await loadUserData();
+  await loadCartData();
   setupPaymentSelection();
-  setupSaveCheckboxes();
+  saveAddressFn = await setupSaveCheckboxes();
 });
 
-// 🔹 Recupera dati utente dal backend
-async function loadUserData(userId) {
+function getToken() {
+  return JSON.parse(localStorage.getItem("token"));
+}
+
+async function loadUserData() {
+  const token = getToken();
+
   try {
-    const response = await fetch(`/api/user/${userId}`);
-    const user = await response.json();
+    const response = await fetch('http://localhost:3000/api/userInfo', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
 
-    document.getElementById("addr-name").value = user.name || "";
-    document.getElementById("addr-surname").value = user.surname || "";
-    document.getElementById("addr-street").value = user.address || "";
-    document.getElementById("addr-city").value = user.city || "";
-    document.getElementById("addr-cap").value = user.cap || "";
-    document.getElementById("addr-phone").value = user.phone || "";
+    const data = await response.json();
+    const user = data.user;
+    const address = data.addresses && data.addresses[0];
 
-    if (user.payment && user.payment.type === "card") {
-      document.querySelector("[data-method='card']").click();
-      document.getElementById("payment-card").value = user.payment.card;
-      document.getElementById("payment-expiry").value = user.payment.expiry;
-      document.getElementById("payment-cvv").value = user.payment.cvv;
-      document.getElementById("payment-name").value = user.payment.name;
-    }
+    document.getElementById("address-name").textContent = user.user_name;
+    document.getElementById("address-surname").textContent = user.surname;
+
+    document.getElementById("address-street").value = address?.street_address || "";
+    document.getElementById("address-city").value = address?.city || "";
+    document.getElementById("address-zip").value = address?.cap || "";
+    document.getElementById("address-province").value = address?.province || "";
   } catch (err) {
     console.error("Errore caricamento dati utente:", err);
   }
 }
 
-// 🔹 Recupera riepilogo carrello dal backend
-async function loadCartData(userId) {
+async function loadCartData() {
   try {
-    const res = await fetch(`/api/cart/${userId}`);
-    const cart = await res.json();
+    const token = getToken();
+    if (!token) throw new Error("Utente non autenticato.");
 
+    const res = await fetch(`http://localhost:3000/api/cart`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Errore nel recupero carrello.");
+
+    const prodottiCarrello = data.cart || [];
     const summaryItems = document.getElementById("summary-items");
     const totalItemsSpan = document.getElementById("total-items");
     const itemsPriceSpan = document.getElementById("items-price");
@@ -49,24 +59,28 @@ async function loadCartData(userId) {
 
     summaryItems.innerHTML = "";
 
-    cart.forEach(item => {
+    prodottiCarrello.forEach(item => {
+      const nome = item.product_name || item.name || "Prodotto";
+      const prezzoUnitario = Number(item.product?.price || item.price || 0);
+      const quantita = item.quantity || 1;
+
       const row = document.createElement("p");
-      row.textContent = `${item.name} x${item.quantity} = €${(item.price * item.quantity).toFixed(2)}`;
+      row.textContent = `${nome} x${quantita} = €${(prezzoUnitario * quantita).toFixed(2)}`;
       summaryItems.appendChild(row);
 
-      totalItems += item.quantity;
-      itemsTotal += item.price * item.quantity;
+      totalItems += quantita;
+      itemsTotal += prezzoUnitario * quantita;
     });
 
+    const spedizione = 5.99;
     totalItemsSpan.textContent = totalItems;
     itemsPriceSpan.textContent = itemsTotal.toFixed(2);
-    totalPriceSpan.textContent = (itemsTotal + 5.99).toFixed(2); // Es. spedizione fissa
+    totalPriceSpan.textContent = (itemsTotal + spedizione).toFixed(2);
   } catch (err) {
-    console.error("Errore caricamento carrello:", err);
+    console.error("Errore caricamento carrello:", err.message || err);
   }
 }
 
-// 🔹 Gestione visiva della selezione metodo di pagamento
 function setupPaymentSelection() {
   document.querySelectorAll(".pay-option").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -82,13 +96,13 @@ function setupPaymentSelection() {
       if (method === "card") {
         form.innerHTML = `
           <label>Numero carta
-            <input type="text" id="payment-card" placeholder="•••• •••• •••• ••••" required />
+            <input type="text" id="payment-card" required />
           </label>
           <label>Scadenza
-            <input type="text" id="payment-expiry" placeholder="MM/AA" required />
+            <input type="text" id="payment-expiry" required />
           </label>
           <label>CVV
-            <input type="text" id="payment-cvv" placeholder="123" required />
+            <input type="text" id="payment-cvv" required />
           </label>
           <label>Intestatario
             <input type="text" id="payment-name" required />
@@ -100,75 +114,110 @@ function setupPaymentSelection() {
             <input type="email" id="payment-paypal" required />
           </label>
         `;
+      } else if (method === "google") {
+        form.innerHTML = `
+          <div id="google-pay-button"></div>
+        `;
+        loadGooglePayButton();
       } else {
-        form.innerHTML = `<p style="grid-column: span 2;">Verrai reindirizzato a <strong>${method === "google" ? "Google Pay" : "Apple Pay"}</strong> per completare il pagamento.</p>`;
+        form.innerHTML = `<p style="grid-column: span 2;">Verrai reindirizzato a <strong>Apple Pay</strong> per completare il pagamento.</p>`;
       }
     });
   });
 }
 
-// 🔹 Gestione checkbox "salva indirizzo" e "salva pagamento"
-function setupSaveCheckboxes() {
-  document.getElementById("save-address").addEventListener("change", e => {
-    e.target.dataset.save = e.target.checked;
+function loadGooglePayButton() {
+  const paymentsClient = new google.payments.api.PaymentsClient({ environment: 'TEST' });
+  const button = paymentsClient.createButton({
+    onClick: onGooglePayClicked,
+    allowedPaymentMethods: ['CARD', 'TOKENIZED_CARD']
   });
-  document.getElementById("save-payment").addEventListener("change", e => {
-    e.target.dataset.save = e.target.checked;
-  });
+  document.getElementById("google-pay-button").appendChild(button);
 }
 
-// 🔹 Invio ordine al backend
-async function sendOrder() {
-  const userId = getUserId();
-  const saveAddress = document.getElementById("save-address").checked;
-  const savePayment = document.getElementById("save-payment").checked;
-  const paymentMethod = document.getElementById("payment-form").dataset.method;
+async function setupSaveCheckboxes() {
+  const addressCheckbox = document.getElementById("save-address");
 
-  if (!paymentMethod) {
+  const saveAddress = async (addressData) => {
+    const token = getToken();
+    const shouldSave = addressCheckbox.checked;
+
+    const response = await fetch('http://localhost:3000/api/addAddress', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        address: addressData,
+        saveForUser: shouldSave
+      })
+    });
+
+    if (!response.ok) {
+      console.error("Errore nel salvataggio dell'indirizzo:", await response.text());
+    } else {
+      console.log("Indirizzo salvato con successo.");
+    }
+  };
+
+  return saveAddress;
+}
+
+async function sendOrder() {
+  const token = getToken();
+  const addressData = {
+    street: document.getElementById("address-street").value,
+    city: document.getElementById("address-city").value,
+    cap: document.getElementById("address-zip").value,
+    province: document.getElementById("address-province").value,
+  };
+  const method = document.getElementById("payment-form").dataset.method;
+  const saveAddressChecked = document.getElementById("save-address").checked;
+
+  if (!method) {
     return showPopup("Errore", "Seleziona un metodo di pagamento.");
   }
 
   try {
+    if (saveAddressChecked && typeof saveAddressFn === "function") {
+      await saveAddressFn(addressData);
+    }
+
+    const paymentDetails = getPaymentDetails(method);
+
     const orderData = {
-      userId,
+      token,
       date: new Date().toISOString(),
-      paymentMethod,
-      address: {
-        name: document.getElementById("addr-name").value,
-        surname: document.getElementById("addr-surname").value,
-        street: document.getElementById("addr-street").value,
-        city: document.getElementById("addr-city").value,
-        cap: document.getElementById("addr-cap").value,
-        phone: document.getElementById("addr-phone").value,
-      },
-      paymentDetails: getPaymentDetails(paymentMethod),
-      saveAddress,
-      savePayment,
+      paymentMethod: method,
+      paymentDetails,
+      address: addressData,
+      saveAddress: saveAddressChecked,
     };
 
-    const res = await fetch("/api/order", {
+    const res = await fetch("http://localhost:3000/api/createOrder", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
       body: JSON.stringify(orderData),
     });
 
     const result = await res.json();
+    console.log("Risultato invio ordine:", result);
 
-    if (result.success) {
-      await fetch(`/api/cart/clear/${userId}`, { method: "POST" });
-      showPopup("Ordine completato", "Riceverai una mail con i dettagli.", () => {
-        window.location.href = "/home";
-      });
-    } else {
-      showPopup("Errore", "Ordine fallito. Riprova.");
-    }
+    showPopup("Ordine completato", "Riceverai una mail con i dettagli.", () => {
+      setTimeout(() => {
+        window.location.href = "homereg.html";
+      }, 5000);
+    });
   } catch (err) {
     console.error("Errore invio ordine:", err);
     showPopup("Errore", "Errore durante l'invio dell'ordine.");
   }
 }
 
-// 🔹 Estrai i dati dal form in base al metodo selezionato
 function getPaymentDetails(method) {
   if (method === "card") {
     return {
@@ -183,11 +232,15 @@ function getPaymentDetails(method) {
       type: "paypal",
       email: document.getElementById("payment-paypal").value,
     };
+  } else if (method === "google") {
+    return {
+      type: "google",
+      token: "simulated_google_token"
+    };
   }
   return { type: method };
 }
 
-// 🔹 Mostra popup (modale)
 function showPopup(title, message, callback = null) {
   const popup = document.createElement("div");
   popup.className = "modal-overlay";
@@ -208,7 +261,12 @@ function showPopup(title, message, callback = null) {
   };
 }
 
-// 🔹 Recupera ID utente dall'URL (puoi modificarlo per usare sessione)
-function getUserId() {
-  return new URLSearchParams(window.location.search).get("id");
+function getTotalAmount() {
+  const el = document.getElementById("total-price");
+  if (!el) return '14.99';
+
+  const raw = el.textContent.trim().replace('€', '').replace(',', '.');
+  const parsed = parseFloat(raw);
+
+  return isNaN(parsed) ? '14.99' : parsed.toFixed(2);
 }

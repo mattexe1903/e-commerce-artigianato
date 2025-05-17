@@ -1,28 +1,30 @@
+
+/* LOGIN.CSS */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   background-color: #3b3434;
+  color: #fff;
 }
 
 header {
   display: flex;
-  justify-content: space-between; /* Allinea gli elementi tra loro */
-  align-items: center; /* Allinea verticalmente gli elementi */
-  padding: 20px 30px; /* Mantieni la stessa altezza dell'header */
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
   background-color: #000;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-  flex-wrap: wrap; /* Permette di andare a capo su schermi piccoli */
+  flex-wrap: wrap;
 }
 
 .logo {
   font-size: 24px;
   font-weight: bold;
   color: #f5b400;
-  flex: 0 0 200px; /* Larghezza fissa ma responsiva */
+  flex: 0 0 200px;
   text-align: center;
 }
 
-/* Mantieni le altre regole per il login, i pulsanti e gli altri elementi come sono */
 .login-container {
   background-color: #000;
   color: #fff;
@@ -100,14 +102,6 @@ button:hover {
   width: 100%;
 }
 
-.password-container input {
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
-  border: none;
-  border-radius: 8px;
-}
-
 .toggle-text {
   text-align: right;
   margin-top: -5px;
@@ -123,4 +117,89 @@ button:hover {
 
 .toggle-text a:hover {
   text-decoration: underline;
+}
+
+.password-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.password-label-row a {
+  font-size: 12px;
+  color: #f5b400;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.password-label-row a:hover {
+  text-decoration: underline;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  padding-top: 100px;
+  left: 0; top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+  background-color: #000;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 400px;
+  border-radius: 12px;
+  color: white;
+  text-align: center;
+}
+
+.modal-content h2 {
+  color: #f5b400;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: none;
+  background-color: #222;
+  color: #fff;
+}
+
+.modal-content button {
+  width: 100%;
+  padding: 12px;
+  background-color: #f5b400;
+  color: #000;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.modal-content button:hover {
+  background-color: #d49f00;
+}
+
+.modal .close {
+  float: right;
+  font-size: 24px;
+  cursor: pointer;
+  color: #f5b400;
+}
+
+#resetMessage {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
 }

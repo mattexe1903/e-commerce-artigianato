@@ -1,78 +1,187 @@
+let categoriesMap = [];
+let prodottoOriginale = {};
+
 window.onload = async function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('id');
-  
-    if (productId) {
-      try {
-        const response = await fetch(`/api/prodotti/${productId}`);
-        if (response.ok) {
-          const prodotto = await response.json();
-          document.getElementById('product-img').src = prodotto.imgUrl;
-          document.getElementById('product-name').innerText = prodotto.nome;
-          document.getElementById('product-category').innerText = prodotto.categoria;
-          document.getElementById('product-description-text').innerText = prodotto.descrizione;
-          document.getElementById('product-price').innerText = prodotto.prezzo;
-          document.getElementById('product-quantity').innerText = prodotto.quantita;
-        } else {
-          console.error('Errore nel caricamento del prodotto.');
-        }
-      } catch (error) {
-        console.error('Errore di rete:', error);
-      }
+  const urlParams = new URLSearchParams(window.location.search);
+  const productId = urlParams.get('id');
+  const tokenRaw = localStorage.getItem("token");
+  const token = tokenRaw && tokenRaw !== "null" ? JSON.parse(tokenRaw) : null;
+
+  await caricaCategorie();
+
+  if (!productId) return;
+
+  try {
+    const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
+      headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+    });
+
+    if (!response.ok) throw new Error('Errore nel caricamento del prodotto');
+
+    const { product } = await response.json();
+
+    document.getElementById('product-img').src = product.photo
+      ? `http://localhost:3000${product.photo}`
+      : 'http://localhost:3000/images/placeholder.jpg';
+
+    document.getElementById('product-name').value = product.product_name || "";
+    document.getElementById('product-description-text').value = product.photo_description || "";
+    document.getElementById('product-price').value = product.price || "0.00";
+    document.getElementById('product-quantity').value = product.quantity || "0";
+
+    const categoriaSelect = document.getElementById('product-category');
+    const categoryIdStr = String(product.category_id);
+
+    if ([...categoriaSelect.options].some(opt => opt.value === categoryIdStr)) {
+      categoriaSelect.value = categoryIdStr;
     }
+
+    prodottoOriginale = {
+      product_name: product.product_name || "",
+      photo_description: product.photo_description || "",
+      price: parseFloat(product.price) || 0,
+      quantity: parseInt(product.quantity) || 0,
+      category_id: product.category_id
+    };
+
+  } catch (error) {
+    console.error('❌ Errore nel caricamento del prodotto:', error);
+  }
+};
+
+async function caricaCategorie() {
+  const selectCategoria = document.getElementById("product-category");
+  selectCategoria.innerHTML = `<option value="" disabled selected>Seleziona categoria</option>`;
+
+  try {
+    const response = await fetch('http://localhost:3000/api/categories-info');
+    const result = await response.json();
+
+    categoriesMap = result.categories;
+
+    result.categories.forEach((c) => {
+      const option = document.createElement("option");
+      option.value = c.category_id; // campo corretto
+      option.textContent = c.category_name;
+      selectCategoria.appendChild(option);
+    });
+  } catch (error) {
+    console.error("❌ Errore nel caricamento delle categorie:", error);
+  }
+}
+
+async function salvaModificheProdotto() {
+  const productId = new URLSearchParams(window.location.search).get('id');
+  const tokenRaw = localStorage.getItem("token");
+  const token = tokenRaw && tokenRaw !== "null" ? JSON.parse(tokenRaw) : null;
+
+  const nome = document.getElementById('product-name').value.trim();
+  const descrizione = document.getElementById('product-description-text').value.trim();
+  const prezzo = parseFloat(document.getElementById('product-price').value.trim());
+  const quantita = parseInt(document.getElementById('product-quantity').value.trim());
+  const categoriaId = Number(document.getElementById('product-category').value);
+
+  if (!nome || isNaN(prezzo) || isNaN(quantita) || isNaN(categoriaId) || categoriaId <= 0) {
+    alert("⚠️ Compila correttamente tutti i campi, inclusa la categoria.");
+    return;
+  }
+
+  const modifiche = {
+    product_name: nome,
+    photo_description: descrizione,
+    price: prezzo,
+    quantity: quantita,
+    category_id: categoriaId
   };
-  
-  function enableEdit(id) {
-    const element = document.getElementById(id);
-  
-    if (element.tagName === "SPAN" || element.tagName === "H2" || element.tagName === "P") {
-      element.contentEditable = "true";
-      element.classList.add('editing');
-    }
-  
-    const parent = element.closest('.editable-field');
-    const editBtn = parent.querySelector('.edit-btn');
-    const saveBtn = parent.querySelector('.save-btn');
-  
-    editBtn.style.display = 'none';
-    saveBtn.style.display = 'inline-block';
+
+  const modificheUguali =
+    modifiche.product_name === prodottoOriginale.product_name &&
+    modifiche.photo_description === prodottoOriginale.photo_description &&
+    modifiche.price === prodottoOriginale.price &&
+    modifiche.quantity === prodottoOriginale.quantity &&
+    modifiche.category_id === prodottoOriginale.category_id;
+
+  if (modificheUguali) {
+    alert("ℹ️ Nessuna modifica da salvare.");
+    return;
   }
-  
-  async function saveEdit(id) {
-    const element = document.getElementById(id);
-    element.contentEditable = "false";
-    element.classList.remove('editing');
-  
-    let newValue = element.innerText.trim();
-  
-    const parent = element.closest('.editable-field');
-    const editBtn = parent.querySelector('.edit-btn');
-    const saveBtn = parent.querySelector('.save-btn');
-  
-    editBtn.style.display = 'inline-block';
-    saveBtn.style.display = 'none';
-  
-    const productId = new URLSearchParams(window.location.search).get('id');
-    if (!productId) return;
-  
-    try {
-      const body = { field: id, value: newValue };
-  
-      const response = await fetch(`/api/prodotti/${productId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      });
-  
-      if (!response.ok) {
-        console.error('Errore durante il salvataggio.');
-      } else {
-        console.log('Modifica salvata.');
-      }
-    } catch (error) {
-      console.error('Errore di rete:', error);
+
+  try {
+    const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+      },
+      body: JSON.stringify(modifiche)
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      alert(`Errore: ${err.message || "Errore durante il salvataggio"}`);
+    } else {
+      alert("✅ Prodotto aggiornato con successo!");
+      prodottoOriginale = { ...modifiche };
     }
+  } catch (error) {
+    console.error("❌ Errore durante la richiesta PUT:", error);
+    alert("Errore di rete durante l'aggiornamento.");
   }
-  
+}
+
+document.getElementById("image-upload").addEventListener("change", async function () {
+  const file = this.files[0];
+  const productId = new URLSearchParams(window.location.search).get('id');
+  const tokenRaw = localStorage.getItem("token");
+  const token = tokenRaw && tokenRaw !== "null" ? JSON.parse(tokenRaw) : null;
+
+  if (!file || !productId) return;
+
+  const formData = new FormData();
+  formData.append("photo", file);
+
+  try {
+    const response = await fetch(`http://localhost:3000/api/products/${productId}/photo`, {
+      method: 'PATCH',
+      headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+      body: formData
+    });
+
+    if (response.ok) {
+      alert("✅ Immagine aggiornata con successo!");
+      location.reload();
+    } else {
+      alert("❌ Errore durante l'aggiornamento dell'immagine.");
+    }
+  } catch (error) {
+    console.error("❌ Errore PATCH:", error);
+    alert("Errore di rete durante l'upload.");
+  }
+});
+
+async function eliminaProdotto() {
+  const conferma = confirm("Sei sicuro di voler eliminare questo prodotto?");
+  if (!conferma) return;
+
+  const productId = new URLSearchParams(window.location.search).get('id');
+  const tokenRaw = localStorage.getItem("token");
+  const token = tokenRaw && tokenRaw !== "null" ? JSON.parse(tokenRaw) : null;
+
+  try {
+    const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
+      method: 'DELETE',
+      headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+    });
+
+    if (response.ok) {
+      alert("🗑️ Prodotto eliminato con successo.");
+      window.location.href = "profile.html";
+    } else {
+      const error = await response.json();
+      alert("Errore durante l'eliminazione: " + (error.message || "Errore sconosciuto."));
+    }
+  } catch (error) {
+    console.error("❌ Errore DELETE:", error);
+    alert("Errore di rete durante l'eliminazione.");
+  }
+}
