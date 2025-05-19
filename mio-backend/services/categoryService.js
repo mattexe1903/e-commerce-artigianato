@@ -19,6 +19,6 @@ const getAllCategoriesInfo = async () => {
 };
 
 module.exports = {
-    getAllCategories,
-    getAllCategoriesInfo
+  getAllCategories,
+  getAllCategoriesInfo
 };

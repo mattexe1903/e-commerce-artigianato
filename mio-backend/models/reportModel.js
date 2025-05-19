@@ -47,7 +47,7 @@ const getArtisanIdByReportId = async (reportId) => {
     WHERE report_id = $1
   `;
   const result = await pool.query(query, [reportId]);
-  return result.rows[0] ? result.rows[0].user_id : null;  
+  return result.rows[0] ? result.rows[0].user_id : null;
 }
 
 const insertSignal = async (userId, title, message, status) => {
@@ -80,7 +80,7 @@ module.exports = {
   createReport,
   getArtisanRequests,
   updateReportState,
-  getArtisanIdByReportId, 
+  getArtisanIdByReportId,
   insertSignal,
   getSignals
 };

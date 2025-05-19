@@ -1,7 +1,6 @@
 const path = require('path');
 const fs = require('fs');
 const productService = require('../services/productService');
-const { get } = require('http');
 
 const getAllProducts = async (req, res) => {
   try {
@@ -35,7 +34,6 @@ const getProductById = async (req, res) => {
 const createProduct = async (req, res) => {
   const { product_name, photo_description, price, quantity, category_id, user_id } = req.body;
   try {
-    // Crea il prodotto senza immagine per ottenere il product_id
     const newProduct = await productService.createProduct({
       product_name,
       photo: 'placeholder.jpg', // Immagine temporanea
@@ -46,7 +44,6 @@ const createProduct = async (req, res) => {
       user_id
     });
 
-    // Se è stato caricato un file
     if (req.file) {
       const extension = path.extname(req.file.originalname);
       const newFileName = `${newProduct.product_id}${extension}`;
@@ -79,9 +76,7 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   const { id } = req.params;
-  console.log('messaggio', req.body);
   const { product_name, photo_description, price, quantity, category_id } = req.body;
-
 
   try {
     const updatedProduct = await productService.updateProduct(id, {
@@ -121,7 +116,7 @@ const updateProductPhoto = async (req, res) => {
 
     const extension = path.extname(req.file.originalname);
     const fileName = `${id}${extension}`;
-    const newPath = path.join(__dirname, '..','..', 'WebContent', 'images', fileName);
+    const newPath = path.join(__dirname, '..', '..', 'WebContent', 'images', fileName);
 
     fs.renameSync(req.file.path, newPath);
 

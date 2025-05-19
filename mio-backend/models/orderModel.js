@@ -56,8 +56,6 @@ const addTempAddress = async (street_address, city, cap, province) => {
   try {
     await client.query('BEGIN');
 
-    console.log('Aggiunta indirizzo temporaneo:', street_address, city, cap, province);
-    
     const result = await client.query(
       `INSERT INTO address (street_address, city, cap, province, country)
        VALUES ($1, $2, $3, $4, 'Italia')
@@ -148,7 +146,6 @@ const getOrdersByArtisanId = async (artisanId) => {
   const client = await pool.connect();
 
   try {
-    // Primo: recupera gli ordini che contengono almeno un prodotto dell'artigiano
     const ordersResult = await client.query(
       `SELECT DISTINCT o.order_id, o.order_date, o.total, s.state_name
        FROM orders o
@@ -162,7 +159,6 @@ const getOrdersByArtisanId = async (artisanId) => {
 
     const orders = ordersResult.rows;
 
-    // Secondo: per ogni ordine, recupera SOLO i prodotti legati all'artigiano
     for (const order of orders) {
       const productsResult = await client.query(
         `SELECT 
@@ -254,7 +250,7 @@ const getDailySalesByArtisan = async (artisanId) => {
 
 module.exports = {
   createOrderFromCart,
-  addTempAddress, 
+  addTempAddress,
   findAddress,
   getOrdersByUserId,
   getOrdersByArtisanId,

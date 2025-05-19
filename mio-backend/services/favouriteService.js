@@ -28,7 +28,7 @@ const getAllFavourites = async (userId) => {
 };
 
 module.exports = {
-    addProductToFavourites, 
+    addProductToFavourites,
     removeProductFromFavourites,
     getAllFavourites
 };

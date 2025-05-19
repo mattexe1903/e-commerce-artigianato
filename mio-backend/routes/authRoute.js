@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
-const pool = require('../db');
 
 // Route login
 router.post('/login', authController.login);

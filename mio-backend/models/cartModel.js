@@ -48,8 +48,6 @@ const addToCart = async (userId, productId, quantity) => {
   return result;
 };
 
-
-
 const removeFromCart = async (userId, productId, quantityToRemove) => {
   const cartResult = await pool.query(
     'SELECT cart_id FROM carts WHERE user_id = $1',
@@ -95,7 +93,7 @@ const clearCart = async (userId) => {
   );
 
   if (cartResult.rows.length === 0) {
-    return null; 
+    return null;
   }
 
   const cartId = cartResult.rows[0].cart_id;
@@ -112,7 +110,6 @@ const clearCart = async (userId) => {
 
   return deleteCartResult.rows[0];
 };
-
 
 module.exports = {
   getCartInfo,

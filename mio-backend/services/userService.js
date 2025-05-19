@@ -8,7 +8,7 @@ const getUserInfo = async (userId) => {
         console.error('Error fetching user info:', error);
         throw error;
     }
-}; 
+};
 
 const getArtigianiInfo = async (userId) => {
     try {
@@ -30,10 +30,8 @@ const getUserInformation = async (userId) => {
     }
 };
 
-// Aggiunta della funzione per aggiornare la password
 const updatePassword = async (userId, newPassword) => {
     try {
-        // Chiama il model per aggiornare la password
         const updatedUser = await userModel.updatePassword(userId, newPassword);
         return updatedUser;
     } catch (error) {
@@ -60,7 +58,7 @@ const addUserAddress = async (userId, street_address, city, cap, province) => {
         console.error('Error adding address:', error);
         throw error;
     }
-}; 
+};
 
 const getInventory = async (userId) => {
     try {

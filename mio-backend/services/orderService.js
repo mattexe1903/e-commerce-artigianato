@@ -59,11 +59,11 @@ const getDailySalesByArtisan = async (artisanId) => {
 };
 
 module.exports = {
-    createOrderFromCart, 
-    addTempAddress, 
-    findAddress, 
-    getOrdersByUserId,
-    getOrdersByArtisanId,
-    getSales,
-    getDailySalesByArtisan
+  createOrderFromCart,
+  addTempAddress,
+  findAddress,
+  getOrdersByUserId,
+  getOrdersByArtisanId,
+  getSales,
+  getDailySalesByArtisan
 };

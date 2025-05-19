@@ -38,9 +38,6 @@ const register = async (nome, cognome, email, password, ruolo) => {
 }
 
 const saveArtigianoDetails = async (userId, craft, iban) => {
-  //const existingArtigiano = await userModel.getArtigianoByUserId(userId);
-  //if (existingArtigiano) throw new Error('Artigiano già registrato');
-
   const newArtigiano = await userModel.createArtigiano(userId, craft, iban);
   return newArtigiano;
 }

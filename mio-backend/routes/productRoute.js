@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../middleware/uploadMiddleware'); // Usa il middleware centralizzato
+const upload = require('../middleware/uploadMiddleware');
 const productController = require('../controllers/productController');
 const favouriteController = require('../controllers/favouriteController');
 const { protect } = require('../middleware/userMiddleware');
-
 
 // Route per ottenere tutti i prodotti
 router.get('/products', productController.getAllProducts);

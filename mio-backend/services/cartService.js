@@ -10,7 +10,7 @@ const addToCart = async (userId, productId, quantity) => {
   return cart;
 }
 
-const removeFromCart = async (userId, productId, quantity ) => {
+const removeFromCart = async (userId, productId, quantity) => {
   const cart = await cartModel.removeFromCart(userId, productId, quantity);
   return cart;
 }
@@ -21,8 +21,8 @@ const clearCart = async (userId) => {
 }
 
 module.exports = {
-    getCartInfo,
-    addToCart,
-    removeFromCart, 
-    clearCart
+  getCartInfo,
+  addToCart,
+  removeFromCart,
+  clearCart
 };

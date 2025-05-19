@@ -36,4 +36,4 @@ app.get('/reset-password', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'WebContent', 'html', 'reset-password.html'));
 });
 
-module.exports = app; // ✅ questa riga è fondamentale
+module.exports = app;
