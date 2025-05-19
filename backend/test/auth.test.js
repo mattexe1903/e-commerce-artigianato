@@ -1,7 +1,7 @@
 const request = require('supertest');
-require('dotenv').config({ path: './backend/.env' });
+require('dotenv').config({ path: '../.env' });
 const app = require('../app');
-const pool = require('../../db/db'); 
+const pool = require('../db');
 
 describe('Test Auth Routes', () => {
   // Cleanup: elimina utenti di test

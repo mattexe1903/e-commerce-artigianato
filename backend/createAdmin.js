@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const db = require('../db/db');
+const db = require('../db');
 
 const createAdmin = async () => {
   const email = 'admin@example.com';

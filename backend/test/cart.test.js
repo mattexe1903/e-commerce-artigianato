@@ -1,10 +1,10 @@
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
-require('dotenv').config({ path: '../backend/.env' });
+require('dotenv').config({ path: '../.env' });
 
-const app = require('../backend/app');
+const app = require('../app');
 
-const pool = require('../db/db');
+const pool = require('../db');
 
 let token;
 let userId;

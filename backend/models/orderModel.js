@@ -1,4 +1,4 @@
-const pool = require('../../db/db');
+const pool = require('../db');
 const { getCartInfo, clearCart } = require('../models/cartModel');
 
 const createOrderFromCart = async (userId, addressId) => {

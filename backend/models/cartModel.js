@@ -1,4 +1,4 @@
-const pool = require('../../db/db');
+const pool = require('../db');
 
 const getCartInfo = async (userId) => {
   const result = await pool.query('SELECT products.product_id, products.product_name, products.photo, products.photo_description, products.price, products.creation_date, carts_products.quantity FROM carts_products JOIN products ON carts_products.product_id = products.product_id JOIN carts ON carts.cart_id = carts_products.cart_id WHERE carts.user_id = $1', [userId]);
