@@ -1,9 +1,9 @@
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
-require('dotenv').config({ path: './mio-backend/.env' });
+require('dotenv').config({ path: './backend/.env' });
 
-const app = require('../mio-backend/app');
-const pool = require('../mio-backend/db');
+const app = require('../backend/app');
+const pool = require('../backend/db');
 
 let testUserId;
 let testEmail;

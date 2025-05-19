@@ -2,15 +2,14 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const pool = require('./db');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, '..', 'WebContent')));
-app.use('/images', express.static(path.join(__dirname, '..', 'WebContent', 'images')));
+app.use(express.static(path.join(__dirname, '..', 'frontend')));
+app.use('/images', express.static(path.join(__dirname, '..', 'frontend', 'images')));
 
 const authRoutes = require('./routes/authRoute');
 const productRoutes = require('./routes/productRoute');
@@ -33,7 +32,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/reset-password', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'WebContent', 'html', 'reset-password.html'));
+  res.sendFile(path.join(__dirname, '..', 'frontend', 'html', 'reset-password.html'));
 });
 
 module.exports = app;

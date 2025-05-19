@@ -1,6 +1,6 @@
 const request = require('supertest');
-const app = require('../mio-backend/app');
-require('dotenv').config({ path: './mio-backend/.env' });
+const app = require('../backend/app');
+require('dotenv').config({ path: './backend/.env' });
 
 
 describe('Test del backend e-commerce', () => {

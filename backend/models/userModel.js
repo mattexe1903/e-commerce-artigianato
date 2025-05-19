@@ -1,5 +1,4 @@
-const pool = require('../db');
-const bcrypt = require('bcrypt');
+const pool = require('../../db/db');
 
 const getUserByEmail = async (email) => {
   const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);

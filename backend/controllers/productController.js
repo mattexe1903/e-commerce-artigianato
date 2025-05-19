@@ -48,7 +48,7 @@ const createProduct = async (req, res) => {
       const extension = path.extname(req.file.originalname);
       const newFileName = `${newProduct.product_id}${extension}`;
       const oldPath = req.file.path;
-      const imageDir = path.join(__dirname, '..', '..', 'WebContent', 'images');
+      const imageDir = path.join(__dirname, '..', '..', 'frontend', 'images');
       const newPath = path.join(imageDir, newFileName);
 
       if (!fs.existsSync(imageDir)) {
@@ -116,7 +116,7 @@ const updateProductPhoto = async (req, res) => {
 
     const extension = path.extname(req.file.originalname);
     const fileName = `${id}${extension}`;
-    const newPath = path.join(__dirname, '..', '..', 'WebContent', 'images', fileName);
+    const newPath = path.join(__dirname, '..', '..', 'frontend', 'images', fileName);
 
     fs.renameSync(req.file.path, newPath);
 

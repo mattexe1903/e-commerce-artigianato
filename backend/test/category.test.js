@@ -1,7 +1,7 @@
-require('dotenv').config({ path: './mio-backend/.env' });
+require('dotenv').config({ path: './backend/.env' });
 const request = require('supertest');
-const app = require('../mio-backend/app');
-const pool = require('../mio-backend/db');
+const app = require('../backend/app');
+const pool = require('../backend/db');
 
 let insertedCategoryId;
 

@@ -4,7 +4,7 @@ const path = require('path');
 // Configurazione di Multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const imagesDir = path.join(__dirname, '..', '..', 'WebContent', 'images');
+    const imagesDir = path.join(__dirname, '..', '..', 'frontend', 'images');
     cb(null, imagesDir);
   },
   filename: function (req, file, cb) {

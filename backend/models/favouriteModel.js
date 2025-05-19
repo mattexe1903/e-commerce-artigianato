@@ -1,4 +1,4 @@
-const pool = require('../db');
+const pool = require('../../db/db');
 
 const getAllFavourites = async (userId) => {
   const result = await pool.query(` SELECT f.user_id, f.product_id, p.product_name, p.photo, p.price FROM favorites f JOIN products p ON f.product_id = p.product_id WHERE f.user_id = $1`, [userId]);
