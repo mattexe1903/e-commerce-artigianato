@@ -124,8 +124,7 @@ function applicaFiltri() {
     div.onclick = () => vaiAllaPaginaProdotto(p.product_id);
     div.innerHTML = `
       <img src="${p.photo ? `http://localhost:3000${p.photo}` : 'http://localhost:3000/images/placeholder.jpg'}"
-      alt="${p.product_id || 'Senza Nome'}"
-      style="width:100px;height:auto;">
+      alt="${p.product_id || 'Senza Nome'}">
       <div class="product-name">${p.product_name || 'Nome mancante'}</div>
       <div class="product-price">€ ${Number(p.price).toFixed(2)}</div>
     `;
