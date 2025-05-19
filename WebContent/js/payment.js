@@ -204,8 +204,7 @@ async function sendOrder() {
     });
 
     const result = await res.json();
-    console.log("Risultato invio ordine:", result);
-
+    
     showPopup("Ordine completato", "Riceverai una mail con i dettagli.", () => {
       setTimeout(() => {
         window.location.href = "homereg.html";

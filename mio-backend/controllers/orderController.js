@@ -1,5 +1,8 @@
+const nodemailer = require('nodemailer');
 const orderService = require('../services/orderService');
 const userService = require('../services/userService');
+const userModel = require('../models/userModel'); // serve per recuperare i dati utente (nome, email)
+const orderModel = require('../models/orderModel'); // serve per ottenere i dettagli dell’ordine
 
 const createOrder = async (req, res) => {
   const userId = req.user.user_id;
@@ -14,16 +17,8 @@ const createOrder = async (req, res) => {
   } = req.body;
 
   try {
-    /*if (!street_address || !city || !cap || !province) {
-      return res.status(400).json({ message: 'Dati indirizzo mancanti' });
-    }*/
-
     let finalAddressId;
-
     const existingAddress = await orderService.findAddress(street_address, city, cap, province);
-
-    console.log('Indirizzo esistente:', existingAddress);
-    console.log('Salva indirizzo:', saveAddress);
 
     if (existingAddress) {
       finalAddressId = existingAddress.addres_id;
@@ -35,18 +30,56 @@ const createOrder = async (req, res) => {
       finalAddressId = tmpAddress.rows[0].addres_id;
     }
 
-    console.log('ID indirizzo finale:', finalAddressId);
     const result = await orderService.createOrderFromCart(userId, finalAddressId);
+
     if (result.success) {
-      res.status(201).json({ message: 'Ordine creato con successo', orderId: result.orderId });
+      // INVIO EMAIL QUI
+      const user = await userModel.getUserById(userId); // supponendo che questa funzione esista
+      const orders = await orderModel.getOrdersByUserId(userId); // ottieni tutti, ma prendi solo l’ultimo
+      const lastOrder = orders[0];
+
+      const productsList = lastOrder.products.map(p => `
+        <li>
+          ${p.product_name} (x${p.quantity}) - €${(p.single_price * p.quantity).toFixed(2)}
+        </li>`).join('');
+
+      const transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
+        }
+      });
+
+      const mailOptions = {
+        from: `"Supporto" <${process.env.EMAIL_USER}>`,
+        to: user.email,
+        subject: 'Conferma Ordine - Grazie per il tuo acquisto!',
+        html: `
+          <p>Ciao ${user.user_name || ''},</p>
+          <p>Grazie per il tuo ordine! Ecco un riepilogo:</p>
+          <ul>
+            ${productsList}
+          </ul>
+          <p>Totale: <strong>€${lastOrder.total}</strong></p>
+          <p>Spedizione a: ${street_address}, ${cap} ${city} (${province})</p>
+          <p>Ti invieremo un'altra email quando l'ordine sarà spedito.</p>
+          <p>Grazie per aver scelto la nostra piattaforma!</p>
+        `
+      };
+
+      await transporter.sendMail(mailOptions);
+
+      return res.status(201).json({ message: 'Ordine creato con successo', orderId: result.orderId });
     } else {
-      res.status(400).json({ message: result.error });
+      return res.status(400).json({ message: result.error });
     }
   } catch (error) {
     console.error('Errore nella creazione dell\'ordine:', error.message);
-    res.status(500).json({ message: 'Errore interno del server' });
+    return res.status(500).json({ message: 'Errore interno del server' });
   }
 };
+
 
 const getOrdersByUserId = async (req, res) => {
   const userId = req.user.user_id;

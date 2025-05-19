@@ -15,7 +15,7 @@ const createOrderFromCart = async (userId, addressId) => {
     const total = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
     const orderResult = await client.query(
-      `INSERT INTO orders (user_id, order_state, total, addres_id)
+      `INSERT INTO orders (user_id, order_state, total, address_id)
        VALUES ($1, (SELECT state_id FROM states WHERE state_name = 'completato'), $2, $3)
        RETURNING order_id`,
       [userId, total, addressId]
@@ -65,7 +65,7 @@ const addTempAddress = async (street_address, city, cap, province) => {
       [street_address, city, cap, province]
     );
 
-    const addressId = result.rows[0].address_id;
+    const addressId = result.rows[0].addres_id;
 
     await client.query('COMMIT');
     return { success: true, addressId };

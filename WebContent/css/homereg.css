@@ -22,50 +22,47 @@ header {
   flex-shrink: 0;
 }
 
-/* Header buttons and dropdown */
-.header-buttons {
+.icon-buttons {
   display: flex;
   align-items: center;
   gap: 15px;
-  position: relative;
   margin-left: auto;
 }
 
-.header-buttons button {
-  padding: 8px 12px;
-  background-color: #f5b400;
-  color: #000;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
+.cart-icon {
   cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s;
+  color: #f5b400;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
 }
 
-.header-buttons button:hover {
-  background-color: #d49f00;
-}
-
-/* Account Icon (Clickable) */
 .account-icon {
   cursor: pointer;
   color: #f5b400;
   font-size: 18px;
+  display: flex;
+  align-items: center;
   position: relative;
+  white-space: nowrap;
 }
 
-/* Dropdown menu */
 .account-dropdown {
   display: none;
   position: absolute;
-  top: 40px;
+  top: 30px;
   right: 0;
   background-color: #000;
   border: 1px solid #f5b400;
   border-radius: 8px;
   z-index: 1000;
   min-width: 150px;
+}
+
+.account-dropdown.show {
+  display: block;
 }
 
 .account-dropdown button {
@@ -84,7 +81,6 @@ header {
   background-color: #222;
 }
 
-/* Show dropdown when active */
 .account-dropdown.show {
   display: block;
 }

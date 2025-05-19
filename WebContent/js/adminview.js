@@ -1,5 +1,7 @@
 document.getElementById("exit-btn").addEventListener("click", () => {
-  window.location.href = "login.html";
+  localStorage.removeItem("token");
+  alert("Logout effettuato");
+  window.location.href = "../home.html";
 });
 
 window.onload = () => {
