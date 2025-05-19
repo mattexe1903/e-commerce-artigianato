@@ -5,7 +5,7 @@
 -- Dumped from database version 16.4
 -- Dumped by pg_dump version 16.4
 
--- Started on 2025-05-19 14:32:48
+-- Started on 2025-05-19 14:40:14
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -57,7 +57,7 @@ CREATE SEQUENCE public.address_addres_id_seq
 ALTER SEQUENCE public.address_addres_id_seq OWNER TO postgres;
 
 --
--- TOC entry 4987 (class 0 OID 0)
+-- TOC entry 4969 (class 0 OID 0)
 -- Dependencies: 216
 -- Name: address_addres_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -96,7 +96,7 @@ CREATE SEQUENCE public.carts_cart_id_seq
 ALTER SEQUENCE public.carts_cart_id_seq OWNER TO postgres;
 
 --
--- TOC entry 4988 (class 0 OID 0)
+-- TOC entry 4970 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: carts_cart_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -137,7 +137,7 @@ CREATE SEQUENCE public.carts_products_carts_products_id_seq
 ALTER SEQUENCE public.carts_products_carts_products_id_seq OWNER TO postgres;
 
 --
--- TOC entry 4989 (class 0 OID 0)
+-- TOC entry 4971 (class 0 OID 0)
 -- Dependencies: 220
 -- Name: carts_products_carts_products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -175,7 +175,7 @@ CREATE SEQUENCE public.categories_category_id_seq
 ALTER SEQUENCE public.categories_category_id_seq OWNER TO postgres;
 
 --
--- TOC entry 4990 (class 0 OID 0)
+-- TOC entry 4972 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: categories_category_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -258,7 +258,7 @@ CREATE SEQUENCE public.orders_order_id_seq
 ALTER SEQUENCE public.orders_order_id_seq OWNER TO postgres;
 
 --
--- TOC entry 4991 (class 0 OID 0)
+-- TOC entry 4973 (class 0 OID 0)
 -- Dependencies: 227
 -- Name: orders_order_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -299,7 +299,7 @@ CREATE SEQUENCE public.orders_products_orders_products_id_seq
 ALTER SEQUENCE public.orders_products_orders_products_id_seq OWNER TO postgres;
 
 --
--- TOC entry 4992 (class 0 OID 0)
+-- TOC entry 4974 (class 0 OID 0)
 -- Dependencies: 229
 -- Name: orders_products_orders_products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -308,45 +308,7 @@ ALTER SEQUENCE public.orders_products_orders_products_id_seq OWNED BY public.ord
 
 
 --
--- TOC entry 230 (class 1259 OID 18692)
--- Name: permissions; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.permissions (
-    permission_id integer NOT NULL,
-    permission_name text NOT NULL
-);
-
-
-ALTER TABLE public.permissions OWNER TO postgres;
-
---
--- TOC entry 231 (class 1259 OID 18697)
--- Name: permissions_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.permissions_permission_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER SEQUENCE public.permissions_permission_id_seq OWNER TO postgres;
-
---
--- TOC entry 4993 (class 0 OID 0)
--- Dependencies: 231
--- Name: permissions_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.permissions_permission_id_seq OWNED BY public.permissions.permission_id;
-
-
---
--- TOC entry 232 (class 1259 OID 18698)
+-- TOC entry 230 (class 1259 OID 18698)
 -- Name: products; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -365,7 +327,7 @@ CREATE TABLE public.products (
 ALTER TABLE public.products OWNER TO postgres;
 
 --
--- TOC entry 233 (class 1259 OID 18704)
+-- TOC entry 231 (class 1259 OID 18704)
 -- Name: products_product_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -381,8 +343,8 @@ CREATE SEQUENCE public.products_product_id_seq
 ALTER SEQUENCE public.products_product_id_seq OWNER TO postgres;
 
 --
--- TOC entry 4994 (class 0 OID 0)
--- Dependencies: 233
+-- TOC entry 4975 (class 0 OID 0)
+-- Dependencies: 231
 -- Name: products_product_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -390,7 +352,7 @@ ALTER SEQUENCE public.products_product_id_seq OWNED BY public.products.product_i
 
 
 --
--- TOC entry 234 (class 1259 OID 18705)
+-- TOC entry 232 (class 1259 OID 18705)
 -- Name: reports; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -409,7 +371,7 @@ CREATE TABLE public.reports (
 ALTER TABLE public.reports OWNER TO postgres;
 
 --
--- TOC entry 235 (class 1259 OID 18711)
+-- TOC entry 233 (class 1259 OID 18711)
 -- Name: reports_report_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -425,8 +387,8 @@ CREATE SEQUENCE public.reports_report_id_seq
 ALTER SEQUENCE public.reports_report_id_seq OWNER TO postgres;
 
 --
--- TOC entry 4995 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 4976 (class 0 OID 0)
+-- Dependencies: 233
 -- Name: reports_report_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -434,7 +396,7 @@ ALTER SEQUENCE public.reports_report_id_seq OWNED BY public.reports.report_id;
 
 
 --
--- TOC entry 236 (class 1259 OID 18712)
+-- TOC entry 234 (class 1259 OID 18712)
 -- Name: roles; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -447,21 +409,7 @@ CREATE TABLE public.roles (
 ALTER TABLE public.roles OWNER TO postgres;
 
 --
--- TOC entry 237 (class 1259 OID 18717)
--- Name: roles_permissions; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.roles_permissions (
-    permission_id integer NOT NULL,
-    role_id integer NOT NULL,
-    permission_type character(1)
-);
-
-
-ALTER TABLE public.roles_permissions OWNER TO postgres;
-
---
--- TOC entry 238 (class 1259 OID 18720)
+-- TOC entry 235 (class 1259 OID 18720)
 -- Name: roles_role_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -477,8 +425,8 @@ CREATE SEQUENCE public.roles_role_id_seq
 ALTER SEQUENCE public.roles_role_id_seq OWNER TO postgres;
 
 --
--- TOC entry 4996 (class 0 OID 0)
--- Dependencies: 238
+-- TOC entry 4977 (class 0 OID 0)
+-- Dependencies: 235
 -- Name: roles_role_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -486,7 +434,7 @@ ALTER SEQUENCE public.roles_role_id_seq OWNED BY public.roles.role_id;
 
 
 --
--- TOC entry 239 (class 1259 OID 18721)
+-- TOC entry 236 (class 1259 OID 18721)
 -- Name: states; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -499,7 +447,7 @@ CREATE TABLE public.states (
 ALTER TABLE public.states OWNER TO postgres;
 
 --
--- TOC entry 240 (class 1259 OID 18726)
+-- TOC entry 237 (class 1259 OID 18726)
 -- Name: states_state_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -515,8 +463,8 @@ CREATE SEQUENCE public.states_state_id_seq
 ALTER SEQUENCE public.states_state_id_seq OWNER TO postgres;
 
 --
--- TOC entry 4997 (class 0 OID 0)
--- Dependencies: 240
+-- TOC entry 4978 (class 0 OID 0)
+-- Dependencies: 237
 -- Name: states_state_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -524,7 +472,7 @@ ALTER SEQUENCE public.states_state_id_seq OWNED BY public.states.state_id;
 
 
 --
--- TOC entry 241 (class 1259 OID 18727)
+-- TOC entry 238 (class 1259 OID 18727)
 -- Name: users; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -542,7 +490,7 @@ CREATE TABLE public.users (
 ALTER TABLE public.users OWNER TO postgres;
 
 --
--- TOC entry 242 (class 1259 OID 18733)
+-- TOC entry 239 (class 1259 OID 18733)
 -- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -558,8 +506,8 @@ CREATE SEQUENCE public.users_user_id_seq
 ALTER SEQUENCE public.users_user_id_seq OWNER TO postgres;
 
 --
--- TOC entry 4998 (class 0 OID 0)
--- Dependencies: 242
+-- TOC entry 4979 (class 0 OID 0)
+-- Dependencies: 239
 -- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -567,7 +515,7 @@ ALTER SEQUENCE public.users_user_id_seq OWNED BY public.users.user_id;
 
 
 --
--- TOC entry 4759 (class 2604 OID 18734)
+-- TOC entry 4750 (class 2604 OID 18734)
 -- Name: address addres_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -575,7 +523,7 @@ ALTER TABLE ONLY public.address ALTER COLUMN addres_id SET DEFAULT nextval('publ
 
 
 --
--- TOC entry 4760 (class 2604 OID 18735)
+-- TOC entry 4751 (class 2604 OID 18735)
 -- Name: carts cart_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -583,7 +531,7 @@ ALTER TABLE ONLY public.carts ALTER COLUMN cart_id SET DEFAULT nextval('public.c
 
 
 --
--- TOC entry 4762 (class 2604 OID 18736)
+-- TOC entry 4753 (class 2604 OID 18736)
 -- Name: carts_products carts_products_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -591,7 +539,7 @@ ALTER TABLE ONLY public.carts_products ALTER COLUMN carts_products_id SET DEFAUL
 
 
 --
--- TOC entry 4764 (class 2604 OID 18737)
+-- TOC entry 4755 (class 2604 OID 18737)
 -- Name: categories category_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -599,7 +547,7 @@ ALTER TABLE ONLY public.categories ALTER COLUMN category_id SET DEFAULT nextval(
 
 
 --
--- TOC entry 4765 (class 2604 OID 18738)
+-- TOC entry 4756 (class 2604 OID 18738)
 -- Name: orders order_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -607,7 +555,7 @@ ALTER TABLE ONLY public.orders ALTER COLUMN order_id SET DEFAULT nextval('public
 
 
 --
--- TOC entry 4767 (class 2604 OID 18739)
+-- TOC entry 4758 (class 2604 OID 18739)
 -- Name: orders_products orders_products_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -615,15 +563,7 @@ ALTER TABLE ONLY public.orders_products ALTER COLUMN orders_products_id SET DEFA
 
 
 --
--- TOC entry 4768 (class 2604 OID 18740)
--- Name: permissions permission_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.permissions ALTER COLUMN permission_id SET DEFAULT nextval('public.permissions_permission_id_seq'::regclass);
-
-
---
--- TOC entry 4769 (class 2604 OID 18741)
+-- TOC entry 4759 (class 2604 OID 18741)
 -- Name: products product_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -631,7 +571,7 @@ ALTER TABLE ONLY public.products ALTER COLUMN product_id SET DEFAULT nextval('pu
 
 
 --
--- TOC entry 4771 (class 2604 OID 18742)
+-- TOC entry 4761 (class 2604 OID 18742)
 -- Name: reports report_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -639,7 +579,7 @@ ALTER TABLE ONLY public.reports ALTER COLUMN report_id SET DEFAULT nextval('publ
 
 
 --
--- TOC entry 4773 (class 2604 OID 18743)
+-- TOC entry 4763 (class 2604 OID 18743)
 -- Name: roles role_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -647,7 +587,7 @@ ALTER TABLE ONLY public.roles ALTER COLUMN role_id SET DEFAULT nextval('public.r
 
 
 --
--- TOC entry 4774 (class 2604 OID 18744)
+-- TOC entry 4764 (class 2604 OID 18744)
 -- Name: states state_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -655,7 +595,7 @@ ALTER TABLE ONLY public.states ALTER COLUMN state_id SET DEFAULT nextval('public
 
 
 --
--- TOC entry 4775 (class 2604 OID 18745)
+-- TOC entry 4765 (class 2604 OID 18745)
 -- Name: users user_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -663,7 +603,7 @@ ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.u
 
 
 --
--- TOC entry 4778 (class 2606 OID 18747)
+-- TOC entry 4768 (class 2606 OID 18747)
 -- Name: address address_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -672,7 +612,7 @@ ALTER TABLE ONLY public.address
 
 
 --
--- TOC entry 4780 (class 2606 OID 18749)
+-- TOC entry 4770 (class 2606 OID 18749)
 -- Name: carts carts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -681,7 +621,7 @@ ALTER TABLE ONLY public.carts
 
 
 --
--- TOC entry 4782 (class 2606 OID 18751)
+-- TOC entry 4772 (class 2606 OID 18751)
 -- Name: carts_products carts_products_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -690,7 +630,7 @@ ALTER TABLE ONLY public.carts_products
 
 
 --
--- TOC entry 4784 (class 2606 OID 18753)
+-- TOC entry 4774 (class 2606 OID 18753)
 -- Name: categories categories_category_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -699,7 +639,7 @@ ALTER TABLE ONLY public.categories
 
 
 --
--- TOC entry 4786 (class 2606 OID 18755)
+-- TOC entry 4776 (class 2606 OID 18755)
 -- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -708,7 +648,7 @@ ALTER TABLE ONLY public.categories
 
 
 --
--- TOC entry 4788 (class 2606 OID 18757)
+-- TOC entry 4778 (class 2606 OID 18757)
 -- Name: favorites favorites_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -717,7 +657,7 @@ ALTER TABLE ONLY public.favorites
 
 
 --
--- TOC entry 4790 (class 2606 OID 18759)
+-- TOC entry 4780 (class 2606 OID 18759)
 -- Name: info_artisan info_artisan_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -726,7 +666,7 @@ ALTER TABLE ONLY public.info_artisan
 
 
 --
--- TOC entry 4792 (class 2606 OID 18761)
+-- TOC entry 4782 (class 2606 OID 18761)
 -- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -735,7 +675,7 @@ ALTER TABLE ONLY public.orders
 
 
 --
--- TOC entry 4794 (class 2606 OID 18763)
+-- TOC entry 4784 (class 2606 OID 18763)
 -- Name: orders_products orders_products_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -744,25 +684,7 @@ ALTER TABLE ONLY public.orders_products
 
 
 --
--- TOC entry 4796 (class 2606 OID 18765)
--- Name: permissions permissions_permission_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.permissions
-    ADD CONSTRAINT permissions_permission_name_key UNIQUE (permission_name);
-
-
---
--- TOC entry 4798 (class 2606 OID 18767)
--- Name: permissions permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.permissions
-    ADD CONSTRAINT permissions_pkey PRIMARY KEY (permission_id);
-
-
---
--- TOC entry 4800 (class 2606 OID 18769)
+-- TOC entry 4786 (class 2606 OID 18769)
 -- Name: products products_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -771,7 +693,7 @@ ALTER TABLE ONLY public.products
 
 
 --
--- TOC entry 4802 (class 2606 OID 18771)
+-- TOC entry 4788 (class 2606 OID 18771)
 -- Name: reports reports_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -780,16 +702,7 @@ ALTER TABLE ONLY public.reports
 
 
 --
--- TOC entry 4808 (class 2606 OID 18773)
--- Name: roles_permissions roles_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.roles_permissions
-    ADD CONSTRAINT roles_permissions_pkey PRIMARY KEY (permission_id, role_id);
-
-
---
--- TOC entry 4804 (class 2606 OID 18775)
+-- TOC entry 4790 (class 2606 OID 18775)
 -- Name: roles roles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -798,7 +711,7 @@ ALTER TABLE ONLY public.roles
 
 
 --
--- TOC entry 4806 (class 2606 OID 18777)
+-- TOC entry 4792 (class 2606 OID 18777)
 -- Name: roles roles_role_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -807,7 +720,7 @@ ALTER TABLE ONLY public.roles
 
 
 --
--- TOC entry 4810 (class 2606 OID 18779)
+-- TOC entry 4794 (class 2606 OID 18779)
 -- Name: states states_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -816,7 +729,7 @@ ALTER TABLE ONLY public.states
 
 
 --
--- TOC entry 4812 (class 2606 OID 18781)
+-- TOC entry 4796 (class 2606 OID 18781)
 -- Name: states states_state_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -825,7 +738,7 @@ ALTER TABLE ONLY public.states
 
 
 --
--- TOC entry 4814 (class 2606 OID 18783)
+-- TOC entry 4798 (class 2606 OID 18783)
 -- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -834,7 +747,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 4816 (class 2606 OID 18785)
+-- TOC entry 4800 (class 2606 OID 18785)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -843,7 +756,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 4817 (class 2606 OID 18912)
+-- TOC entry 4801 (class 2606 OID 18912)
 -- Name: address address_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -852,7 +765,7 @@ ALTER TABLE ONLY public.address
 
 
 --
--- TOC entry 4819 (class 2606 OID 18791)
+-- TOC entry 4803 (class 2606 OID 18791)
 -- Name: carts_products carts_products_cart_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -861,7 +774,7 @@ ALTER TABLE ONLY public.carts_products
 
 
 --
--- TOC entry 4820 (class 2606 OID 18796)
+-- TOC entry 4804 (class 2606 OID 18796)
 -- Name: carts_products carts_products_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -870,7 +783,7 @@ ALTER TABLE ONLY public.carts_products
 
 
 --
--- TOC entry 4818 (class 2606 OID 18927)
+-- TOC entry 4802 (class 2606 OID 18927)
 -- Name: carts carts_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -879,7 +792,7 @@ ALTER TABLE ONLY public.carts
 
 
 --
--- TOC entry 4821 (class 2606 OID 18806)
+-- TOC entry 4805 (class 2606 OID 18806)
 -- Name: favorites favorites_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -888,7 +801,7 @@ ALTER TABLE ONLY public.favorites
 
 
 --
--- TOC entry 4822 (class 2606 OID 18811)
+-- TOC entry 4806 (class 2606 OID 18811)
 -- Name: favorites favorites_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -897,7 +810,7 @@ ALTER TABLE ONLY public.favorites
 
 
 --
--- TOC entry 4825 (class 2606 OID 18816)
+-- TOC entry 4809 (class 2606 OID 18816)
 -- Name: inventory fk_inventory_product; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -906,7 +819,7 @@ ALTER TABLE ONLY public.inventory
 
 
 --
--- TOC entry 4826 (class 2606 OID 18821)
+-- TOC entry 4810 (class 2606 OID 18821)
 -- Name: inventory fk_inventory_user; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -915,7 +828,7 @@ ALTER TABLE ONLY public.inventory
 
 
 --
--- TOC entry 4823 (class 2606 OID 18902)
+-- TOC entry 4807 (class 2606 OID 18902)
 -- Name: info_artisan info_artisan_artisan_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -924,7 +837,7 @@ ALTER TABLE ONLY public.info_artisan
 
 
 --
--- TOC entry 4824 (class 2606 OID 18831)
+-- TOC entry 4808 (class 2606 OID 18831)
 -- Name: info_artisan info_artisan_artisan_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -933,7 +846,7 @@ ALTER TABLE ONLY public.info_artisan
 
 
 --
--- TOC entry 4827 (class 2606 OID 18836)
+-- TOC entry 4811 (class 2606 OID 18836)
 -- Name: orders orders_addres_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -942,7 +855,7 @@ ALTER TABLE ONLY public.orders
 
 
 --
--- TOC entry 4828 (class 2606 OID 18841)
+-- TOC entry 4812 (class 2606 OID 18841)
 -- Name: orders orders_order_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -951,7 +864,7 @@ ALTER TABLE ONLY public.orders
 
 
 --
--- TOC entry 4830 (class 2606 OID 18942)
+-- TOC entry 4814 (class 2606 OID 18942)
 -- Name: orders_products orders_products_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -960,7 +873,7 @@ ALTER TABLE ONLY public.orders_products
 
 
 --
--- TOC entry 4831 (class 2606 OID 18932)
+-- TOC entry 4815 (class 2606 OID 18932)
 -- Name: orders_products orders_products_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -969,7 +882,7 @@ ALTER TABLE ONLY public.orders_products
 
 
 --
--- TOC entry 4829 (class 2606 OID 18937)
+-- TOC entry 4813 (class 2606 OID 18937)
 -- Name: orders orders_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -978,7 +891,7 @@ ALTER TABLE ONLY public.orders
 
 
 --
--- TOC entry 4832 (class 2606 OID 18861)
+-- TOC entry 4816 (class 2606 OID 18861)
 -- Name: products products_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -987,7 +900,7 @@ ALTER TABLE ONLY public.products
 
 
 --
--- TOC entry 4833 (class 2606 OID 18866)
+-- TOC entry 4817 (class 2606 OID 18866)
 -- Name: reports reports_admin_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -996,7 +909,7 @@ ALTER TABLE ONLY public.reports
 
 
 --
--- TOC entry 4834 (class 2606 OID 18871)
+-- TOC entry 4818 (class 2606 OID 18871)
 -- Name: reports reports_report_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1005,7 +918,7 @@ ALTER TABLE ONLY public.reports
 
 
 --
--- TOC entry 4835 (class 2606 OID 18876)
+-- TOC entry 4819 (class 2606 OID 18876)
 -- Name: reports reports_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1014,25 +927,7 @@ ALTER TABLE ONLY public.reports
 
 
 --
--- TOC entry 4836 (class 2606 OID 18881)
--- Name: roles_permissions roles_permissions_permission_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.roles_permissions
-    ADD CONSTRAINT roles_permissions_permission_id_fkey FOREIGN KEY (permission_id) REFERENCES public.permissions(permission_id);
-
-
---
--- TOC entry 4837 (class 2606 OID 18886)
--- Name: roles_permissions roles_permissions_role_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.roles_permissions
-    ADD CONSTRAINT roles_permissions_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.roles(role_id);
-
-
---
--- TOC entry 4838 (class 2606 OID 18891)
+-- TOC entry 4820 (class 2606 OID 18891)
 -- Name: users users_user_role_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1040,7 +935,7 @@ ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_user_role_fkey FOREIGN KEY (user_role) REFERENCES public.roles(role_id);
 
 
--- Completed on 2025-05-19 14:32:48
+-- Completed on 2025-05-19 14:40:15
 
 --
 -- PostgreSQL database dump complete
