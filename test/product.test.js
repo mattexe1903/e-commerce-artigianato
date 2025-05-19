@@ -61,10 +61,7 @@ describe('Product Routes', () => {
       .field('quantity', 5)
       .field('category_id', 1)
       .attach('photo', tempImagePath); // usa il file fittizio
-
-    console.log('POST response:', res.body);
-
-    expect(res.statusCode).toBe(201);
+expect(res.statusCode).toBe(201);
     expect(res.body.success).toBe(true);
     expect(res.body.product).toBeDefined();
 
@@ -96,10 +93,7 @@ describe('Product Routes', () => {
         quantity: 10,
         category_id: 1
       });
-
-    console.log('PUT response:', res.body);
-
-    expect(res.statusCode).toBe(200);
+expect(res.statusCode).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.product.product_name).toBe('Updated Product');
   });
@@ -108,10 +102,7 @@ describe('Product Routes', () => {
     const res = await request(app)
       .patch(`/api/products/${productId}/photo`)
       .attach('photo', tempImagePath); // usa di nuovo il file fittizio
-
-    console.log('PATCH response:', res.body);
-
-    expect(res.statusCode).toBe(200);
+expect(res.statusCode).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.photo).toBeDefined();
   });

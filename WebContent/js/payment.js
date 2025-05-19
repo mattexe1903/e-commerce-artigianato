@@ -1,3 +1,10 @@
+  async function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.display = "block";
+    setTimeout(() => t.style.display = "none", 3000);
+  }
+
 let saveAddressFn;
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -31,8 +38,7 @@ async function loadUserData() {
     document.getElementById("address-zip").value = address?.cap || "";
     document.getElementById("address-province").value = address?.province || "";
   } catch (err) {
-    console.error("Errore caricamento dati utente:", err);
-  }
+}
 }
 
 async function loadCartData() {
@@ -76,8 +82,7 @@ async function loadCartData() {
     itemsPriceSpan.textContent = itemsTotal.toFixed(2);
     totalPriceSpan.textContent = (itemsTotal + spedizione).toFixed(2);
   } catch (err) {
-    console.error("Errore caricamento carrello:", err.message || err);
-  }
+}
 }
 
 function setupPaymentSelection() {
@@ -154,10 +159,8 @@ async function setupSaveCheckboxes() {
     });
 
     if (!response.ok) {
-      console.error("Errore nel salvataggio dell'indirizzo:", await response.text());
-    } else {
-      console.log("Indirizzo salvato con successo.");
-    }
+} else {
+}
   };
 
   return saveAddress;
@@ -211,8 +214,7 @@ async function sendOrder() {
       }, 5000);
     });
   } catch (err) {
-    console.error("Errore invio ordine:", err);
-    showPopup("Errore", "Errore durante l'invio dell'ordine.");
+showPopup("Errore", "Errore durante l'invio dell'ordine.");
   }
 }
 

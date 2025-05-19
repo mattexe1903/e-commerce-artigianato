@@ -29,8 +29,7 @@ beforeAll(async () => {
   });
 
   if (!loginRes.body.token) {
-    console.error('Login fallito:', loginRes.body);
-    throw new Error('Login fallito durante il test.');
+throw new Error('Login fallito durante il test.');
   }
 
   token = loginRes.body.token;

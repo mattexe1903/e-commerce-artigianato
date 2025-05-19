@@ -1,3 +1,10 @@
+  async function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.display = "block";
+    setTimeout(() => t.style.display = "none", 3000);
+  }
+
 document.addEventListener("DOMContentLoaded", function () {
   const loginForm = document.getElementById("loginForm");
   const loginBtn = document.getElementById("loginBtn");
@@ -30,8 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return data;
       })
       .then(data => {
-        console.log("Login successful:", data);
-        const role = data.user_role;
+const role = data.user_role;
 
         localStorage.setItem("token", JSON.stringify(data.token));
         

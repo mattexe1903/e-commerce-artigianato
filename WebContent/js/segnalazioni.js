@@ -1,3 +1,10 @@
+async function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.display = "block";
+  setTimeout(() => t.style.display = "none", 3000);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const problemaSelect = document.getElementById('problema');
   const inviaBtn = document.getElementById('inviaBtn');
@@ -34,17 +41,18 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       body: JSON.stringify(segnalazione)
     })
-    .then(response => {
-      if (response.ok) {
-        alert("Segnalazione inviata con successo!");
-        window.location.href = "../home.html";
-      } else {
-        alert("Errore durante l'invio. Riprova.");
-      }
-    })
-    .catch(error => {
-      console.error("Errore:", error);
-      alert("Errore imprevisto. Riprova più tardi.");
-    });
+      .then(response => {
+        if (response.ok) {
+          showToast("Segnalazione inviata con successo!");
+          setTimeout(() => {
+            window.location.href = "../home.html";
+          }, 1500);
+        } else {
+          showToast("Errore durante l'invio. Riprova.");
+        }
+      })
+      .catch(error => {
+showToast("Errore imprevisto. Riprova più tardi.");
+      });
   });
 });

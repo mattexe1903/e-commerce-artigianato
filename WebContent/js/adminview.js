@@ -1,8 +1,18 @@
+  async function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.display = "block";
+    setTimeout(() => t.style.display = "none", 3000);
+  }
+
 document.getElementById("exit-btn").addEventListener("click", () => {
   localStorage.removeItem("token");
-  alert("Logout effettuato");
-  window.location.href = "../home.html";
+  showToast("Logout effettuato");
+  setTimeout(() => {
+    window.location.href = "../home.html";
+  }, 1500);
 });
+
 
 window.onload = () => {
   loadArtisanReportList();
@@ -14,10 +24,7 @@ async function loadArtisanReportList() {
   try {
     const res = await fetch('http://localhost:3000/api/getArtisanRequest');
     const segnalazioni = await res.json();
-
-    console.log("Richieste di registrazione artigiano:", segnalazioni);
-
-    const tableBody = document.getElementById("richieste-list");
+const tableBody = document.getElementById("richieste-list");
     tableBody.innerHTML = "";
 
     if (segnalazioni.length === 0) {
@@ -45,8 +52,7 @@ async function loadArtisanReportList() {
       });
     }
   } catch (err) {
-    console.error("Errore nel caricamento delle segnalazioni:", err);
-  }
+}
 }
 
 async function handleRequest(id, action) {
@@ -71,8 +77,7 @@ async function handleRequest(id, action) {
 
     location.reload();
   } catch (err) {
-    console.error(`Errore durante la ${action} della richiesta con ID ${id}:`, err);
-  }
+}
 }
 
 async function loadReportList() {
@@ -83,10 +88,7 @@ async function loadReportList() {
 
     const tableBody = document.getElementById("segnalazioni-list");
     tableBody.innerHTML = "";
-
-    console.log("Segnalazioni:", segnalazioni);
-
-    if (segnalazioni.length === 0) {
+if (segnalazioni.length === 0) {
       tableBody.innerHTML = `
         <tr>
           <td colspan="5">Nessuna segnalazione trovata.</td>
@@ -109,8 +111,7 @@ async function loadReportList() {
       });
     }
   } catch (err) {
-    console.error("Errore nel caricamento delle segnalazioni:", err);
-  }
+}
 }
 
 // Carica lista artigiani
@@ -148,15 +149,14 @@ function rimuoviArtigiano(id) {
   fetch(`http://localhost:3000/api/artisan/${id}`, { method: 'DELETE' })
     .then(response => {
       if (response.ok) {
-        alert("Artigiano rimosso con successo.");
+        showToast("Artigiano rimosso con successo.");
         location.reload();
       } else {
-        alert("Errore nella rimozione dell'artigiano.");
+        showToast("Errore nella rimozione dell'artigiano.");
       }
     })
     .catch(error => {
-      console.error("Errore nella richiesta di eliminazione:", error);
-      alert("Errore imprevisto durante la rimozione.");
+showToast("Errore imprevisto durante la rimozione.");
     });
 }
 
@@ -193,6 +193,5 @@ async function creaGraficoVendite() {
     });
 
   } catch (errore) {
-    console.error('Errore nel caricamento del grafico:', errore);
-  }
+}
 }

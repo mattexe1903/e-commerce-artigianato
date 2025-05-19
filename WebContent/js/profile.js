@@ -1,3 +1,10 @@
+  async function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.display = "block";
+    setTimeout(() => t.style.display = "none", 3000);
+  }
+
 document.getElementById("home-btn").addEventListener("click", () => {
   const tokenRaw = localStorage.getItem("token");
   const token = JSON.parse(tokenRaw);
@@ -10,7 +17,6 @@ document.getElementById("home-btn").addEventListener("click", () => {
       const role = data.user.user_role;
 
       if (role === 3) {
-        // Rimuove il token dalla sessione per gli artigiani
         localStorage.removeItem("token");
         window.location.href = "../home.html";
       } else {
@@ -178,8 +184,7 @@ window.onload = async () => {
 
           document.getElementById("dashboard")?.classList.remove("hidden");
         } catch (errore) {
-          console.error('Errore nel caricamento del grafico:', errore);
-        }
+}
       }
 
       // CHIAMATA GRAFICO
@@ -255,8 +260,7 @@ window.onload = async () => {
     }
 
   } catch (err) {
-    console.error("Errore:", err);
-    alert("C'è stato un errore nel caricamento del profilo.");
+showToast("C'è stato un errore nel caricamento del profilo.");
   }
 };
 

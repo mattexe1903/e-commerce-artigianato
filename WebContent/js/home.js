@@ -1,3 +1,10 @@
+  async function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.display = "block";
+    setTimeout(() => t.style.display = "none", 3000);
+  }
+
 function vaiAllaPaginaProdotto(idProdotto) {
     window.location.href = `html/productsview.html?id=${idProdotto}`;
 }
@@ -13,8 +20,7 @@ async function caricaNuoviArrivi() {
   const track = document.getElementById("carousel-track");
 
   if (!track) {
-    console.error("Elemento carousel-track non trovato nel DOM.");
-    return;
+return;
   }
 
   try {
@@ -37,14 +43,11 @@ async function caricaNuoviArrivi() {
         <div class="product-name">${prodotto.product_name || 'Nome mancante'}</div>
         <div class="product-price">€ ${Number(prodotto.price).toFixed(2)}</div>
       `;
-
-      console.log('Aggiunto prodotto:', prodotto.product_name);
-      track.appendChild(div);
+track.appendChild(div);
     });
 
   } catch (error) {
-    console.error('Errore nel caricare i nuovi arrivi:', error);
-  }
+}
 }
 
 async function caricaTuttiProdotti() {
@@ -63,8 +66,7 @@ async function caricaTuttiProdotti() {
             lista.appendChild(div);
         });
     } catch (error) {
-        console.error('Errore nel caricare i prodotti:', error);
-        lista.innerHTML = "<p>Errore nel caricare i prodotti.</p>";
+lista.innerHTML = "<p>Errore nel caricare i prodotti.</p>";
     }
 }
 
@@ -147,8 +149,7 @@ async function caricaCategorie() {
             selectCategoria.appendChild(option);
         });
     } catch (error) {
-        console.error("Errore nel caricamento delle categorie:", error);
-    }
+}
 }
 
 window.addEventListener("load", () => {

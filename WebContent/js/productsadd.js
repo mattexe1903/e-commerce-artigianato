@@ -1,4 +1,10 @@
-// Estrai parametri e token dall'URL/localStorage
+  async function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.display = "block";
+    setTimeout(() => t.style.display = "none", 3000);
+  }
+
 const urlParams = new URLSearchParams(window.location.search);
 const productId = urlParams.get('id');
 
@@ -7,7 +13,6 @@ const token = tokenRaw && tokenRaw !== "null" ? JSON.parse(tokenRaw) : null;
 
 let utenteId = null;
 
-// Recupera l'utente tramite fetch e imposta l'ID
 if (token) {
   fetch('http://localhost:3000/api/user', {
     method: 'GET',
@@ -25,8 +30,7 @@ if (token) {
       utenteId = data.user_id;
     })
     .catch(error => {
-      console.error("❌ Errore nel recupero dell'utente:", error);
-    });
+});
 }
 
 
@@ -63,8 +67,7 @@ async function caricaCategorie() {
       selectCategoria.appendChild(option);
     });
   } catch (error) {
-    console.error("❌ Errore nel caricamento delle categorie:", error);
-  }
+}
 }
 
 // Invio del prodotto al database
@@ -77,7 +80,7 @@ function creaProdotto() {
   const file = document.getElementById("image-upload").files[0];
 
   if (!nome || !descrizione || isNaN(prezzo) || isNaN(quantita) || !file || !categoriaId) {
-    alert("Compila tutti i campi, inclusa la categoria, e seleziona un'immagine.");
+    showToast("Compila tutti i campi, inclusa la categoria, e seleziona un'immagine.");
     return;
   }
 
@@ -99,11 +102,12 @@ function creaProdotto() {
       return res.json();
     })
     .then(data => {
-      alert("Prodotto creato con successo!");
+      showToast("Prodotto creato con successo!");
+      setTimeout(() => {
       window.location.href = "profile.html";
+  }, 1500);
     })
     .catch(err => {
-      console.error(err);
-      alert("Errore durante la creazione del prodotto");
+showToast("Errore durante la creazione del prodotto");
     });
 }

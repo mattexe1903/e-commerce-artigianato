@@ -76,8 +76,7 @@ describe('Ordini Routes', () => {
       .post('/api/cart/add')
       .set('Authorization', `Bearer ${token}`)
       .send({ productId, quantity: 1 });
-
-    console.log('Carrello dopo aggiunta prodotto:', addToCartRes.body);  // Debug
+// Debug
 
     const orderData = {
       address: {
@@ -93,8 +92,7 @@ describe('Ordini Routes', () => {
       .post('/api/createOrder')
       .set('Authorization', `Bearer ${token}`)
       .send(orderData);
-
-    console.log('Risultato creazione ordine:', res.body);  // Debug
+// Debug
 
     // Verifica se la creazione dell'ordine è andata a buon fine
     expect(res.statusCode).toBe(201);
@@ -105,8 +103,7 @@ describe('Ordini Routes', () => {
     const res = await request(app)
       .get('/api/getOrdersByUserId')
       .set('Authorization', `Bearer ${token}`);
-
-    console.log('Ordini recuperati:', res.body);  // Debug
+// Debug
 
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);

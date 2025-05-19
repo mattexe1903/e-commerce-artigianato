@@ -1,3 +1,10 @@
+  async function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.display = "block";
+    setTimeout(() => t.style.display = "none", 3000);
+  }
+
 document.addEventListener("DOMContentLoaded", async () => {
   aggiornaCarrello();
   caricaNuoviArrivi();
@@ -12,9 +19,7 @@ function vaiAllaPaginaProdotto(idProdotto) {
 
 function vaiAlProfilo() {
   const token = JSON.parse(localStorage.getItem("token"));
-  console.log("Token:", token);
-
-  fetch('http://localhost:3000/api/user', {
+fetch('http://localhost:3000/api/user', {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`
@@ -52,8 +57,10 @@ function vaiAlProfilo() {
 
 function logout() {
   localStorage.removeItem("token");  // Rimuove il token salvato
-  alert("Logout effettuato");
-  window.location.href = "../home.html";  // Reindirizza alla home pubblica
+  showToast("Logout effettuato");
+  setTimeout(() => {
+    window.location.href = "../home.html";
+  }, 1500);
 }
 
 function vaiAlCarrello() {
@@ -142,10 +149,7 @@ async function aggiornaCarrello() {
     if (!Array.isArray(prodottiNelCarrello)) {
       throw new Error("Formato dati non valido per il carrello.");
     }
-
-    console.log("Prodotti nel carrello:", prodottiNelCarrello);
-
-    const totale = prodottiNelCarrello.reduce((acc, item) => {
+const totale = prodottiNelCarrello.reduce((acc, item) => {
       const prezzo = item.product?.price || item.price || 0;
       const quantita = item.quantity || 1;
       return acc + (prezzo * quantita);
@@ -156,16 +160,14 @@ async function aggiornaCarrello() {
     document.getElementById("cart-total").innerText = `€${totale.toFixed(2)}`;
 
   } catch (error) {
-    console.error("Errore aggiornamento carrello:", error.message || error);
-  }
+}
 }
 
 async function caricaNuoviArrivi() {
   const track = document.getElementById("carousel-track");
 
   if (!track) {
-    console.error("Elemento carousel-track non trovato nel DOM.");
-    return;
+return;
   }
 
   try {
@@ -193,8 +195,7 @@ async function caricaNuoviArrivi() {
     });
 
   } catch (error) {
-    console.error('Errore nel caricare i nuovi arrivi:', error);
-  }
+}
 }
 
 let prodottiList = [];
@@ -230,8 +231,7 @@ async function caricaTuttiProdotti() {
       lista.appendChild(div);
     });
   } catch (error) {
-    console.error('Errore nel caricare i prodotti:', error);
-    lista.innerHTML = "<p>Errore nel caricare i prodotti.</p>";
+lista.innerHTML = "<p>Errore nel caricare i prodotti.</p>";
   }
 }
 
@@ -258,6 +258,5 @@ async function caricaCategorie() {
       selectCategoria.appendChild(option);
     });
   } catch (error) {
-    console.error("Errore nel caricamento delle categorie:", error);
-  }
+}
 }

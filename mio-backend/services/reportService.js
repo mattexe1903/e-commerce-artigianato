@@ -27,8 +27,7 @@ const updateArtisanRequest = async (id, stato) => {
 
   if (stato === 'accettato' || stato === 'rifiutato') {
     const artisanId = await reportModel.getArtisanIdByReportId(id);
-    console.log('Artisan ID:', artisanId);
-    console.log('Stato:', stato);
+console.log('Stato:', stato);
 
     if (artisanId) {
       ;

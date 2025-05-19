@@ -10,9 +10,7 @@ const createAdmin = async () => {
     INSERT INTO users (user_name, surname, email, user_password, user_role)
     VALUES ($1, $2, $3, $4, $5)
   `, ['admin', 'admin', email, hashedPassword, 1]);
-
-  console.log('Admin creato con successo!');
-  process.exit();
+process.exit();
 };
 
 createAdmin();

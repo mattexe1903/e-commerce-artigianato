@@ -1,3 +1,10 @@
+async function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.display = "block";
+  setTimeout(() => t.style.display = "none", 3000);
+}
+
 window.onload = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const tipo = urlParams.get('tipo');
@@ -71,16 +78,17 @@ window.onload = () => {
           return data;
         })
         .catch(error => {
-          alert(error.message || "Errore di connessione.");
-          window.location.href = "login.html";
+          showToast(error.message || "Errore di connessione.");
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 1500);
         });
-      alert("Email inoltrara con successo. Attendere l'approvazione dell'amministratore.");
-      window.location.href = "../home.html";
+      showToast("Email inoltrara con successo. Attendere l'approvazione dell'amministratore.");
+      setTimeout(() => {
+        window.location.href = "../home.html";
+      }, 1500);
     } else {
-
-      console.log("Dati cliente:", datiBase);
-
-      fetch('http://localhost:3000/api/register', {
+fetch('http://localhost:3000/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

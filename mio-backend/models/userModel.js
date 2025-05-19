@@ -29,14 +29,12 @@ const updatePassword = async (userId, newPassword) => {
     );
 
     if (result.rowCount === 0) {
-      console.error(`Nessun utente trovato con ID: ${userId}`);
-      throw new Error('Nessun utente trovato con questo ID.');
+throw new Error('Nessun utente trovato con questo ID.');
     }
 
     return result.rows[0];
   } catch (error) {
-    console.error('Errore durante l\'aggiornamento della password:', error.message);
-    throw new Error('Errore durante l\'aggiornamento della password');
+throw new Error('Errore durante l\'aggiornamento della password');
   }
 };
 

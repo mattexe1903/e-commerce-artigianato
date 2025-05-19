@@ -5,8 +5,7 @@ const getUserInfo = async (userId) => {
         const userInfo = await userModel.getUserById(userId);
         return userInfo;
     } catch (error) {
-        console.error('Error fetching user info:', error);
-        throw error;
+throw error;
     }
 };
 
@@ -15,8 +14,7 @@ const getArtigianiInfo = async (userId) => {
         const artigianiInfo = await userModel.getArtigianiById(userId);
         return artigianiInfo;
     } catch (error) {
-        console.error('Error fetching artigiani info:', error);
-        throw error;
+throw error;
     }
 }
 
@@ -25,8 +23,7 @@ const getUserInformation = async (userId) => {
         const addresses = await userModel.getUserAddresses(userId);
         return addresses;
     } catch (error) {
-        console.error('Error fetching user addresses:', error);
-        throw error;
+throw error;
     }
 };
 
@@ -35,8 +32,7 @@ const updatePassword = async (userId, newPassword) => {
         const updatedUser = await userModel.updatePassword(userId, newPassword);
         return updatedUser;
     } catch (error) {
-        console.error('Error updating password:', error);
-        throw error;
+throw error;
     }
 };
 
@@ -45,8 +41,7 @@ const getUserByEmail = async (email) => {
         const user = await userModel.getUserByEmail(email);
         return user;
     } catch (error) {
-        console.error('Error fetching user by email:', error);
-        throw error;
+throw error;
     }
 };
 
@@ -55,8 +50,7 @@ const addUserAddress = async (userId, street_address, city, cap, province) => {
         const address = await userModel.addUserAddress(userId, street_address, city, cap, province);
         return address;
     } catch (error) {
-        console.error('Error adding address:', error);
-        throw error;
+throw error;
     }
 };
 
@@ -65,8 +59,7 @@ const getInventory = async (userId) => {
         const inventory = await userModel.getInventory(userId);
         return inventory;
     } catch (error) {
-        console.error('Error fetching inventory:', error);
-        throw error;
+throw error;
     }
 };
 
@@ -75,8 +68,7 @@ const getArtisanRegistered = async () => {
         const artisanRegistered = await userModel.getArtisanRegistered();
         return artisanRegistered;
     } catch (error) {
-        console.error('Error fetching artisan registered:', error);
-        throw error;
+throw error;
     }
 };
 
@@ -85,8 +77,7 @@ const deleteArtisan = async (artisanId) => {
         const result = await userModel.deleteArtisan(artisanId);
         return result;
     } catch (error) {
-        console.error('Error deleting artisan:', error);
-        throw error;
+throw error;
     }
 };
 

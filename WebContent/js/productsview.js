@@ -1,10 +1,16 @@
+  async function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.display = "block";
+    setTimeout(() => t.style.display = "none", 3000);
+  }
+
 window.onload = async function () {
   const urlParams = new URLSearchParams(window.location.search);
   const productId = urlParams.get('id');
   const tokenRaw = localStorage.getItem("token");
   const token = tokenRaw && tokenRaw !== "null" ? JSON.parse(tokenRaw) : null;
 
-  // Imposta il link "Lokal"
   document.getElementById("lokal-link").href = token ? "homereg.html" : "../home.html";
 
   if (!productId) return;
@@ -48,8 +54,7 @@ window.onload = async function () {
       }
     }
   } catch (error) {
-    console.error("Errore nel recupero del prodotto:", error);
-  }
+}
 };
 
 function mostraPopupEReindirizza() {
@@ -91,11 +96,10 @@ async function aggiungiAiPreferiti() {
       heartIcon.style.color = heartIcon.classList.contains('preferito') ? 'red' : '#f5b400';
     } else {
       const errorData = await response.json();
-      alert(`Errore: ${errorData.message || 'Operazione fallita.'}`);
+      showToast(`Errore: ${errorData.message || 'Operazione fallita.'}`);
     }
   } catch (error) {
-    console.error("Errore durante l'aggiunta/rimozione dai preferiti:", error);
-  }
+}
 }
 
 async function aggiungiAlCarrello() {
@@ -111,7 +115,7 @@ async function aggiungiAlCarrello() {
   }
 
   if (!prodottoId || isNaN(quantita) || quantita < 1 || quantita > maxQuantita) {
-    alert("Quantità non valida.");
+    showToast("Quantità non valida.");
     return;
   }
 
@@ -126,14 +130,13 @@ async function aggiungiAlCarrello() {
     });
 
     if (response.ok) {
-      alert("Prodotto aggiunto al carrello!");
+      showToast("Prodotto aggiunto al carrello!");
     } else {
       const errData = await response.json();
-      alert(`Errore: ${errData.message || 'Impossibile aggiungere al carrello.'}`);
+      showToast(`Errore: ${errData.message || 'Impossibile aggiungere al carrello.'}`);
     }
   } catch (error) {
-    console.error("Errore durante l'aggiunta al carrello:", error);
-  }
+}
 }
 
 function verificaQuantita() {
@@ -142,7 +145,7 @@ function verificaQuantita() {
   const val = parseInt(input.value);
 
   if (val > max) {
-    alert("La quantità selezionata supera quella disponibile.");
+    showToast("La quantità selezionata supera quella disponibile.");
     input.value = max;
   } else if (val < 1 || isNaN(val)) {
     input.value = 1;

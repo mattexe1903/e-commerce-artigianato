@@ -14,8 +14,7 @@ const sendArtisanRequest = async (req, res) => {
 
     return res.status(200).json({ message: 'Richiesta inviata con successo.' });
   } catch (error) {
-    console.error('Errore durante l\'invio della richiesta:', error);
-    return res.status(500).json({ message: 'Errore interno del server.' });
+return res.status(500).json({ message: 'Errore interno del server.' });
   }
 }
 
@@ -24,8 +23,7 @@ const getArtisanRequest = async (req, res) => {
     const requests = await reportService.getArtisanRequest();
     return res.status(200).json(requests);
   } catch (error) {
-    console.error('Errore durante il recupero delle richieste:', error);
-    return res.status(500).json({ message: 'Errore interno del server.' });
+return res.status(500).json({ message: 'Errore interno del server.' });
   }
 }
 
@@ -41,8 +39,7 @@ const updateArtisanRequest = async (req, res) => {
 
     return res.status(200).json({ message: 'Richiesta aggiornata con successo.' });
   } catch (error) {
-    console.error('Errore durante l\'aggiornamento della richiesta:', error);
-    return res.status(500).json({ message: 'Errore interno del server.' });
+return res.status(500).json({ message: 'Errore interno del server.' });
   }
 }
 
@@ -65,8 +62,7 @@ const sendSignal = async (req, res) => {
 
     return res.status(200).json({ message: 'Segnalazione inviata con successo.' });
   } catch (error) {
-    console.error('Errore durante l\'invio della segnalazione:', error);
-    return res.status(500).json({ message: 'Errore interno del server.' });
+return res.status(500).json({ message: 'Errore interno del server.' });
   }
 };
 
@@ -75,8 +71,7 @@ const getSignal = async (req, res) => {
     const signals = await reportService.getSignal();
     return res.status(200).json(signals);
   } catch (error) {
-    console.error('Errore durante il recupero delle segnalazioni:', error);
-    return res.status(500).json({ message: 'Errore interno del server.' });
+return res.status(500).json({ message: 'Errore interno del server.' });
   }
 };
 

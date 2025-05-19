@@ -1,3 +1,9 @@
+  async function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.display = "block";
+    setTimeout(() => t.style.display = "none", 3000);
+  }
 document.addEventListener('DOMContentLoaded', () => {
   const resetBtn = document.getElementById('resetBtn');
   const passwordInput = document.getElementById('newPassword');
@@ -53,9 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       const data = await res.json();
-      console.log('Risposta del server:', data);
-
-      if (res.ok) {
+if (res.ok) {
         messageBox.style.color = 'lightgreen';
         messageBox.textContent = data.message || 'Password aggiornata con successo.';
         passwordInput.disabled = true;
@@ -73,8 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
     } catch (err) {
-      console.error('Errore durante il reset:', err);
-      messageBox.style.color = 'red';
+messageBox.style.color = 'red';
       messageBox.textContent = 'Errore di connessione al server.';
     }
   });

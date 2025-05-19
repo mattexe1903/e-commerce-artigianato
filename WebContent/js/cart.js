@@ -1,3 +1,10 @@
+  async function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.display = "block";
+    setTimeout(() => t.style.display = "none", 3000);
+  }
+
 document.addEventListener("DOMContentLoaded", () => {
   caricaCarrello();
 });
@@ -63,8 +70,7 @@ async function caricaCarrello() {
 
     aggiornaTotale();
   } catch (err) {
-    console.error("Errore caricamento carrello:", err.message || err);
-  }
+}
 }
 
 function aggiornaTotale() {
@@ -110,8 +116,7 @@ async function confirmPartialRemove() {
 
   try {
     const token = getToken();
-    console.log("Token:", token);
-    console.log("prodottoSelezionato", prodottoSelezionato.product_id);
+console.log("prodottoSelezionato", prodottoSelezionato.product_id);
 
     const res = await fetch(`http://localhost:3000/api/cart/remove`, {
       method: "DELETE",
@@ -137,10 +142,13 @@ async function confirmPartialRemove() {
 function proceedOrder() {
   const token = getToken();
   if (!token) {
-    alert("Devi essere loggato per procedere al pagamento.");
+    showToast("Devi essere loggato per procedere al pagamento.");
     return;
   }
 
-  alert("Verrai reindirizzato alla pagina di pagamento...");
-  window.location.href = `payment.html?user=${token}`;
+  showToast("Verrai reindirizzato alla pagina di pagamento...");
+  setTimeout(() => {
+    window.location.href = `payment.html?user=${token}`;
+  }, 1500);
+
 }

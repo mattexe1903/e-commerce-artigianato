@@ -11,8 +11,7 @@ const getUserInfo = async (req, res) => {
     }
     return res.status(200).json(userInfo);
   } catch (error) {
-    console.error('Error fetching user info:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -25,8 +24,7 @@ const getArtigianiInfo = async (req, res) => {
     }
     return res.status(200).json(artigianiInfo);
   } catch (error) {
-    console.error('Error fetching artigiani info:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -37,8 +35,7 @@ const getUserInformation = async (req, res) => {
     const addresses = await userService.getUserInformation(userId);
     return res.status(200).json({ addresses, user });
   } catch (error) {
-    console.error('Error fetching user addresses:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -51,9 +48,7 @@ const sendResetEmail = async (req, res) => {
     }
 
     const user = await userService.getUserByEmail(email);
-    console.log('User found:', user);
-
-    if (!user) {
+if (!user) {
       return res.status(404).json({ message: "Nessun utente trovato con questa email." });
     }
 
@@ -94,8 +89,7 @@ const sendResetEmail = async (req, res) => {
     return res.status(200).json({ message: 'Email di reset inviata con successo.' });
 
   } catch (error) {
-    console.error('Errore durante invio email di reset:', error);
-    return res.status(500).json({ message: 'Errore durante l\'invio dell\'email.' });
+return res.status(500).json({ message: 'Errore durante l\'invio dell\'email.' });
   }
 };
 
@@ -108,16 +102,14 @@ const resetPassword = async (req, res) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret_reset_key');
-    console.log('Decoded token:', decoded);
-    const userId = decoded.userId;
+const userId = decoded.userId;
 
     await userService.updatePassword(userId, newPassword);
 
     return res.status(200).json({ message: 'Password aggiornata con successo.' });
 
   } catch (error) {
-    console.error('Errore durante il reset della password:', error);
-    return res.status(500).json({ message: 'Errore durante il reset della password.' });
+return res.status(500).json({ message: 'Errore durante il reset della password.' });
   }
 };
 
@@ -133,8 +125,7 @@ const addUserAddress = async (req, res) => {
     const address = await userService.addUserAddress(userId, street_address, city, cap, province);
     return res.status(201).json(address);
   } catch (error) {
-    console.error('Error adding address:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -144,8 +135,7 @@ const getInventory = async (req, res) => {
     const inventory = await userService.getInventory(userId);
     return res.status(200).json(inventory);
   } catch (error) {
-    console.error('Error fetching inventory:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -154,8 +144,7 @@ const getArtisanRegistered = async (req, res) => {
     const artisanRegistered = await userService.getArtisanRegistered();
     return res.status(200).json(artisanRegistered);
   } catch (error) {
-    console.error('Error fetching artisan registered:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -169,8 +158,7 @@ const deleteArtisan = async (req, res) => {
       return res.status(404).json({ message: 'Artisan not found' });
     }
   } catch (error) {
-    console.error('Error deleting artisan:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+return res.status(500).json({ message: 'Internal server error' });
   }
 };
 

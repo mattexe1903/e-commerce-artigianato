@@ -1,5 +1,9 @@
-// === CONFIGURAZIONE BASE ===
-
+  async function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.display = "block";
+    setTimeout(() => t.style.display = "none", 3000);
+  }
 // Metodo di pagamento base (test)
 const baseCardPaymentMethod = {
   type: 'CARD',
@@ -32,8 +36,7 @@ window.addEventListener("load", () => {
   if (window.google && google.payments && google.payments.api) {
     initGooglePay();
   } else {
-    console.error("❌ Google Pay API non disponibile.");
-  }
+}
 });
 
 function initGooglePay() {
@@ -50,20 +53,17 @@ function initGooglePay() {
       if (response.result) {
         createAndAddGooglePayButton();
       } else {
-        console.warn("⚠️ Google Pay non disponibile per questo dispositivo.");
-      }
+}
     })
     .catch(err => {
-      console.error("❌ Errore in isReadyToPay:", err);
-    });
+});
 }
 
 // === CREAZIONE DEL PULSANTE ===
 
 function createAndAddGooglePayButton() {
   if (!paymentsClient) {
-    console.error("❌ paymentsClient non inizializzato.");
-    return;
+return;
   }
 
   const button = paymentsClient.createButton({
@@ -75,16 +75,14 @@ function createAndAddGooglePayButton() {
     target.innerHTML = ""; // pulizia in caso di re-render
     target.appendChild(button);
   } else {
-    console.warn("⚠️ Elemento #google-pay-button non trovato.");
-  }
+}
 }
 
 // === GESTIONE CLICK ===
 
 function onGooglePayClicked() {
   if (!paymentsClient) {
-    console.error("❌ paymentsClient non disponibile.");
-    return;
+return;
   }
 
   const paymentDataRequest = {
@@ -104,12 +102,10 @@ function onGooglePayClicked() {
 
   paymentsClient.loadPaymentData(paymentDataRequest)
     .then(paymentData => {
-      console.log("✅ Pagamento simulato:", paymentData);
-      alert("Pagamento effettuato con successo (test)!");
+showToast("Pagamento effettuato con successo (test)!");
       sendOrder();
     })
     .catch(err => {
-      console.warn("❌ Pagamento annullato o errore:", err.statusCode || err);
-      alert("Pagamento annullato o fallito.");
+showToast("Pagamento annullato o fallito.");
     });
 }

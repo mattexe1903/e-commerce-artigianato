@@ -1,3 +1,10 @@
+async function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.display = "block";
+  setTimeout(() => t.style.display = "none", 3000);
+}
+
 let categoriesMap = [];
 let prodottoOriginale = {};
 
@@ -45,8 +52,7 @@ window.onload = async function () {
     };
 
   } catch (error) {
-    console.error('❌ Errore nel caricamento del prodotto:', error);
-  }
+}
 };
 
 async function caricaCategorie() {
@@ -66,8 +72,7 @@ async function caricaCategorie() {
       selectCategoria.appendChild(option);
     });
   } catch (error) {
-    console.error("❌ Errore nel caricamento delle categorie:", error);
-  }
+}
 }
 
 async function salvaModificheProdotto() {
@@ -82,7 +87,7 @@ async function salvaModificheProdotto() {
   const categoriaId = Number(document.getElementById('product-category').value);
 
   if (!nome || isNaN(prezzo) || isNaN(quantita) || isNaN(categoriaId) || categoriaId <= 0) {
-    alert("⚠️ Compila correttamente tutti i campi, inclusa la categoria.");
+    showToast("⚠️ Compila correttamente tutti i campi, inclusa la categoria.");
     return;
   }
 
@@ -102,7 +107,7 @@ async function salvaModificheProdotto() {
     modifiche.category_id === prodottoOriginale.category_id;
 
   if (modificheUguali) {
-    alert("ℹ️ Nessuna modifica da salvare.");
+    showToast("ℹ️ Nessuna modifica da salvare.");
     return;
   }
 
@@ -118,14 +123,13 @@ async function salvaModificheProdotto() {
 
     if (!response.ok) {
       const err = await response.json();
-      alert(`Errore: ${err.message || "Errore durante il salvataggio"}`);
+      showToast(`Errore: ${err.message || "Errore durante il salvataggio"}`);
     } else {
-      alert("✅ Prodotto aggiornato con successo!");
+      showToast("✅ Prodotto aggiornato con successo!");
       prodottoOriginale = { ...modifiche };
     }
   } catch (error) {
-    console.error("❌ Errore durante la richiesta PUT:", error);
-    alert("Errore di rete durante l'aggiornamento.");
+showToast("Errore di rete durante l'aggiornamento.");
   }
 }
 
@@ -148,14 +152,13 @@ document.getElementById("image-upload").addEventListener("change", async functio
     });
 
     if (response.ok) {
-      alert("✅ Immagine aggiornata con successo!");
+      showToast("✅ Immagine aggiornata con successo!");
       location.reload();
     } else {
-      alert("❌ Errore durante l'aggiornamento dell'immagine.");
+      showToast("❌ Errore durante l'aggiornamento dell'immagine.");
     }
   } catch (error) {
-    console.error("❌ Errore PATCH:", error);
-    alert("Errore di rete durante l'upload.");
+showToast("Errore di rete durante l'upload.");
   }
 });
 
@@ -174,14 +177,15 @@ async function eliminaProdotto() {
     });
 
     if (response.ok) {
-      alert("🗑️ Prodotto eliminato con successo.");
-      window.location.href = "profile.html";
+      showToast("🗑️ Prodotto eliminato con successo.");
+      setTimeout(() => {
+        window.location.href = "profile.html";
+      }, 1500);
     } else {
       const error = await response.json();
-      alert("Errore durante l'eliminazione: " + (error.message || "Errore sconosciuto."));
+      showToast("Errore durante l'eliminazione: " + (error.message || "Errore sconosciuto."));
     }
   } catch (error) {
-    console.error("❌ Errore DELETE:", error);
-    alert("Errore di rete durante l'eliminazione.");
+showToast("Errore di rete durante l'eliminazione.");
   }
 }

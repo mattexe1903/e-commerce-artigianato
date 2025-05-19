@@ -75,8 +75,7 @@ const createOrder = async (req, res) => {
       return res.status(400).json({ message: result.error });
     }
   } catch (error) {
-    console.error('Errore nella creazione dell\'ordine:', error.message);
-    return res.status(500).json({ message: 'Errore interno del server' });
+return res.status(500).json({ message: 'Errore interno del server' });
   }
 };
 
@@ -92,8 +91,7 @@ const getOrdersByUserId = async (req, res) => {
       res.status(404).json({ message: 'Nessun ordine trovato' });
     }
   } catch (error) {
-    console.error('Errore nel recupero degli ordini:', error.message);
-    res.status(500).json({ message: 'Errore interno del server' });
+res.status(500).json({ message: 'Errore interno del server' });
   }
 }
 
@@ -108,8 +106,7 @@ const getOrdersByArtisanId = async (req, res) => {
       res.status(404).json({ message: 'Nessun ordine trovato' });
     }
   } catch (error) {
-    console.error('Errore nel recupero degli ordini:', error.message);
-    res.status(500).json({ message: 'Errore interno del server' });
+res.status(500).json({ message: 'Errore interno del server' });
   }
 }
 
@@ -136,8 +133,7 @@ const getSales = async (req, res) => {
 
     res.status(200).json({ labels, dati });
   } catch (error) {
-    console.error('Errore nel recupero delle vendite:', error.message);
-    res.status(500).json({ message: 'Errore interno del server' });
+res.status(500).json({ message: 'Errore interno del server' });
   }
 };
 
@@ -159,8 +155,7 @@ const getDailySalesByArtisan = async (req, res) => {
     res.json({ labels, dati });
 
   } catch (error) {
-    console.error('Errore nel recupero delle vendite giornaliere:', error.message);
-    res.status(500).json({ message: 'Errore interno del server' });
+res.status(500).json({ message: 'Errore interno del server' });
   }
 };
 

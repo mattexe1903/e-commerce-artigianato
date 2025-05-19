@@ -43,8 +43,7 @@ const createOrderFromCart = async (userId, addressId) => {
     return { success: true, orderId };
   } catch (error) {
     await client.query('ROLLBACK');
-    console.error('Errore nella creazione ordine:', error.message);
-    return { success: false, error: error.message };
+return { success: false, error: error.message };
   } finally {
     client.release();
   }
@@ -69,8 +68,7 @@ const addTempAddress = async (street_address, city, cap, province) => {
     return { success: true, addressId };
   } catch (error) {
     await client.query('ROLLBACK');
-    console.error('Errore nell\'aggiunta dell\'indirizzo temporaneo:', error.message);
-    return { success: false, error: error.message };
+return { success: false, error: error.message };
   } finally {
     client.release();
   }
@@ -93,8 +91,7 @@ const findAddress = async (street_address, city, cap, province) => {
       return null;
     }
   } catch (error) {
-    console.error('Errore nella ricerca dell\'indirizzo:', error.message);
-    throw error;
+throw error;
   } finally {
     client.release();
   }
@@ -135,8 +132,7 @@ const getOrdersByUserId = async (userId) => {
 
     return orders;
   } catch (error) {
-    console.error('Errore nel recupero degli ordini con prodotti:', error.message);
-    throw error;
+throw error;
   } finally {
     client.release();
   }
@@ -180,8 +176,7 @@ const getOrdersByArtisanId = async (artisanId) => {
 
     return orders;
   } catch (error) {
-    console.error('Errore nel recupero degli ordini per artigiano:', error.message);
-    throw error;
+throw error;
   } finally {
     client.release();
   }
@@ -206,8 +201,7 @@ const getSales = async () => {
 
     return salesData;
   } catch (error) {
-    console.error('Errore nel recupero delle vendite:', error.message);
-    throw error;
+throw error;
   } finally {
     client.release();
   }
@@ -237,8 +231,7 @@ const getDailySalesByArtisan = async (artisanId) => {
       total: parseFloat(row.total)
     }));
   } catch (err) {
-    console.error('Errore nella query delle vendite giornaliere:', err.message);
-    throw err;
+throw err;
   } finally {
     client.release();
   }

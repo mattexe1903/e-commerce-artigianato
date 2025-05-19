@@ -78,8 +78,7 @@ const registerArtigiano = async (req, res) => {
       user
     });
   } catch (err) {
-    console.error('Errore durante la registrazione dell\'artigiano:', err);
-    res.status(500).json({
+res.status(500).json({
       success: false,
       message: err.message || 'Errore nella registrazione'
     });
