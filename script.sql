@@ -1,206 +1,1048 @@
--- 1. Tabella Roles
-CREATE TABLE roles
-(
-    role_id SERIAL PRIMARY KEY,
-    role_name TEXT NOT NULL UNIQUE
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 16.4
+-- Dumped by pg_dump version 16.4
+
+-- Started on 2025-05-19 14:32:48
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 215 (class 1259 OID 18650)
+-- Name: address; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.address (
+    addres_id integer NOT NULL,
+    user_id integer,
+    street_address text NOT NULL,
+    city text NOT NULL,
+    cap text NOT NULL,
+    province text NOT NULL,
+    country text NOT NULL
 );
 
--- 2. Tabella States
-CREATE TABLE states
-(
-    state_id SERIAL PRIMARY KEY,
-    state_name TEXT NOT NULL UNIQUE
+
+ALTER TABLE public.address OWNER TO postgres;
+
+--
+-- TOC entry 216 (class 1259 OID 18655)
+-- Name: address_addres_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.address_addres_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.address_addres_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 4987 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: address_addres_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.address_addres_id_seq OWNED BY public.address.addres_id;
+
+
+--
+-- TOC entry 217 (class 1259 OID 18656)
+-- Name: carts; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.carts (
+    cart_id integer NOT NULL,
+    user_id integer,
+    creation_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
 
--- 3. Tabella Users
-CREATE TABLE users
-(
-    user_id SERIAL PRIMARY KEY,
-    user_name TEXT NOT NULL,
-    surname TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    user_password TEXT NOT NULL,
-    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    user_role INTEGER,
-    FOREIGN KEY (user_role) REFERENCES roles(role_id)
+
+ALTER TABLE public.carts OWNER TO postgres;
+
+--
+-- TOC entry 218 (class 1259 OID 18660)
+-- Name: carts_cart_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.carts_cart_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.carts_cart_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 4988 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: carts_cart_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.carts_cart_id_seq OWNED BY public.carts.cart_id;
+
+
+--
+-- TOC entry 219 (class 1259 OID 18661)
+-- Name: carts_products; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.carts_products (
+    carts_products_id integer NOT NULL,
+    cart_id integer,
+    product_id integer,
+    quantity integer NOT NULL,
+    creation_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
 
--- 4. Tabella Categories
-CREATE TABLE categories
-(
-    category_id SERIAL PRIMARY KEY,
-    category_name TEXT NOT NULL UNIQUE
+
+ALTER TABLE public.carts_products OWNER TO postgres;
+
+--
+-- TOC entry 220 (class 1259 OID 18665)
+-- Name: carts_products_carts_products_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.carts_products_carts_products_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.carts_products_carts_products_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 4989 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: carts_products_carts_products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.carts_products_carts_products_id_seq OWNED BY public.carts_products.carts_products_id;
+
+
+--
+-- TOC entry 221 (class 1259 OID 18666)
+-- Name: categories; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.categories (
+    category_id integer NOT NULL,
+    category_name text NOT NULL
 );
 
--- 5. Tabella Address
-CREATE TABLE address
-(
-    addres_id SERIAL PRIMARY KEY,
-    user_id INTEGER,
-    street_address TEXT NOT NULL,
-    city TEXT NOT NULL,
-    cap TEXT NOT NULL,
-    province TEXT NOT NULL,
-    country TEXT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE public.categories OWNER TO postgres;
+
+--
+-- TOC entry 222 (class 1259 OID 18671)
+-- Name: categories_category_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.categories_category_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.categories_category_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 4990 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: categories_category_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.categories_category_id_seq OWNED BY public.categories.category_id;
+
+
+--
+-- TOC entry 223 (class 1259 OID 18672)
+-- Name: favorites; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.favorites (
+    user_id integer NOT NULL,
+    product_id integer NOT NULL
 );
 
--- 6. Tabella Carts
-CREATE TABLE carts
-(
-    cart_id SERIAL PRIMARY KEY,
-    user_id INTEGER,
-    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+
+ALTER TABLE public.favorites OWNER TO postgres;
+
+--
+-- TOC entry 224 (class 1259 OID 18675)
+-- Name: info_artisan; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.info_artisan (
+    artisan_id integer NOT NULL,
+    iban text NOT NULL,
+    craft text NOT NULL,
+    artisan_state integer
 );
 
--- 7. Tabella Products
-CREATE TABLE products
-(
-    product_id SERIAL PRIMARY KEY,
-    product_name TEXT NOT NULL,
-    photo TEXT NOT NULL,
-    photo_description TEXT NOT NULL,
-    price NUMERIC(10, 2) NOT NULL,
-    quantity INTEGER NOT NULL,
-    category_id INTEGER,
-    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (category_id) REFERENCES categories(category_id)
+
+ALTER TABLE public.info_artisan OWNER TO postgres;
+
+--
+-- TOC entry 225 (class 1259 OID 18680)
+-- Name: inventory; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.inventory (
+    product_id integer,
+    user_id integer
 );
 
--- 8. Tabella Favorites
-CREATE TABLE favorites
-(
-    user_id INTEGER NOT NULL,
-    product_id INTEGER NOT NULL,
-    PRIMARY KEY (user_id, product_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (product_id) REFERENCES products(product_id)
+
+ALTER TABLE public.inventory OWNER TO postgres;
+
+--
+-- TOC entry 226 (class 1259 OID 18683)
+-- Name: orders; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.orders (
+    order_id integer NOT NULL,
+    user_id integer,
+    order_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    order_state integer,
+    total numeric(10,2) NOT NULL,
+    addres_id integer
 );
 
--- 9. Tabella Info_Artisan
-CREATE TABLE info_artisan
-(
-    artisan_id INTEGER PRIMARY KEY,
-    iban TEXT NOT NULL,
-    craft TEXT NOT NULL,
-    artisan_state INTEGER,
-    FOREIGN KEY (artisan_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (artisan_state) REFERENCES states(state_id)
+
+ALTER TABLE public.orders OWNER TO postgres;
+
+--
+-- TOC entry 227 (class 1259 OID 18687)
+-- Name: orders_order_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.orders_order_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.orders_order_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 4991 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: orders_order_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.orders_order_id_seq OWNED BY public.orders.order_id;
+
+
+--
+-- TOC entry 228 (class 1259 OID 18688)
+-- Name: orders_products; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.orders_products (
+    orders_products_id integer NOT NULL,
+    order_id integer,
+    product_id integer,
+    quantity integer NOT NULL,
+    single_price numeric(10,2) NOT NULL
 );
 
--- 10. Tabella Inventory
-CREATE TABLE inventory
-(
-    product_id INTEGER PRIMARY KEY,
-    user_id INTEGER,
-    FOREIGN KEY (product_id) REFERENCES products(product_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE public.orders_products OWNER TO postgres;
+
+--
+-- TOC entry 229 (class 1259 OID 18691)
+-- Name: orders_products_orders_products_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.orders_products_orders_products_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.orders_products_orders_products_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 4992 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: orders_products_orders_products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.orders_products_orders_products_id_seq OWNED BY public.orders_products.orders_products_id;
+
+
+--
+-- TOC entry 230 (class 1259 OID 18692)
+-- Name: permissions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.permissions (
+    permission_id integer NOT NULL,
+    permission_name text NOT NULL
 );
 
--- 11. Tabella Orders
-CREATE TABLE orders
-(
-    order_id SERIAL PRIMARY KEY,
-    user_id INTEGER,
-    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    order_state INTEGER,
-    total NUMERIC(10, 2) NOT NULL,
-    address_id INTEGER,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (address_id) REFERENCES address(addres_id),
-    FOREIGN KEY (order_state) REFERENCES states(state_id)
+
+ALTER TABLE public.permissions OWNER TO postgres;
+
+--
+-- TOC entry 231 (class 1259 OID 18697)
+-- Name: permissions_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.permissions_permission_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.permissions_permission_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 4993 (class 0 OID 0)
+-- Dependencies: 231
+-- Name: permissions_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.permissions_permission_id_seq OWNED BY public.permissions.permission_id;
+
+
+--
+-- TOC entry 232 (class 1259 OID 18698)
+-- Name: products; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.products (
+    product_id integer NOT NULL,
+    product_name text NOT NULL,
+    photo text NOT NULL,
+    photo_description text NOT NULL,
+    price numeric(10,2) NOT NULL,
+    quantity integer NOT NULL,
+    category_id integer,
+    creation_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
 
--- 12. Tabella Orders_Products
-CREATE TABLE orders_products
-(
-    orders_products_id SERIAL PRIMARY KEY,
-    order_id INTEGER,
-    product_id INTEGER,
-    quantity INTEGER NOT NULL,
-    single_price NUMERIC(10, 2) NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES products(product_id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE public.products OWNER TO postgres;
+
+--
+-- TOC entry 233 (class 1259 OID 18704)
+-- Name: products_product_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.products_product_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.products_product_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 4994 (class 0 OID 0)
+-- Dependencies: 233
+-- Name: products_product_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.products_product_id_seq OWNED BY public.products.product_id;
+
+
+--
+-- TOC entry 234 (class 1259 OID 18705)
+-- Name: reports; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.reports (
+    report_id integer NOT NULL,
+    user_id integer,
+    title character varying(255) NOT NULL,
+    report_message text NOT NULL,
+    report_state integer,
+    sent_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    resolution_date timestamp without time zone,
+    admin_id integer
 );
 
--- 13. Tabella Carts_Products
-CREATE TABLE carts_products
-(
-    carts_products_id SERIAL PRIMARY KEY,
-    cart_id INTEGER,
-    product_id INTEGER,
-    quantity INTEGER NOT NULL,
-    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (cart_id) REFERENCES carts(cart_id),
-    FOREIGN KEY (product_id) REFERENCES products(product_id)
+
+ALTER TABLE public.reports OWNER TO postgres;
+
+--
+-- TOC entry 235 (class 1259 OID 18711)
+-- Name: reports_report_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.reports_report_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.reports_report_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 4995 (class 0 OID 0)
+-- Dependencies: 235
+-- Name: reports_report_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.reports_report_id_seq OWNED BY public.reports.report_id;
+
+
+--
+-- TOC entry 236 (class 1259 OID 18712)
+-- Name: roles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.roles (
+    role_id integer NOT NULL,
+    role_name text NOT NULL
 );
 
--- 14. Tabella Reports
-CREATE TABLE reports
-(
-    report_id SERIAL PRIMARY KEY,
-    user_id INTEGER,
-    title VARCHAR(255) NOT NULL,
-    report_message TEXT NOT NULL,
-    report_state INTEGER,
-    sent_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    admin_id INTEGER,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (admin_id) REFERENCES users(user_id) ON DELETE SET NULL,
-    FOREIGN KEY (report_state) REFERENCES states(state_id)
+
+ALTER TABLE public.roles OWNER TO postgres;
+
+--
+-- TOC entry 237 (class 1259 OID 18717)
+-- Name: roles_permissions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.roles_permissions (
+    permission_id integer NOT NULL,
+    role_id integer NOT NULL,
+    permission_type character(1)
 );
 
--- popolamento iniziale delle tabelle
-INSERT INTO roles
-    (role_id, role_name)
-VALUES
-    (1, 'admin'),
-    (2, 'users'),
-    (3, 'artisan');
 
-INSERT INTO states
-    (state_id, state_name)
-VALUES
-    (1, 'in attesa'),
-    (2, 'accettato'),
-    (3, 'rifiutato'),
-    (4, 'completato'),
-    (5, 'annullato'),
-    (6, 'nuova'),
-    (7, 'in lavorazione'),
-    (8, 'risolta'),
-    (9, 'archiviata');
+ALTER TABLE public.roles_permissions OWNER TO postgres;
 
-INSERT INTO categories
-    (category_id, category_name)
-VALUES
-    (1, 'Gioielli'),
-    (2, 'Ceramica e Terracotta'),
-    (3, 'Lavorazione del Legno'),
-    (4, 'Tessili e Ricami'),
-    (5, 'Accessori Moda'),
-    (6, 'Saponi e Cosmetici Naturali'),
-    (7, 'Carta e Cartoleria'),
-    (8, 'Decorazioni per la Casa'),
-    (9, 'Candele Artigianali'),
-    (10, 'Vetri Artistici'),
-    (11, 'Oggetti in Cuoio'),
-    (12, 'Bambole e Peluche Fatti a Mano'),
-    (13, 'Arte e Dipinti'),
-    (14, 'Mobili Artigianali'),
-    (15, 'Strumenti Musicali Fatti a Mano');
+--
+-- TOC entry 238 (class 1259 OID 18720)
+-- Name: roles_role_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
 
-INSERT INTO products
-    (product_id, product_name, photo, photo_description, price, quantity, category_id, creation_date)
-VALUES
-    (1, 'Borsa in Pelle Fatto a Mano', '/images/1.jpg', 'Borsa artigianale realizzata in vera pelle italiana', 85.99, 12, 1, '2025-05-09 11:27:56'),
-    (2, 'Scultura in Legno di Ulivo', '/images/2.jpg', 'Scultura decorativa intagliata a mano da legno d’ulivo', 129.00, 5, 2, '2025-05-09 11:27:56'),
-    (3, 'Orecchini in Ceramica Raku', '/images/3.jpg', 'Orecchini fatti a mano con tecnica raku tradizionale', 49.90, 20, 3, '2025-05-09 11:27:56'),
-    (4, 'Tovaglia Ricamata a Mano', '/images/4.jpg', 'Tovaglia in lino con ricami floreali artigianali', 99.50, 8, 4, '2025-05-09 11:27:56'),
-    (5, 'Cornice Artistica Dipinta', '/images/5.jpg', 'Cornice in legno dipinta a mano con motivi floreali', 39.99, 15, 2, '2025-05-09 11:27:56'),
-    (6, 'Candela Profumata Naturale', '/images/6.jpg', 'Candela artigianale a base di cera di soia e oli essenziali', 19.00, 30, 5, '2025-05-09 11:27:56'),
-    (7, 'Vaso in Ceramica Smaltato', '/images/7.jpg', 'Vaso decorativo modellato e smaltato a mano', 59.95, 10, 2, '2025-05-09 11:27:56'),
-    (8, 'Taccuino in Carta Riciclata', '/images/8.jpg', 'Taccuino fatto a mano con copertina in tessuto', 24.99, 18, 1, '2025-05-09 11:27:56'),
-    (9, 'Portagioie in Legno Intarsiato', '/images/9.jpg', 'Scatola portagioie realizzata con intarsi lignei artigianali', 69.99, 6, 3, '2025-05-09 11:27:56'),
-    (10, 'Quadro ad Acquerello', '/images/10.jpg', 'Dipinto originale su carta realizzato con tecnica ad acquerello', 79.99, 4, 4, '2025-05-09 11:27:56');
+CREATE SEQUENCE public.roles_role_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.roles_role_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 4996 (class 0 OID 0)
+-- Dependencies: 238
+-- Name: roles_role_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.roles_role_id_seq OWNED BY public.roles.role_id;
+
+
+--
+-- TOC entry 239 (class 1259 OID 18721)
+-- Name: states; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.states (
+    state_id integer NOT NULL,
+    state_name text NOT NULL
+);
+
+
+ALTER TABLE public.states OWNER TO postgres;
+
+--
+-- TOC entry 240 (class 1259 OID 18726)
+-- Name: states_state_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.states_state_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.states_state_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 4997 (class 0 OID 0)
+-- Dependencies: 240
+-- Name: states_state_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.states_state_id_seq OWNED BY public.states.state_id;
+
+
+--
+-- TOC entry 241 (class 1259 OID 18727)
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    user_id integer NOT NULL,
+    user_name text NOT NULL,
+    surname text NOT NULL,
+    email text NOT NULL,
+    user_password text NOT NULL,
+    creation_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    user_role integer NOT NULL
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- TOC entry 242 (class 1259 OID 18733)
+-- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.users_user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.users_user_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 4998 (class 0 OID 0)
+-- Dependencies: 242
+-- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.users_user_id_seq OWNED BY public.users.user_id;
+
+
+--
+-- TOC entry 4759 (class 2604 OID 18734)
+-- Name: address addres_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.address ALTER COLUMN addres_id SET DEFAULT nextval('public.address_addres_id_seq'::regclass);
+
+
+--
+-- TOC entry 4760 (class 2604 OID 18735)
+-- Name: carts cart_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.carts ALTER COLUMN cart_id SET DEFAULT nextval('public.carts_cart_id_seq'::regclass);
+
+
+--
+-- TOC entry 4762 (class 2604 OID 18736)
+-- Name: carts_products carts_products_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.carts_products ALTER COLUMN carts_products_id SET DEFAULT nextval('public.carts_products_carts_products_id_seq'::regclass);
+
+
+--
+-- TOC entry 4764 (class 2604 OID 18737)
+-- Name: categories category_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.categories ALTER COLUMN category_id SET DEFAULT nextval('public.categories_category_id_seq'::regclass);
+
+
+--
+-- TOC entry 4765 (class 2604 OID 18738)
+-- Name: orders order_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders ALTER COLUMN order_id SET DEFAULT nextval('public.orders_order_id_seq'::regclass);
+
+
+--
+-- TOC entry 4767 (class 2604 OID 18739)
+-- Name: orders_products orders_products_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders_products ALTER COLUMN orders_products_id SET DEFAULT nextval('public.orders_products_orders_products_id_seq'::regclass);
+
+
+--
+-- TOC entry 4768 (class 2604 OID 18740)
+-- Name: permissions permission_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.permissions ALTER COLUMN permission_id SET DEFAULT nextval('public.permissions_permission_id_seq'::regclass);
+
+
+--
+-- TOC entry 4769 (class 2604 OID 18741)
+-- Name: products product_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.products ALTER COLUMN product_id SET DEFAULT nextval('public.products_product_id_seq'::regclass);
+
+
+--
+-- TOC entry 4771 (class 2604 OID 18742)
+-- Name: reports report_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.reports ALTER COLUMN report_id SET DEFAULT nextval('public.reports_report_id_seq'::regclass);
+
+
+--
+-- TOC entry 4773 (class 2604 OID 18743)
+-- Name: roles role_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.roles ALTER COLUMN role_id SET DEFAULT nextval('public.roles_role_id_seq'::regclass);
+
+
+--
+-- TOC entry 4774 (class 2604 OID 18744)
+-- Name: states state_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.states ALTER COLUMN state_id SET DEFAULT nextval('public.states_state_id_seq'::regclass);
+
+
+--
+-- TOC entry 4775 (class 2604 OID 18745)
+-- Name: users user_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.users_user_id_seq'::regclass);
+
+
+--
+-- TOC entry 4778 (class 2606 OID 18747)
+-- Name: address address_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.address
+    ADD CONSTRAINT address_pkey PRIMARY KEY (addres_id);
+
+
+--
+-- TOC entry 4780 (class 2606 OID 18749)
+-- Name: carts carts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.carts
+    ADD CONSTRAINT carts_pkey PRIMARY KEY (cart_id);
+
+
+--
+-- TOC entry 4782 (class 2606 OID 18751)
+-- Name: carts_products carts_products_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.carts_products
+    ADD CONSTRAINT carts_products_pkey PRIMARY KEY (carts_products_id);
+
+
+--
+-- TOC entry 4784 (class 2606 OID 18753)
+-- Name: categories categories_category_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.categories
+    ADD CONSTRAINT categories_category_name_key UNIQUE (category_name);
+
+
+--
+-- TOC entry 4786 (class 2606 OID 18755)
+-- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.categories
+    ADD CONSTRAINT categories_pkey PRIMARY KEY (category_id);
+
+
+--
+-- TOC entry 4788 (class 2606 OID 18757)
+-- Name: favorites favorites_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.favorites
+    ADD CONSTRAINT favorites_pkey PRIMARY KEY (user_id, product_id);
+
+
+--
+-- TOC entry 4790 (class 2606 OID 18759)
+-- Name: info_artisan info_artisan_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.info_artisan
+    ADD CONSTRAINT info_artisan_pkey PRIMARY KEY (artisan_id);
+
+
+--
+-- TOC entry 4792 (class 2606 OID 18761)
+-- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_pkey PRIMARY KEY (order_id);
+
+
+--
+-- TOC entry 4794 (class 2606 OID 18763)
+-- Name: orders_products orders_products_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders_products
+    ADD CONSTRAINT orders_products_pkey PRIMARY KEY (orders_products_id);
+
+
+--
+-- TOC entry 4796 (class 2606 OID 18765)
+-- Name: permissions permissions_permission_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.permissions
+    ADD CONSTRAINT permissions_permission_name_key UNIQUE (permission_name);
+
+
+--
+-- TOC entry 4798 (class 2606 OID 18767)
+-- Name: permissions permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.permissions
+    ADD CONSTRAINT permissions_pkey PRIMARY KEY (permission_id);
+
+
+--
+-- TOC entry 4800 (class 2606 OID 18769)
+-- Name: products products_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_pkey PRIMARY KEY (product_id);
+
+
+--
+-- TOC entry 4802 (class 2606 OID 18771)
+-- Name: reports reports_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.reports
+    ADD CONSTRAINT reports_pkey PRIMARY KEY (report_id);
+
+
+--
+-- TOC entry 4808 (class 2606 OID 18773)
+-- Name: roles_permissions roles_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.roles_permissions
+    ADD CONSTRAINT roles_permissions_pkey PRIMARY KEY (permission_id, role_id);
+
+
+--
+-- TOC entry 4804 (class 2606 OID 18775)
+-- Name: roles roles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.roles
+    ADD CONSTRAINT roles_pkey PRIMARY KEY (role_id);
+
+
+--
+-- TOC entry 4806 (class 2606 OID 18777)
+-- Name: roles roles_role_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.roles
+    ADD CONSTRAINT roles_role_name_key UNIQUE (role_name);
+
+
+--
+-- TOC entry 4810 (class 2606 OID 18779)
+-- Name: states states_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.states
+    ADD CONSTRAINT states_pkey PRIMARY KEY (state_id);
+
+
+--
+-- TOC entry 4812 (class 2606 OID 18781)
+-- Name: states states_state_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.states
+    ADD CONSTRAINT states_state_name_key UNIQUE (state_name);
+
+
+--
+-- TOC entry 4814 (class 2606 OID 18783)
+-- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_email_key UNIQUE (email);
+
+
+--
+-- TOC entry 4816 (class 2606 OID 18785)
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+
+
+--
+-- TOC entry 4817 (class 2606 OID 18912)
+-- Name: address address_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.address
+    ADD CONSTRAINT address_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- TOC entry 4819 (class 2606 OID 18791)
+-- Name: carts_products carts_products_cart_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.carts_products
+    ADD CONSTRAINT carts_products_cart_id_fkey FOREIGN KEY (cart_id) REFERENCES public.carts(cart_id);
+
+
+--
+-- TOC entry 4820 (class 2606 OID 18796)
+-- Name: carts_products carts_products_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.carts_products
+    ADD CONSTRAINT carts_products_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.products(product_id);
+
+
+--
+-- TOC entry 4818 (class 2606 OID 18927)
+-- Name: carts carts_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.carts
+    ADD CONSTRAINT carts_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- TOC entry 4821 (class 2606 OID 18806)
+-- Name: favorites favorites_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.favorites
+    ADD CONSTRAINT favorites_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.products(product_id);
+
+
+--
+-- TOC entry 4822 (class 2606 OID 18811)
+-- Name: favorites favorites_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.favorites
+    ADD CONSTRAINT favorites_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+
+
+--
+-- TOC entry 4825 (class 2606 OID 18816)
+-- Name: inventory fk_inventory_product; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.inventory
+    ADD CONSTRAINT fk_inventory_product FOREIGN KEY (product_id) REFERENCES public.products(product_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- TOC entry 4826 (class 2606 OID 18821)
+-- Name: inventory fk_inventory_user; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.inventory
+    ADD CONSTRAINT fk_inventory_user FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- TOC entry 4823 (class 2606 OID 18902)
+-- Name: info_artisan info_artisan_artisan_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.info_artisan
+    ADD CONSTRAINT info_artisan_artisan_id_fkey FOREIGN KEY (artisan_id) REFERENCES public.users(user_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- TOC entry 4824 (class 2606 OID 18831)
+-- Name: info_artisan info_artisan_artisan_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.info_artisan
+    ADD CONSTRAINT info_artisan_artisan_state_fkey FOREIGN KEY (artisan_state) REFERENCES public.states(state_id);
+
+
+--
+-- TOC entry 4827 (class 2606 OID 18836)
+-- Name: orders orders_addres_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_addres_id_fkey FOREIGN KEY (addres_id) REFERENCES public.address(addres_id);
+
+
+--
+-- TOC entry 4828 (class 2606 OID 18841)
+-- Name: orders orders_order_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_order_state_fkey FOREIGN KEY (order_state) REFERENCES public.states(state_id);
+
+
+--
+-- TOC entry 4830 (class 2606 OID 18942)
+-- Name: orders_products orders_products_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders_products
+    ADD CONSTRAINT orders_products_order_id_fkey FOREIGN KEY (order_id) REFERENCES public.orders(order_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- TOC entry 4831 (class 2606 OID 18932)
+-- Name: orders_products orders_products_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders_products
+    ADD CONSTRAINT orders_products_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.products(product_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- TOC entry 4829 (class 2606 OID 18937)
+-- Name: orders orders_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- TOC entry 4832 (class 2606 OID 18861)
+-- Name: products products_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.categories(category_id);
+
+
+--
+-- TOC entry 4833 (class 2606 OID 18866)
+-- Name: reports reports_admin_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.reports
+    ADD CONSTRAINT reports_admin_id_fkey FOREIGN KEY (admin_id) REFERENCES public.users(user_id) ON DELETE SET NULL;
+
+
+--
+-- TOC entry 4834 (class 2606 OID 18871)
+-- Name: reports reports_report_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.reports
+    ADD CONSTRAINT reports_report_state_fkey FOREIGN KEY (report_state) REFERENCES public.states(state_id);
+
+
+--
+-- TOC entry 4835 (class 2606 OID 18876)
+-- Name: reports reports_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.reports
+    ADD CONSTRAINT reports_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 4836 (class 2606 OID 18881)
+-- Name: roles_permissions roles_permissions_permission_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.roles_permissions
+    ADD CONSTRAINT roles_permissions_permission_id_fkey FOREIGN KEY (permission_id) REFERENCES public.permissions(permission_id);
+
+
+--
+-- TOC entry 4837 (class 2606 OID 18886)
+-- Name: roles_permissions roles_permissions_role_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.roles_permissions
+    ADD CONSTRAINT roles_permissions_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.roles(role_id);
+
+
+--
+-- TOC entry 4838 (class 2606 OID 18891)
+-- Name: users users_user_role_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_user_role_fkey FOREIGN KEY (user_role) REFERENCES public.roles(role_id);
+
+
+-- Completed on 2025-05-19 14:32:48
+
+--
+-- PostgreSQL database dump complete
+--
+
