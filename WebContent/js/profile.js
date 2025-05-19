@@ -8,10 +8,21 @@ document.getElementById("home-btn").addEventListener("click", () => {
     .then(res => res.json())
     .then(data => {
       const role = data.user.user_role;
-      window.location.href = role === 3 ? "../home.html" : "homereg.html";
+
+      if (role === 3) {
+        // Rimuove il token dalla sessione per gli artigiani
+        localStorage.removeItem("token");
+        window.location.href = "../home.html";
+      } else {
+        window.location.href = "homereg.html";
+      }
     })
-    .catch(() => window.location.href = "homereg.html");
+    .catch(() => {
+      localStorage.removeItem("token"); // in caso di errore, rimuove il token
+      window.location.href = "homereg.html";
+    });
 });
+
 
 window.onload = async () => {
   try {
@@ -24,7 +35,6 @@ window.onload = async () => {
 
     const { user, addresses = [] } = await resUser.json();
     const role = user.user_role;
-    console.log(user);
 
     document.getElementById("titolo-bentornato").innerText = `Benvenuto, ${user.user_name}`;
     document.getElementById("sidebar-title").innerText = role === 3 ? "Lokal" : "Profilo";

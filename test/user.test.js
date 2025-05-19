@@ -81,22 +81,27 @@ describe('User Routes', () => {
   });
 
 it('DELETE /api/artisan/:id - elimina artigiano fittizio', async () => {
-// Inserisci prima l'utente/artigiano nella tabella padre users
-await pool.query(
-  `INSERT INTO users (user_id, user_name, surname, email, user_password, user_role)
-   VALUES ($1, $2, $3, $4, $5, $6)
-   ON CONFLICT (user_id) DO NOTHING`,  // evita errore se esiste già
-  [99999, 'Fake', 'Artisan', 'fakeartisan@example.com', 'password123', 3]
-);
+  // Pulizia dati fittizi, in ordine: figli -> padre
+  await pool.query('DELETE FROM info_artisan WHERE artisan_id = $1', [99999]);
+  await pool.query('DELETE FROM users WHERE user_id = $1', [99999]);
 
-// Ora inserisci l'artigiano in info_artisan
-const insertRes = await pool.query(
-  `INSERT INTO info_artisan (artisan_id, iban, craft, artisan_state)
-   VALUES ($1, $2, $3, $4) RETURNING artisan_id`,
-  [99999, 'dxcfgvbhjn', 'fabbro', 3]
-);
+  // Inserisci l'utente/artigiano nella tabella padre 'users'
+  await pool.query(
+    `INSERT INTO users (user_id, user_name, surname, email, user_password, user_role)
+     VALUES ($1, $2, $3, $4, $5, $6)`,
+    [99999, 'Fake', 'Artisan', 'fakeartisan@example.com', 'password123', 3]
+  );
+
+  // Ora inserisci l'artigiano nella tabella 'info_artisan'
+  const insertRes = await pool.query(
+    `INSERT INTO info_artisan (artisan_id, iban, craft, artisan_state)
+     VALUES ($1, $2, $3, $4)
+     RETURNING artisan_id`,
+    [99999, 'dxcfgvbhjn', 'fabbro', 3]
+  );
 
   const artisanId = insertRes.rows[0].artisan_id;
+
   // Elimino l'artigiano appena creato
   const res = await request(app)
     .delete(`/api/artisan/${artisanId}`)
@@ -104,8 +109,12 @@ const insertRes = await pool.query(
 
   expect([200, 204]).toContain(res.statusCode);
 
-  // Verifico che l'artigiano sia stato eliminato dal DB
-  const checkRes = await pool.query('SELECT * FROM info_artisan WHERE artisan_id = $1', [artisanId]);
+  // Verifica che l'artigiano sia stato eliminato dal DB
+  const checkRes = await pool.query(
+    'SELECT * FROM info_artisan WHERE artisan_id = $1',
+    [artisanId]
+  );
   expect(checkRes.rowCount).toBe(0);
 });
+
 });
