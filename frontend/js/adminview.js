@@ -9,7 +9,7 @@ document.getElementById("exit-btn").addEventListener("click", () => {
   localStorage.removeItem("token");
   showToast("Logout effettuato");
   setTimeout(() => {
-    window.location.href = "../home.html";
+    window.location.href = "home.html";
   }, 1500);
 });
 

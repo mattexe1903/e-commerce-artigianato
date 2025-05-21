@@ -11,7 +11,7 @@ window.onload = async function () {
   const tokenRaw = localStorage.getItem("token");
   const token = tokenRaw && tokenRaw !== "null" ? JSON.parse(tokenRaw) : null;
 
-  document.getElementById("lokal-link").href = token ? "homereg.html" : "../home.html";
+  document.getElementById("lokal-link").href = token ? "homereg.html" : "home.html";
 
   if (!productId) return;
 

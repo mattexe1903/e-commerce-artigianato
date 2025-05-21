@@ -5,12 +5,20 @@ const path = require('path');
 
 const app = express();
 
-app.use(cors());
+// CORS per frontend su porta 5500
+app.use(cors({
+  origin: 'http://localhost:5500'
+}));
+
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, '..', 'frontend')));
-app.use('/images', express.static(path.join(__dirname, '..', 'frontend', 'images')));
+// 🔥 Serve immagini dalla cartella montata dal volume Docker
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
+// Se vuoi servire file statici HTML/CSS/JS dal frontend (opzionale)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Rotte API
 const authRoutes = require('./routes/authRoute');
 const productRoutes = require('./routes/productRoute');
 const userRoutes = require('./routes/userRoute');
@@ -27,12 +35,14 @@ app.use('/api', categoryRoutes);
 app.use('/api', orderRoutes);
 app.use('/api', reportRoutes);
 
+// 🔧 Route base
 app.get('/', (req, res) => {
   res.send('Benvenuto nel backend dell\'e-commerce!');
 });
 
+// 🔧 Reset password (serve HTML statico, solo se necessario)
 app.get('/reset-password', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'frontend', 'html', 'reset-password.html'));
+  res.sendFile(path.join(__dirname, 'html', 'reset-password.html'));
 });
 
 module.exports = app;

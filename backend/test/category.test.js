@@ -5,21 +5,27 @@ const pool = require('../db');
 
 let insertedCategoryId;
 
-beforeAll(async () => {
-  // Pulisce eventuali categorie duplicate
-  await pool.query("DELETE FROM categories WHERE category_name = 'TestCategory'");
+async function createCleanTestCategory(categoryName) {
+  // Cancella eventuali categorie duplicate
+  await pool.query("DELETE FROM categories WHERE category_name = $1", [categoryName]);
 
-  // Inserisce una categoria di test
+  // Inserisce una nuova categoria e restituisce l'ID
   const result = await pool.query(
-    "INSERT INTO categories (category_name) VALUES ($1) RETURNING category_id",
-    ['TestCategory']
+    `INSERT INTO categories (category_name)
+     VALUES ($1)
+     RETURNING category_id`,
+    [categoryName]
   );
-  insertedCategoryId = result.rows[0].category_id;
+
+  return result.rows[0].category_id;
+}
+
+beforeAll(async () => {
+  insertedCategoryId = await createCleanTestCategory('TestCategory');
 });
 
 afterAll(async () => {
-  // Rimuove la categoria inserita
-  await pool.query("DELETE FROM categories WHERE category_id = $1", [insertedCategoryId]);
+  await pool.query("DELETE FROM categories WHERE category_name = $1", ['TestCategory']);
   await pool.end();
 });
 

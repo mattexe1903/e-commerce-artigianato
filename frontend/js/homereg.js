@@ -59,7 +59,7 @@ function logout() {
   localStorage.removeItem("token");  // Rimuove il token salvato
   showToast("Logout effettuato");
   setTimeout(() => {
-    window.location.href = "../home.html";
+    window.location.href = "home.html";
   }, 1500);
 }
 

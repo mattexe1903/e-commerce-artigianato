@@ -5,7 +5,6 @@ const login = async (email, password) => {
   const user = await userModel.getUserByEmail(email);
   const cleanedPassword = password.trim();
   if (!user) throw new Error('Credenziali non valide');
-console.log(cleanedPassword);
 
   const validPassword = await bcrypt.compare(cleanedPassword, user.user_password);
   if (!validPassword) throw new Error('Credenziali non valide');

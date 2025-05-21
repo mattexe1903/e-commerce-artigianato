@@ -85,7 +85,7 @@ window.onload = () => {
         });
       showToast("Email inoltrara con successo. Attendere l'approvazione dell'amministratore.");
       setTimeout(() => {
-        window.location.href = "../home.html";
+        window.location.href = "home.html";
       }, 1500);
     } else {
 fetch('http://localhost:3000/api/register', {

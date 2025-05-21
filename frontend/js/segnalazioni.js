@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (response.ok) {
           showToast("Segnalazione inviata con successo!");
           setTimeout(() => {
-            window.location.href = "../home.html";
+            window.location.href = "home.html";
           }, 1500);
         } else {
           showToast("Errore durante l'invio. Riprova.");

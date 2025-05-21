@@ -1,14 +1,14 @@
 const nodemailer = require('nodemailer');
 const orderService = require('../services/orderService');
 const userService = require('../services/userService');
-const userModel = require('../../backend/models/userModel'); // serve per recuperare i dati utente (nome, email)
-const orderModel = require('../../backend/models/orderModel'); // serve per ottenere i dettagli dell’ordine
+const userModel = require('../models/userModel'); // serve per recuperare i dati utente (nome, email)
+const orderModel = require('../models/orderModel'); // serve per ottenere i dettagli dell’ordine
 
 const createOrder = async (req, res) => {
   const userId = req.user.user_id;
   const {
     address: {
-      street: street_address,
+      street_address,
       city,
       cap,
       province
@@ -34,8 +34,8 @@ const createOrder = async (req, res) => {
 
     if (result.success) {
       // INVIO EMAIL QUI
-      const user = await userModel.getUserById(userId); // supponendo che questa funzione esista
-      const orders = await orderModel.getOrdersByUserId(userId); // ottieni tutti, ma prendi solo l’ultimo
+      const user = await userModel.getUserById(userId);
+      const orders = await orderModel.getOrdersByUserId(userId);
       const lastOrder = orders[0];
 
       const productsList = lastOrder.products.map(p => `

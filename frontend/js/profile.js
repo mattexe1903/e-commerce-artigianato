@@ -18,7 +18,7 @@ document.getElementById("home-btn").addEventListener("click", () => {
 
       if (role === 3) {
         localStorage.removeItem("token");
-        window.location.href = "../home.html";
+        window.location.href = "home.html";
       } else {
         window.location.href = "homereg.html";
       }

@@ -6,7 +6,7 @@
   }
 
 function vaiAllaPaginaProdotto(idProdotto) {
-    window.location.href = `html/productsview.html?id=${idProdotto}`;
+    window.location.href = `productsview.html?id=${idProdotto}`;
 }
 
 function toggleFiltri() {

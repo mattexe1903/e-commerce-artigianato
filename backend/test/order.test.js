@@ -10,7 +10,7 @@ let userId;
 let productId;
 
 beforeAll(async () => {
-  // Rimuovi eventuali utenti di test esistenti
+  // Rimuovi eventuali utenti di test
   await pool.query("DELETE FROM users WHERE email = 'testcart@example.com'");
 
   // Registra nuovo utente
@@ -22,22 +22,17 @@ beforeAll(async () => {
     conferma: 'password123'
   });
 
-  // Effettua login per ottenere token
+  // Login per ottenere token
   const loginRes = await request(app).post('/api/login').send({
     email: 'testcart@example.com',
     password: 'password123'
   });
 
-  if (!loginRes.body.token) {
-    throw new Error('Login fallito durante il test.');
-  }
   token = loginRes.body.token;
-
-  // Decodifica il token per ottenere userId
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   userId = decoded.user_id;
 
-  // Inserisci un prodotto di test nel DB
+  // Inserisci prodotto
   const prod = await pool.query(
     `INSERT INTO products (product_name, price, photo, photo_description, quantity, creation_date)
      VALUES ('Test Product', 9.99, 'photo.jpg', 'desc', 100, NOW())
@@ -47,11 +42,13 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  // Pulizia dati di test da DB
+  // Pulizia completa dati test
+  await pool.query("DELETE FROM orders WHERE user_id = $1", [userId]);
   await pool.query("DELETE FROM carts_products WHERE product_id = $1", [productId]);
   await pool.query("DELETE FROM carts WHERE user_id = $1", [userId]);
   await pool.query("DELETE FROM products WHERE product_id = $1", [productId]);
-  await pool.query("DELETE FROM users WHERE email = 'testcart@example.com'");
+  await pool.query("DELETE FROM address WHERE user_id = $1", [userId]);
+  await pool.query("DELETE FROM users WHERE user_id = $1", [userId]);
   await pool.end();
 });
 
@@ -71,16 +68,16 @@ describe('Ordini Routes', () => {
   });
 
   test('POST /api/createOrder - crea un ordine con indirizzo valido', async () => {
-    // Aggiungi prodotto al carrello prima di creare l'ordine
-    const addToCartRes = await request(app)
+    // Aggiunta al carrello
+    await request(app)
       .post('/api/cart/add')
       .set('Authorization', `Bearer ${token}`)
       .send({ productId, quantity: 1 });
-// Debug
 
+    // Dati indirizzo da salvare (struttura corretta)
     const orderData = {
       address: {
-        street: 'Via Test 123',
+        street_address: 'Via Test 123',
         city: 'Milano',
         cap: '20100',
         province: 'MI'
@@ -92,9 +89,8 @@ describe('Ordini Routes', () => {
       .post('/api/createOrder')
       .set('Authorization', `Bearer ${token}`)
       .send(orderData);
-// Debug
 
-    // Verifica se la creazione dell'ordine è andata a buon fine
+    // Verifica risposta
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty('orderId');
   });
@@ -103,7 +99,6 @@ describe('Ordini Routes', () => {
     const res = await request(app)
       .get('/api/getOrdersByUserId')
       .set('Authorization', `Bearer ${token}`);
-// Debug
 
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);

@@ -116,7 +116,6 @@ async function confirmPartialRemove() {
 
   try {
     const token = getToken();
-console.log("prodottoSelezionato", prodottoSelezionato.product_id);
 
     const res = await fetch(`http://localhost:3000/api/cart/remove`, {
       method: "DELETE",
