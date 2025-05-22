@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
 const orderService = require('../services/orderService');
 const userService = require('../services/userService');
-const userModel = require('../models/userModel'); // serve per recuperare i dati utente (nome, email)
-const orderModel = require('../models/orderModel'); // serve per ottenere i dettagli dell’ordine
+const userModel = require('../models/userModel');
+const orderModel = require('../models/orderModel');
 
 const createOrder = async (req, res) => {
   const userId = req.user.user_id;
@@ -33,7 +33,6 @@ const createOrder = async (req, res) => {
     const result = await orderService.createOrderFromCart(userId, finalAddressId);
 
     if (result.success) {
-      // INVIO EMAIL QUI
       const user = await userModel.getUserById(userId);
       const orders = await orderModel.getOrdersByUserId(userId);
       const lastOrder = orders[0];

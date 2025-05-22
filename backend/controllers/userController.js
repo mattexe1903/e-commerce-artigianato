@@ -59,10 +59,8 @@ if (!user) {
       { expiresIn: '1h' }
     );
 
-    // Costruisce il link per il reset password
     const resetLink = `http://localhost:3000/reset-password?token=${token}`;
 
-    // Configura il trasportatore Nodemailer
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
       auth: {

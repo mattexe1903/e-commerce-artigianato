@@ -10,10 +10,8 @@ let userId;
 let productId;
 
 beforeAll(async () => {
-  // Rimuovi eventuali utenti di test
   await pool.query("DELETE FROM users WHERE email = 'testcart@example.com'");
 
-  // Registra nuovo utente
   await request(app).post('/api/register').send({
     nome: 'Test',
     cognome: 'User',

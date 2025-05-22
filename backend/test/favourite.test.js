@@ -10,10 +10,8 @@ let userId;
 let productId;
 
 beforeAll(async () => {
-  // Pulisce eventuali dati residui
   await pool.query("DELETE FROM users WHERE email = 'testfavourite@example.com'");
 
-  // Registra utente
   await request(app).post('/api/register').send({
     nome: 'Favourite',
     cognome: 'User',
@@ -22,7 +20,6 @@ beforeAll(async () => {
     conferma: 'password123'
   });
 
-  // Login utente
   const loginRes = await request(app).post('/api/login').send({
     email: 'testfavourite@example.com',
     password: 'password123'
@@ -34,11 +31,9 @@ throw new Error('Login fallito durante il test.');
 
   token = loginRes.body.token;
 
-  // Decodifica token
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   userId = decoded.user_id;
 
-  // Inserisce un prodotto di test
   const prod = await pool.query(
     `INSERT INTO products (product_name, price, photo, photo_description, quantity, creation_date)
      VALUES ('Test Favourite Product', 19.99, 'photo.jpg', 'descrizione', 50, NOW())

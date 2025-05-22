@@ -4,7 +4,6 @@ const app = require('../app');
 const pool = require('../db');
 
 describe('Test Auth Routes', () => {
-  // Cleanup: elimina utenti di test
   afterAll(async () => {
     await pool.query("DELETE FROM users WHERE email LIKE 'testutente%@example.com'");
     await pool.end();

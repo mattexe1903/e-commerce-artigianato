@@ -6,10 +6,8 @@ const pool = require('../db');
 let insertedCategoryId;
 
 async function createCleanTestCategory(categoryName) {
-  // Cancella eventuali categorie duplicate
   await pool.query("DELETE FROM categories WHERE category_name = $1", [categoryName]);
 
-  // Inserisce una nuova categoria e restituisce l'ID
   const result = await pool.query(
     `INSERT INTO categories (category_name)
      VALUES ($1)

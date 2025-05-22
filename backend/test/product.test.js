@@ -10,16 +10,13 @@ const pool = require('../db');
 let token;
 let userId;
 let productId;
-const tempImagePath = path.join(__dirname, 'temp-image.jpg'); // file fittizio
+const tempImagePath = path.join(__dirname, 'temp-image.jpg');
 
 beforeAll(async () => {
-  // Crea immagine fittizia
   fs.writeFileSync(tempImagePath, 'Fake image content for test');
 
-  // Cleanup utente se già presente
   await pool.query("DELETE FROM users WHERE email = 'testproduct@example.com'");
 
-  // Registra un nuovo utente
   await request(app).post('/api/register').send({
     nome: 'Test',
     cognome: 'Product',

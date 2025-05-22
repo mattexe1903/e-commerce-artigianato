@@ -68,7 +68,7 @@ const removeFromCart = async (req, res) => {
 };
 
 const clearCart = async (req, res) => {
-  const userId = req.user.user_id; // <-- qui!
+  const userId = req.user.user_id; 
   try {
     const clearedCart = await cartService.clearCart(userId);
     if (!clearedCart) {
