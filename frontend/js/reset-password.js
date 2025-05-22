@@ -69,7 +69,7 @@ if (res.ok) {
 
         // Reindirizzamento al login dopo 5 secondi
         setTimeout(() => {
-          window.location.href = 'html/login.html';
+          window.location.href = '/html/login.html';
         }, 5000);
       } else {
         messageBox.style.color = 'orange';

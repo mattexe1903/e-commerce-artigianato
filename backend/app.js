@@ -14,9 +14,9 @@ app.use(express.json());
 
 // 🔥 Serve immagini dalla cartella montata dal volume Docker
 app.use('/images', express.static(path.join(__dirname, 'images')));
-
-// Se vuoi servire file statici HTML/CSS/JS dal frontend (opzionale)
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/css', express.static(path.join(__dirname, 'css')));
+app.use('/js', express.static(path.join(__dirname, 'js')));
+app.use('/html', express.static(path.join(__dirname, 'html')));
 
 // Rotte API
 const authRoutes = require('./routes/authRoute');

@@ -20,7 +20,10 @@ services:
     volumes:
       - ./backend:/app
       - backend_node_modules:/app/node_modules
-      - ./frontend/images:/app/images  # 🔥 Monta le immagini nel backend
+      - ./frontend/images:/app/images
+      - ./frontend/html:/app/html
+      - ./frontend/css:/app/css
+      - ./frontend/js:/app/js
     depends_on:
       - db
     restart: unless-stopped

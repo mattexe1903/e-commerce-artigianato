@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel');
 
 const getUserInfo = async (userId) => {
@@ -29,7 +30,8 @@ throw error;
 
 const updatePassword = async (userId, newPassword) => {
     try {
-        const updatedUser = await userModel.updatePassword(userId, newPassword);
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const updatedUser = await userModel.updatePassword(userId, hashedPassword);
         return updatedUser;
     } catch (error) {
 throw error;
