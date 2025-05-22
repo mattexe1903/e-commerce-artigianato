@@ -28,6 +28,7 @@ if (token) {
       }
 
       utenteId = data.user_id;
+      consol
     })
     .catch(error => {
 });

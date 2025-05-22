@@ -20,7 +20,8 @@ const createProduct = async (productData) => {
     [product_name, photo_description, price, photo || '', quantity, category_id]
   );
 
-  const newProduct = result.rows[0];
+    const newProduct = result.rows[0];
+    console.log('New product created:', newProduct);
 
   await pool.query(
     `INSERT INTO inventory (product_id, user_id) VALUES ($1, $2)`,

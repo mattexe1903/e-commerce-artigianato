@@ -169,7 +169,7 @@ async function setupSaveCheckboxes() {
 async function sendOrder() {
   const token = getToken();
   const addressData = {
-    street: document.getElementById("address-street").value,
+    street_address: document.getElementById("address-street").value,
     city: document.getElementById("address-city").value,
     cap: document.getElementById("address-zip").value,
     province: document.getElementById("address-province").value,

@@ -4,11 +4,11 @@ const path = require('path');
 // Configurazione di Multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const imagesDir = path.join(__dirname, '..', '..', 'frontend', 'images');
+    const imagesDir = path.join(__dirname, '..', 'images');
     cb(null, imagesDir);
   },
   filename: function (req, file, cb) {
-const productId = req.body.productId || 'placeholder';
+    const productId = req.body.productId || 'placeholder';
     const extname = path.extname(file.originalname); // Ottieni l'estensione del file (e.g., .jpg, .png)
     cb(null, `${productId}${extname}`);
   }
