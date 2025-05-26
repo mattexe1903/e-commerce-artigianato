@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin View</title>
+  <link rel="stylesheet" href="../css/adminview.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <nav class="sidebar">
+      <h2>Admin Panel</h2>
+      <ul>
+        <li><a href="#richieste">Richieste</a></li>
+        <li><a href="#gestione-artigiani">Artigiani</a></li>
+        <li><a href="#segnalazioni">Segnalazioni</a></li>
+        <li><a href="#grafici">Statistiche</a></li>
+        <li><button id="exit-btn">Esci</button></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <header>
+        <h1>Benvenuto, Admin</h1>
+      </header>
+
+      <section class="card" id="richieste">
+        <h2>Richieste Artigiani</h2>
+        <div id="richieste-list"></div>
+      </section>
+
+      <section class="card" id="gestione-artigiani">
+        <h2>Gestione Artigiani</h2>
+        <div id="artigiani-list"></div>
+      </section>
+
+      <section class="card" id="segnalazioni">
+        <h2>Segnalazioni</h2>
+        <div class="table-wrapper">
+        <div id="segnalazioni-list"></div>
+        </div>
+      </section>
+
+      <section class="card" id="grafici">
+        <h2>Statistiche</h2>
+        <canvas id="venditeChart"></canvas>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" style="position:fixed;top:30px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:4px;display:none;font-family:sans-serif;font-size:14px;"></div>
+
+  <script src="../js/adminview.js"></script>
+</body>
+</html>

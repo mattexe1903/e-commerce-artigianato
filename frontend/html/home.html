@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lokal - Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">Lokal</div>
+    <div class="header-buttons">
+      <button onclick="window.location.href='login.html'">Accedi</button>
+      <button onclick="window.location.href='regchoice.html'">Registrati</button>
+    </div>
+  </header>
+
+  <section>
+    <h2>Nuovi arrivi</h2>
+    <div class="carousel-container">
+      <div class="carousel-track" id="carousel-track"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Tutti i prodotti</h2>
+
+    <div class="filter-container">
+      <button onclick="toggleFiltri()">Filtra</button>
+      <div id="menu-filtri" style="display: none;">
+        <select id="filtro-categoria">
+          <option value="">Tutte le categorie</option>
+        </select>
+        <select id="filtro-prezzo">
+          <option value="">Ordina per prezzo</option>
+          <option value="asc">Prezzo crescente</option>
+          <option value="desc">Prezzo decrescente</option>
+        </select>
+        <select id="filtro-disponibilita">
+          <option value="">Ordina per disponibilità</option>
+          <option value="disponibile">Disponibili prima</option>
+          <option value="non_disponibile">Non disponibili prima</option>
+        </select>
+        <button onclick="applicaFiltri()">Applica</button>
+      </div>
+    </div>
+
+    <div class="product-list" id="product-list"></div>
+  </section>
+
+  <script src="/js/home.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profilo</title>
+  <link rel="stylesheet" href="../css/profile.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="layout">
+    <nav class="sidebar">
+      <h2 id="sidebar-title">Profilo</h2>
+      <ul id="nav-list">
+        <li><a href="#dati">Dati</a></li>
+        <li id="sidebar-ordini"><a href="#ordini-section">I miei ordini</a></li>
+        <li id="sidebar-preferiti"><a href="#preferiti-section">I miei preferiti</a></li>
+        <li><button id="home-btn">Home</button></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <header>
+        <h1 id="titolo-bentornato">Benvenuto</h1>
+      </header>
+
+      <section class="card" id="dati">
+        <h2>Dati Utente</h2>
+        <div id="dati-utente"></div>
+      </section>
+
+      <section class="card" id="ordini-section">
+        <h2>I miei ordini</h2>
+        <div class="table-wrapper">
+          <table id="tabella-ordini">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Numero Ordine</th>
+                <th>Prezzo</th>
+                <th>Articoli</th>
+                <th>Stato</th>
+              </tr>
+            </thead>
+            <tbody id="ordini-list">
+              <!-- I dati degli ordini verranno inseriti qui dinamicamente -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+
+      <section class="card" id="preferiti-section">
+        <h2>I miei preferiti</h2>
+        <div class="grid-container" id="lista-preferiti"></div>
+      </section>
+
+      <!-- Sezioni visibili solo per artigiani -->
+      <section class="card hidden" id="inventario">
+        <div class="inventario-header">
+          <h2>Inventario</h2>
+          <button id="aggiungi-prodotto-btn">+</button>
+        </div>
+        <div class="grid-container" id="inventario-list"></div>
+      </section>
+
+      <section class="card hidden" id="prenotazioni">
+        <h2>Prenotazioni</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Numero Ordine</th>
+              <th>ID Articolo</th>
+              <th>Numero Articoli</th>
+              <th>Stato</th>
+            </tr>
+          </thead>
+          <tbody id="prenotazioni-list"></tbody>
+        </table>
+      </section>
+
+      <section class="card hidden" id="dashboard">
+        <h2>Dashboard</h2>
+        <canvas id="venditeChart"></canvas>
+      </section>
+    </main>
+  </div>
+
+    <div id="toast" style="position:fixed;top:30px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:4px;display:none;font-family:sans-serif;font-size:14px;"></div>
+
+
+  <script src="../js/profile.js"></script>
+</body>
+
+</html>
